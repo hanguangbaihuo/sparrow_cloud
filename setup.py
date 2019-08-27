@@ -9,22 +9,6 @@ import shutil
 from setuptools import find_packages, setup
 
 
-# py3_supported_range = (3.7, )
-
-# import pdb; pdb.set_trace()
-
-
-# def copytree(src, dst, symlinks=False, ignore=None):
-#     for item in os.listdir(src):
-#         s = os.path.join(src, item)
-#         d = os.path.join(dst, item)
-#         if os.path.isdir(s):
-#             shutil.copytree(s, d, symlinks, ignore)
-#         else:
-#             shutil.copy2(s, d)
-
-# copytree("demo/sparrow_cloud", "sparrow_cloud")
-
 setup(
     name='sparrow_django',
     version="v1.0",
