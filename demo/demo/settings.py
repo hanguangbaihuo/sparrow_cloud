@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # sparrow cloud
+    "sparrow_cloud.apps.ping",
+    "sparrow_cloud.apps.permission_command",
 ]
 
 MIDDLEWARE = [

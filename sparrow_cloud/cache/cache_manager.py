@@ -30,7 +30,7 @@ class CacheManager(models.Manager):
         try:
             db_obj= super(CacheManager, self).get(*args, **kwargs) 
         except:
-            print("object is not available both in redis and db!")
+            # print("object is not available both in redis and db!")
             db_obj = None
         return db_obj
     
