@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 
 setup(
-    name='sparrowdjango',
+    name='sparrowcloud',
     version="v1.0",
     license='MIT',
     description='',
@@ -18,7 +18,7 @@ setup(
     # long_description_content_type='text/markdown',
     author='',
     author_email='',  # SEE NOTE BELOW (*)
-    packages=find_packages(exclude=['tests*']),
+    packages=find_packages(include=['sparrow_cloud', 'sparrow_cloud.*', '*.sparrow_cloud.*', '*.sparrow_cloud']),
     include_package_data=True,
     install_requires=[],
     python_requires=">=3.7",
