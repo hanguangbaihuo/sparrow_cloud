@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 
 setup(
-    name='sparrow_django',
+    name='sparrowdjango',
     version="v1.0",
     license='MIT',
     description='',

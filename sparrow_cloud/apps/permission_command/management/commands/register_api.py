@@ -51,8 +51,8 @@ class Command(BaseCommand):
                     regx_list.append(pathregx)
                     print("path=%s, method=%s, regx=%s" % (path, methods, pathregx))
         print(regx_list)
-        regx_list = [re.compile(pa) for pa in regx_list]
-        path = "/api/testapp/zz/asef/ddd/asef/"
-        for pa in regx_list:
-            xx = re.search(pa, path)
-            print(xx)
+        # regx_list = [re.compile(pa) for pa in regx_list]
+        # path = "/api/testapp/zz/asef/ddd/asef/"
+        # for pa in regx_list:
+        #     xx = re.search(pa, path)
+        #     print(xx)
