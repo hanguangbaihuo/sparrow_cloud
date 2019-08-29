@@ -130,7 +130,18 @@ CACHES = {
     }
 }
 
+
+# consul_service 依赖配置
 CONSUL_CLIENT_ADDR = {
-    "host": "127.0.0.1",
-    "port": 8500
+    "host": "127.0.0.1",  # consul host
+    "port": 8500  # consul port
 }
+
+
+# cache_manager 依赖配置
+import redis
+CACHE_REDIS_POOL = redis.ConnectionPool(
+    host='REDIS_HOST',  # redis host
+    port='REDIS_PORT',  # redis port
+    password='REDIS_PASSWORD',  # redis password
+    decode_responses=True)
