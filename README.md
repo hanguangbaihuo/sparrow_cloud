@@ -11,8 +11,31 @@ pip install git+https://github.com/hanguangbaihuo/sparrow_cloud.git
 > 说明： consul服务发现
 
 ```
-依赖配置
+依赖settings配置：
 
+CACHES = {
+    'default': {
+        'BACKEND': '',
+        'LOCATION': '',
+    }
+}
+
+
+# consul_service 依赖配置
+CONSUL_CLIENT_ADDR = {
+    "host": "127.0.0.1",  # consul host
+    "port": 8500  # consul port
+}
+
+使用方法：
+from sparrow_cloud.registry.service_registry import consul_service
+# host 为默认参数，非必填， 如果传了此项参数， 会直接返回参数， 不过不传，则从consul中找服务地址
+service_conf = {
+        "service_name": "",  # k8s上的服务名称
+        "host": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
+    }
+service_addr = consul_service(service_conf)
+# 输出"127.0.0.1:8001"
 ```
 
 #### cache_manager

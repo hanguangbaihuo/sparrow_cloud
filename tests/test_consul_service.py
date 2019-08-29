@@ -6,8 +6,8 @@ from sparrow_cloud.registry.service_registry import consul_service
 def mock_get_settings_value(name):
     """获取settings中的配置"""
     service_conf = {
-        "host":"127.0.0.1",
-        "port":8500
+        "host": "127.0.0.1",
+        "port": 8500
     }
     return service_conf
 
