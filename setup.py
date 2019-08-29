@@ -20,7 +20,10 @@ setup(
     author_email='',  # SEE NOTE BELOW (*)
     packages=find_packages(include=['sparrow_cloud', 'sparrow_cloud.*', '*.sparrow_cloud.*', '*.sparrow_cloud']),
     include_package_data=True,
-    install_requires=[],
+    install_requires=[
+        'requests>=2.12.1',
+        'python-consul>=1.1.0'
+    ],
     python_requires=">=3.7",
     zip_safe=False,
     classifiers=[
@@ -42,4 +45,5 @@ setup(
         # 'Programming Language :: Python :: 3 :: Only',
         'Topic :: Internet :: WWW/HTTP',
     ],
+
 )
