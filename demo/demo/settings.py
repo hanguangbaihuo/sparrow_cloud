@@ -161,7 +161,7 @@ CONSUL_CLIENT_ADDR = {
     "port": 8500  # consul port
 }
 
-# SparrowAuthentication 依赖配置
+# UserIDAuthentication 依赖配置
 SPARROW_AUTHENTICATION = {
     "USER_CLASS_PATH": "sparrow_cloud.auth.user.User",
 }

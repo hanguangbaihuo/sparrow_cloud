@@ -92,10 +92,10 @@ MIDDLEWARE = (
 * * *
 
 
-#### SparrowAuthentication
+#### UserIDAuthentication
 > 描述： user_id 解析
 
-#### 配置 SparrowAuthentication 认证需要的参数(仅兼容django2.2以上版本)
+#### 配置 UserIDAuthentication 认证需要的参数(仅兼容django2.2以上版本)
 
 ```
 SPARROW_AUTHENTICATION = {
