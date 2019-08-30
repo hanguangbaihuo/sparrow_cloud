@@ -168,7 +168,7 @@ SPARROW_AUTHENTICATION = {
 
 # JWTMiddleware 依赖配置
 JWT_MIDDLEWARE = {
-    "JWT_SECRET": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh"
+    "JWT_SECRET": "问tianyi"
 }
 
 # cache_manager 依赖配置
