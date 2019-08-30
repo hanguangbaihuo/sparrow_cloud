@@ -8,7 +8,7 @@ pip install git+https://github.com/hanguangbaihuo/sparrow_cloud.git
 
 
 #### service_registry
-> 说明： consul服务发现
+> 描述： consul服务发现
 
 ```
 依赖settings配置：
@@ -39,7 +39,7 @@ service_addr = consul_service(service_conf)
 ```
 
 #### cache_manager
-> 说明 ： cache_manager 会把model的get方法使用缓存
+> 描述 ： cache_manager 会把model的get方法使用缓存
 ```
 依赖settings配置：
 
@@ -63,4 +63,52 @@ demo中可查看示例
 model 示例路径， sparrow_demo/models.py
 
 
+```
+
+
+* * *
+
+#### JWTMiddleware
+> 描述：Token 解析
+
+#### 配置 JWTMiddleware 中间件需要的参数
+> 将以下参数添加到settings.py
+```
+JWT_MIDDLEWARE = {
+    "JWT_SECRET": "问 tianyi"
+}
+``` 
+>参数说明： JWT_SECRET : jwt_secret
+
+#### 注册 JWTMiddleware
+
+> 注册中间件
+```
+MIDDLEWARE = (
+    'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware', # 放最上层
+```
+
+
+* * *
+
+
+#### SparrowAuthentication
+> 描述： user_id 解析
+
+#### 配置 SparrowAuthentication 认证需要的参数(仅兼容django2.2以上版本)
+
+```
+SPARROW_AUTHENTICATION = {
+    "USER_CLASS_PATH": "sparrow_cloud.auth.user.User",
+}
+
+# 参数说明： USER_CLASS_PATH： 路径中的User为中间件的User模版， 可以根据自己的需求重新创建User， 并将自己的User路径按照模版格式放到：USER_CLASS_PATH下 
+
+# 注册中间件
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
+    )
+}
 ```
