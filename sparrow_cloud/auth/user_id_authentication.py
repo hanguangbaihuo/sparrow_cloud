@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-from rest_framework.authentication import get_authorization_header
-from sparrow_django_common.common.utils import get_user_class
-from sparrow_django_common.common.decode_jwt import DecodeJwt
+from sparrow_cloud.utils.get_user import get_user_class
 import logging
 
 logger = logging.getLogger(__name__)

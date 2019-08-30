@@ -1,5 +1,5 @@
-from sparrow_django_common.utils.get_settings_value import GetSettingsValue
-from sparrow_django_common.base_middlware.base_middleware import MiddlewareMixin
+from sparrow_cloud.utils.get_settings_value import GetSettingsValue
+from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 
 
 get_value = GetSettingsValue()

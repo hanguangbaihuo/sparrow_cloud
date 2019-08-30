@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # JWTMiddleware
+    'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -83,6 +85,28 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+    # SparrowAuthentication
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
+    ),
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -121,3 +145,38 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+
+# consul_service 依赖配置
+CONSUL_CLIENT_ADDR = {
+    "host": "127.0.0.1",  # consul host
+    "port": 8500  # consul port
+}
+
+# SparrowAuthentication 依赖配置
+SPARROW_AUTHENTICATION = {
+    "USER_CLASS_PATH": "sparrow_cloud.auth.user.User",
+}
+
+# JWTMiddleware 依赖配置
+JWT_MIDDLEWARE = {
+    "JWT_SECRET": "问tianyi"
+}
+
+# cache_manager 依赖配置
+import redis
+CACHE_REDIS_POOL = redis.ConnectionPool(
+    host='REDIS_HOST',  # redis host
+    port='REDIS_PORT',  # redis port
+    password='REDIS_PASSWORD',  # redis password
+    decode_responses=True)
+
+
