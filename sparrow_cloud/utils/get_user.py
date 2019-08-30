@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from sparrow_cloud.utils.get_settings_value import GetSettingsValue
-from sparrow_django_common.utils.common_exceptions import AuthenticationValidError
+from sparrow_cloud.utils.common_exceptions import AuthenticationValidError
 
 import importlib
 import functools
