@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # JWTMiddleware
+    'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,6 +83,28 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+    # SparrowAuthentication
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
+    ),
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
 
@@ -137,6 +161,15 @@ CONSUL_CLIENT_ADDR = {
     "port": 8500  # consul port
 }
 
+# SparrowAuthentication 依赖配置
+SPARROW_AUTHENTICATION = {
+    "USER_CLASS_PATH": "sparrow_cloud.auth.user.User",
+}
+
+# JWTMiddleware 依赖配置
+JWT_MIDDLEWARE = {
+    "JWT_SECRET": "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh"
+}
 
 # cache_manager 依赖配置
 import redis
@@ -145,3 +178,5 @@ CACHE_REDIS_POOL = redis.ConnectionPool(
     port='REDIS_PORT',  # redis port
     password='REDIS_PASSWORD',  # redis password
     decode_responses=True)
+
+
