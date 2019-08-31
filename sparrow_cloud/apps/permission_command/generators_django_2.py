@@ -300,6 +300,9 @@ class OpenAPISchemaGenerator(object):
             "api_list": api_list
         }
 
+    def get_service_name(self):
+        return settings.SERVICE_NAME
+
     def get_register_api(self, top, components, request, public):
         '''
         按照注册中心的数据格式, 重新构建数据结构

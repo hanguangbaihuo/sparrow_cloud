@@ -247,7 +247,7 @@ class SchemaGenerator(object):
                 "is_regex": is_regex,
             }
             result.append(regex_api)
-            print("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
+            logger.info("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
         return {
             "service_name": self.get_service_name(),
             "api_list": api_list
