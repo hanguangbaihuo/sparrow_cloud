@@ -223,7 +223,7 @@ class SchemaGenerator(object):
         处理正则数据
         '''
         # path_pamas_pattern
-        api_list = []
+        result = []
         pattern_param = re.compile('\{((?!\/).)*\}')
         pattern_str = '[^/]*'
         g = lambda pathregx: True if pattern_str in pathregx else False
@@ -246,11 +246,11 @@ class SchemaGenerator(object):
                 "name": name,
                 "is_regex": is_regex,
             }
-            api_list.append(regex_api)
+            result.append(regex_api)
             logger.info("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
         return {
             "service_name": self.get_service_name(),
-            "api_list": api_list
+            "api_list": result
         }
 
     def get_service_name(self):
