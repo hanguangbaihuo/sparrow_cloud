@@ -5,7 +5,8 @@ from collections import OrderedDict, defaultdict
 from rest_framework import versioning
 from rest_framework.compat import URLPattern, URLResolver, get_original_route
 from rest_framework.schemas.generators import EndpointEnumerator as _EndpointEnumerator
-from rest_framework.schemas.generators import SchemaGenerator, endpoint_ordering
+from rest_framework.schemas import SchemaGenerator
+from rest_framework.schemas.generators import endpoint_ordering
 from rest_framework.schemas import AutoSchema
 from rest_framework.settings import api_settings
 from rest_framework.utils import formatting
@@ -270,8 +271,9 @@ class OpenAPISchemaGenerator(object):
             return None
 
         ret=[]
+        import pdb; pdb.set_trace()
         for category in top:
-            print('~~~~~~~~~')
+            # print('~~~~~~~~~')
             endpoints=category['points']
             if endpoints is None or len(endpoints)==0:
                 continue
