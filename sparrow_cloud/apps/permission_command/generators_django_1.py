@@ -12,7 +12,9 @@ from rest_framework.request import clone_request
 from rest_framework.utils import formatting
 from rest_framework.views import APIView
 from pprint import pprint
+import logging
 
+logger = logging.getLogger(__name__)
 
 '''
 注册数据结构

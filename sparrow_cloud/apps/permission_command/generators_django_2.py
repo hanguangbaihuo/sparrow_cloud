@@ -14,7 +14,7 @@ from rest_framework.utils import formatting
 from django.utils.encoding import force_text, smart_text
 
 
-logger = logging.getLogger("django")
+logger = logging.getLogger(__name__)
 
 PATH_PARAMETER_RE = re.compile(r'{(?P<parameter>\w+)}')
 header_regex = re.compile('^[a-zA-Z][0-9A-Za-z_]*:')
