@@ -187,7 +187,9 @@ class OpenAPISchemaGenerator(object):
 
     def get_schema(self, request=None, public=False):
         endpoints = self.get_endpoints(request)
-        return self.get_paths(endpoints, None, request, public=False)
+        # return self.get_paths(endpoints, None, request, public=False)
+        register_api = self.get_register_api(endpoints, None, request, public=False)
+        return self.handle_api_path(register_api)
 
     def get_endpoints(self, request):
         enumerator = self.endpoint_enumerator_class(self._gen.patterns, self._gen.urlconf, request=request)
@@ -263,6 +265,78 @@ class OpenAPISchemaGenerator(object):
 
         return summary, description
 
+    def handle_api_path(self, api_list):
+        '''
+        处理正则数据
+        '''
+        # path_pamas_pattern
+        result = []
+        pattern_param = re.compile('\{((?!\/).)*\}')
+        pattern_str = '[^/]*'
+        g = lambda pathregx: True if pattern_str in pathregx else False
+        for api in api_list:
+            origin_path = api['origin_path']
+            regex_path = pattern_param.sub(pattern_str, origin_path)
+            is_regex = g(regex_path)
+            if is_regex:
+                regex_path = "^" + regex_path + "$"
+
+            method = api['method']
+            desc = api["desc"]
+            name = api["name"]
+
+            regex_api = {
+                "path": regex_path,
+                "origin_path": origin_path,
+                "method": method,
+                "desc": desc,
+                "name": name,
+                "is_regex": is_regex,
+            }
+            result.append(regex_api)
+            print("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
+        return result
+
+    def get_register_api(self, top, components, request, public):
+        '''
+        按照注册中心的数据格式, 重新构建数据结构
+        '''
+        if not top:
+            return None
+        result = []
+        for category in top:
+            # import pdb; pdb.set_trace()
+            endpoints=category['points']
+            if endpoints is None or len(endpoints)==0:
+                continue
+            for path, (view_cls, methods) in sorted(endpoints.items()):
+                for method, view in methods:
+                    method_lower=method.lower()
+                    method_name = getattr(view, 'action', method_lower)
+                    method_docstring = getattr(view, method_name, None).__doc__
+                    if method_docstring:
+                        method_docstring = self._get_description_section(view, method.lower(),
+                                                                         formatting.dedent(smart_text(method_docstring)))
+                    else:
+                        method_docstring = self._get_description_section(view, getattr(view, 'action', method.lower()),
+                                                                         view.get_view_description())
+                    if not method_docstring:
+                        method_docstring = "_"
+                    (name, desc) = self.split_summary_from_description(method_docstring)
+                    if name is None:
+                            name = desc
+                    _path = {
+                        "name": name,
+                        # "path": path,
+                        "method": method_lower,
+                        "origin_path": path,
+                        # "is_regex": False,
+                        "desc": desc,
+                        # "version": ""
+                    }
+                    result.append(_path)
+        return result
+
     def get_paths(self, top, components, request, public):
         """
         Generate the Swagger Paths for the API from the given endpoints.
@@ -271,7 +345,7 @@ class OpenAPISchemaGenerator(object):
             return None
 
         ret=[]
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         for category in top:
             # print('~~~~~~~~~')
             endpoints=category['points']

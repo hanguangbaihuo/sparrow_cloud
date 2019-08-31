@@ -13,12 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path
+from . import views
+# from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/ping/', include("sparrow_cloud.apps.ping.urls")),
-    path('demo/', include("sparrow_demo.urls")),
-    path('testpermission_path/', include("testpermission_path.urls")),
+    re_path(r'^xx/(?P<username>\w+)/$', views.test_path_params_1, name="test_path_params_1"),
+    re_path(r'^(?P<id>\w+)/yy/(?P<username>\w+)/$', views.test_path_params_2, name="test_path_params_2"),
+    path(r'^yy/zz/$', views.test_path_no_params_2, name="test_path_no_params_2"),
+    path(r'^mm/$', views.test_path_no_params_1, name="test_path_no_params_1"),
 ]

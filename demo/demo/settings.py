@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # sparrow cloud
     "sparrow_cloud.apps.ping",
     "sparrow_cloud.apps.permission_command",
+    "testpermission_path",
 ]
 
 MIDDLEWARE = [

@@ -97,8 +97,8 @@ class Command(BaseCommand):
         schema = self.get_schema(generator, None, True)
         # pprint(schema)
         for xx in schema:
-            if xx['is_regex']:
-                pprint(xx)
+            # if xx['is_regex']:
+            pprint(xx)
         # if not auth_centre:
         #     auth_centre=settings.AUTH_CENTRE
         # if local=="0":
