@@ -270,9 +270,8 @@ class OpenAPISchemaGenerator(object):
             return None
 
         ret=[]
-        import pdb; pdb.set_trace()
         for category in top:
-            # print('~~~~~~~~~')
+            print('~~~~~~~~~')
             endpoints=category['points']
             if endpoints is None or len(endpoints)==0:
                 continue
