@@ -14,44 +14,30 @@ from rest_framework.views import APIView
 from pprint import pprint
 
 
-
-# 注册数据结构
-# [
-#     {
-#         "name": "name",
-#         "path": "/api/xx/yy/",
-#         "method": "GET",
-#         "origin_path": "",
-#         "is_regex": False,
-#         "desc": "desc",
-#         "version": ""
-#     },
-#     {
-#         "name": "name",
-#         "path": "/api/xx/yy/",
-#         "method": "GET",
-#         "origin_path": "",
-#         "is_regex": False,
-#         "desc": "desc",
-#         "version": ""
-#     },
-# ]
-
-
-# Schema 数据结构
-
-# [
-
-#     {
-#         "app_name": "app_name",
-#         "api:" [
-#             "path": "xxxx",
-#             "get": 
-#         ]
-#     },
-
-# ]
-
+'''
+注册数据结构
+{
+    "service_name": "u",
+    "api_list": [
+        {
+            "api_name": "api_name",
+            "method": "GET",
+            "path": "/api/ooo/",
+            "origin_path": "/api/oooo/",
+            "desc": "desc",
+            "is_regex": "False"
+        },
+        {
+            "api_name": "api_name",
+            "method": "GET",
+            "path": "/api/uuu/pppp/",
+            "origin_path": "/api/odd/",
+            "desc": "desc",
+            "is_regex": "False"
+        }
+    ]
+}
+'''
 
 
 
@@ -237,7 +223,7 @@ class SchemaGenerator(object):
         处理正则数据
         '''
         # path_pamas_pattern
-        result = []
+        api_list = []
         pattern_param = re.compile('\{((?!\/).)*\}')
         pattern_str = '[^/]*'
         g = lambda pathregx: True if pattern_str in pathregx else False
@@ -262,7 +248,13 @@ class SchemaGenerator(object):
             }
             result.append(regex_api)
             print("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
-        return result
+        return {
+            "service_name": self.get_service_name(),
+            "api_list": api_list
+        }
+
+    def get_service_name(self):
+        return settings.SERVICE_NAME
 
     def get_paths(self, top, components, request, public):
         """

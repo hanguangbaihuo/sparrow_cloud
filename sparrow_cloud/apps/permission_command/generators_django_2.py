@@ -12,7 +12,7 @@ from rest_framework.settings import api_settings
 from rest_framework.utils import formatting
 from django.utils.encoding import force_text, smart_text
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("django")
 
 PATH_PARAMETER_RE = re.compile(r'{(?P<parameter>\w+)}')
 header_regex = re.compile('^[a-zA-Z][0-9A-Za-z_]*:')
@@ -270,7 +270,7 @@ class OpenAPISchemaGenerator(object):
         处理正则数据
         '''
         # path_pamas_pattern
-        result = []
+        api_list = []
         pattern_param = re.compile('\{((?!\/).)*\}')
         pattern_str = '[^/]*'
         g = lambda pathregx: True if pattern_str in pathregx else False
@@ -294,8 +294,11 @@ class OpenAPISchemaGenerator(object):
                 "is_regex": is_regex,
             }
             result.append(regex_api)
-            print("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
-        return result
+            logger.info("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
+        return {
+            "service_name": self.get_service_name(),
+            "api_list": api_list
+        }
 
     def get_register_api(self, top, components, request, public):
         '''
