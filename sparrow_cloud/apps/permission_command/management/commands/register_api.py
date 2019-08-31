@@ -95,10 +95,10 @@ class Command(BaseCommand):
             generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_1.SchemaGenerator", "API",
                                                   "1.0")
         schema = self.get_schema(generator, None, True)
-        # pprint(schema)
-        for xx in schema:
+        pprint(schema)
+        # for xx in schema:
             # if xx['is_regex']:
-            pprint(xx)
+            # pprint(xx)
         # if not auth_centre:
         #     auth_centre=settings.AUTH_CENTRE
         # if local=="0":
