@@ -89,10 +89,10 @@ class Command(BaseCommand):
         logging.disable(logging.WARNING)
 
         if dj_ver == "2":
-            generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_1.OpenAPISchemaGenerator", "API",
+            generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_2.OpenAPISchemaGenerator", "API",
                                                   "1.0")
         else:
-            generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_2.SchemaGenerator", "API",
+            generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_1.SchemaGenerator", "API",
                                                   "1.0")
         schema = self.get_schema(generator, None, True)
         # pprint(schema)
