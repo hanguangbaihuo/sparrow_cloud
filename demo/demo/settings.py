@@ -181,3 +181,4 @@ CACHE_REDIS_POOL = redis.ConnectionPool(
     decode_responses=True)
 
 
+SERVICE_NAME = "demo"

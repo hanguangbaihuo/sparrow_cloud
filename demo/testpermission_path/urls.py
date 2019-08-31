@@ -20,6 +20,6 @@ from . import views
 urlpatterns = [
     re_path(r'^xx/(?P<username>\w+)/$', views.test_path_params_1, name="test_path_params_1"),
     re_path(r'^(?P<id>\w+)/yy/(?P<username>\w+)/$', views.test_path_params_2, name="test_path_params_2"),
-    path(r'^yy/zz/$', views.test_path_no_params_2, name="test_path_no_params_2"),
-    path(r'^mm/$', views.test_path_no_params_1, name="test_path_no_params_1"),
+    path(r'yy/zz/', views.test_path_no_params_2, name="test_path_no_params_2"),
+    path(r'mm/', views.test_path_no_params_1, name="test_path_no_params_1"),
 ]
