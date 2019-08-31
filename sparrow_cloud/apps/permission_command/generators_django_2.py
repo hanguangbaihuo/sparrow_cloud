@@ -1,6 +1,7 @@
 import copy
 import logging
 import re
+from django.conf import settings
 from collections import OrderedDict, defaultdict
 from rest_framework import versioning
 from rest_framework.compat import URLPattern, URLResolver, get_original_route
@@ -11,6 +12,7 @@ from rest_framework.schemas import AutoSchema
 from rest_framework.settings import api_settings
 from rest_framework.utils import formatting
 from django.utils.encoding import force_text, smart_text
+
 
 logger = logging.getLogger("django")
 
@@ -293,7 +295,7 @@ class OpenAPISchemaGenerator(object):
                 "name": name,
                 "is_regex": is_regex,
             }
-            result.append(regex_api)
+            api_list.append(regex_api)
             logger.info("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
         return {
             "service_name": self.get_service_name(),
