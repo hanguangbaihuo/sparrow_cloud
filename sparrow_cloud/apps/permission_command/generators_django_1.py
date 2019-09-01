@@ -250,13 +250,7 @@ class SchemaGenerator(object):
             }
             result.append(regex_api)
             logger.info("path=%s, method=%s, regx=%s" % (origin_path, method, regex_path))
-        return {
-            "service_name": self.get_service_name(),
-            "api_list": result
-        }
-
-    def get_service_name(self):
-        return settings.SERVICE_NAME
+        return result
 
     def get_paths(self, top, components, request, public):
         """
