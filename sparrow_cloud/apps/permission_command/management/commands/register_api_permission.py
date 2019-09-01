@@ -1,7 +1,6 @@
 import json
 import logging
-
-from sparrow_cloud.utils import get_settings_value
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from django.utils.module_loading import import_string
@@ -96,7 +95,7 @@ class Command(BaseCommand):
                                                   "1.0")
         schema = self.get_schema(generator, None, True)
 
-        service_conf = get_settings_value("SERVICE_CONFIG")
+        service_conf = settings.SERVICE_CONFIG
         service_name = service_conf.get("NAME")
         resutl = {
             "service_name": service_name,
