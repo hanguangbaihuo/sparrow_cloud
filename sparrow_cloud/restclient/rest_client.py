@@ -6,7 +6,7 @@ from .exception import HTTP5XXException, HTTP4XXException, HTTPException
 
 
 
-def get(service_conf, api_path, data=None, *args, **kwargs):
+def get(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
@@ -17,10 +17,10 @@ def get(service_conf, api_path, data=None, *args, **kwargs):
     '''
     servicer_addr = consul_service(service_conf)
     url = _build_url(service_conf, api_path)
-    res = requests.get(url, data=data *args, **kwargs)
+    res = requests.get(url, json=payload, *args, **kwargs)
     return _handle_response(res)
 
-def post(service_conf, api_path, data=None, *args, **kwargs):
+def post(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
@@ -29,9 +29,10 @@ def post(service_conf, api_path, data=None, *args, **kwargs):
             "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
         }
     '''
+    # import pdb; pdb.set_trace()
     servicer_addr = consul_service(service_conf)
     url = _build_url(service_conf, api_path)
-    res = requests.post(url, data=data *args, **kwargs)
+    res = requests.post(url, json=payload, *args, **kwargs)
     return _handle_response(res)
 
 
@@ -41,22 +42,22 @@ def _build_url(service_conf, api_path):
 
 
 def _handle_response(response):
-    if res.status_code >= 500:
+    if response.status_code >= 500:
         raise HTTP5XXException(
-            code=res.status_code,
-            detail=res.content
+            code=response.status_code,
+            detail=response.content
         )
-    elif res.status_code >=400:
+    elif response.status_code >=400:
         raise HTTP4XXException(
-            code=res.status_code,
-            detail=res.json()
+            code=response.status_code,
+            detail=response.json()
         )
-    elif res.status_code >=200:
-        res_result = res.json()
-        res_result['status_code'] = res.status_code
+    elif response.status_code >=200:
+        res_result = response.json()
+        res_result['status_code'] = response.status_code
         return res_result
-    elif:
+    else:
         raise HTTPException(
-            code=res.status_code,
-            detail=res.content
+            code=response.status_code,
+            detail=response.content
         )
