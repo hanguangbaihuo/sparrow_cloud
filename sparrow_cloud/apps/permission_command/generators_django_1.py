@@ -244,7 +244,7 @@ class SchemaGenerator(object):
                 "path": regex_path,
                 "origin_path": origin_path,
                 "method": method,
-                "desc": desc,
+                "desc": desc[:500],
                 "api_name": name,
                 "is_regex": is_regex,
             }

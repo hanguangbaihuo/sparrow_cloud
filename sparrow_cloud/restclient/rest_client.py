@@ -50,7 +50,7 @@ def _handle_response(response):
     elif response.status_code >=400:
         raise HTTP4XXException(
             code=response.status_code,
-            detail=response.json()
+            detail="",
         )
     elif response.status_code >=200:
         res_result = response.json()

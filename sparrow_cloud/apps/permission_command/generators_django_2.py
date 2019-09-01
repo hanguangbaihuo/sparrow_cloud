@@ -291,8 +291,8 @@ class OpenAPISchemaGenerator(object):
                 "path": regex_path,
                 "origin_path": origin_path,
                 "method": method,
-                "desc": desc,
-                "name": name,
+                "desc": desc[:500],
+                "api_name": name,
                 "is_regex": is_regex,
             }
             result.append(regex_api)
