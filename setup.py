@@ -25,8 +25,6 @@ setup(
         'attrs==19.1.0',
         'certifi==2019.6.16',
         'chardet==3.0.4',
-        'Django==2.2.4',
-        'djangorestframework==3.10.2',
         'idna==2.8',
         'importlib-metadata==0.19',
         'more-itertools==7.2.0',
