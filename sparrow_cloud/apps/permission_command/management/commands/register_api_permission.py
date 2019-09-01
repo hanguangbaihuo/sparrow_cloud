@@ -76,7 +76,7 @@ class Command(BaseCommand):
     def register(self, api_list):
         permission_service_conf = settings.PERMISSION_SERVICE_CONF
         api_path = permission_service_conf.get("REGISTER_API")
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         try:
             rest_client.post(permission_service_conf, api_path, api_list)
         except Exception as ex:
