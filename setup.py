@@ -22,7 +22,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'requests>=2.12.1',
-        'python-consul>=1.1.0'
+        'python-consul>=1.1.0',
+        'coreapi>=2.3.3',
     ],
     python_requires=">=3.7",
     zip_safe=False,
