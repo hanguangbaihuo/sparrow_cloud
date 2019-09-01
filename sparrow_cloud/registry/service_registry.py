@@ -18,10 +18,10 @@ def get_settings_value(name):
 def consul_service(service_conf):
     """从consul service 拿到服务的名称"""
     consul_conf = get_settings_value('CONSUL_CLIENT_ADDR')
-    consul_host = consul_conf.get('host', None)
-    consul_port = consul_conf.get('port', None)
-    service_name = service_conf.get('service_name', None)
-    service_host = service_conf.get('host', None)
+    consul_host = consul_conf.get('HOST', None)
+    consul_port = consul_conf.get('PORT', None)
+    service_name = service_conf.get('NAME_SVC', None)
+    service_host = service_conf.get('HOST', None)
     if service_host:
         return service_host
     if service_name:

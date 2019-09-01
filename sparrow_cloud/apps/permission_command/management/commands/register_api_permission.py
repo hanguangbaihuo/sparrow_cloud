@@ -5,6 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from django.utils.module_loading import import_string
 from rest_framework.settings import api_settings
+from sparrow_cloud.restclient import rest_client
 import requests
 import traceback
 from pprint import pprint
@@ -42,36 +43,44 @@ class Command(BaseCommand):
             _name = _name[0:60]
         return _name
 
-    def register(self, schema, auth_centre,local, upd):
+    # def register(self, schema, auth_centre, local, upd):
+    #     try:
+    #         #print(schema)
+    #         _not_local=not local
+    #         if local:
+    #             try:
+    #                 from auth_api.repository import PermissionRepository
+    #                 PermissionRepository.batch_by_schema(schema, upd)
+    #             except Exception as e:
+    #                 traceback.print_exc()
+    #                 print("导入时发生错误")
+    #                 _not_local=True
+
+    #         if _not_local and auth_centre:
+    #             r = requests.post(auth_centre, data={
+    #                 "schema": json.dumps(schema),
+    #                 "upd": upd
+    #             })
+    #             if r.status_code == 200:
+    #                 print("注册API成功")
+    #             else:
+    #                 print("注册API失败")
+    #         else:
+    #             if _not_local:
+    #                print("未指定AUTH_CENTRE")
+    #     except Exception as e:
+
+    #         traceback.print_exc()
+    #         print("issue")
+
+    def register(self, api_list):
+        permission_service_conf = settings.PERMISSION_SERVICE_CONF
+        api_path = permission_service_conf.get("REGISTER_API")
+        import pdb; pdb.set_trace()
         try:
-            #print(schema)
-            _not_local=not local
-            if local:
-                try:
-                    from auth_api.repository import PermissionRepository
-                    PermissionRepository.batch_by_schema(schema, upd)
-                except Exception as e:
-                    traceback.print_exc()
-                    print("导入时发生错误")
-                    _not_local=True
-
-            if _not_local and auth_centre:
-                r = requests.post(auth_centre, data={
-                    "schema": json.dumps(schema),
-                    "upd": upd
-                })
-                if r.status_code == 200:
-                    print("注册API成功")
-                else:
-                    print("注册API失败")
-            else:
-                if _not_local:
-                   print("未指定AUTH_CENTRE")
-        except Exception as e:
-
+            rest_client.post(permission_service_conf, api_path, api_list)
+        except Exception as ex:
             traceback.print_exc()
-            print("issue")
-
 
     def get_schema_generator(self, generator_class_name, api_name, api_version):
         generator_class = import_string(generator_class_name)
@@ -102,6 +111,8 @@ class Command(BaseCommand):
             "api_list": schema
         }
         pprint(resutl)
+        # 注册/更新 api 权限
+        self.register(resutl)
         # for xx in schema:
             # if xx['is_regex']:
             # pprint(xx)
