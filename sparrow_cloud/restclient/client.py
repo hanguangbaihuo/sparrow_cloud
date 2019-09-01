@@ -4,10 +4,7 @@ import hashlib
 import logging
 import requests
 from urllib.parse import urlencode, quote_plus
-
-from logging.config import fileConfig
-fileConfig('log.conf')
-logger = logging.getLogger(__name__)
+from sparrow_cloud.registry.service_registry import consul_service
 
 '''
 Rest http to dynimaic function: 把 rest 方法转化为 动态方法调用
@@ -19,11 +16,16 @@ Rest http to dynimaic function: 把 rest 方法转化为 动态方法调用
         }
         url: 参数 (value0, value1, value2, ...)
             url 参数占位符: _key_
+
 response: json
     {
         "key": "value"
     }
+
 1 如果 url 里面有参数怎们办?
+
+
+
 '''
 
 ALLOWED_HTTP_METHOD = ('get', 'post', 'head', 'options', 'put', 'delete')
@@ -49,6 +51,15 @@ class HttpMethodNotAllowedException(Exception):
         return (message)
 
 
+def get_service_addr(service_conf):
+    '''
+    获取服务地址
+    '''
+    if not isinstance(service_conf, dict):
+        raise TypeError("service_conf should be Dict. but get {}".format(type(service_conf)))
+    service_addr = consul_service(service_conf)
+    return service_addr
+
 def build_uri(uri_parts, uri_params, append_slash):
     '''
     使用参数生成url
@@ -70,29 +81,10 @@ def build_uri(uri_parts, uri_params, append_slash):
                 if i == URI_PARAMS_PLACEHOLDER:
                     uri_parts[n] = uri_params[j]
                     j += 1
-    # 处理查询参数
-    # if query_params:
-    #     query_params = urlencode(data)
     # 处理查询字符串
     uri = '/'.join(str(x) for x in uri_parts)
     if append_slash:
         uri = uri + "/"
-    # import pdb; pdb.set_trace()
-    # uri_parts = []
-    # for uri_part in orig_uriparts:
-    #     # If this part matches a keyword argument (starting with _), use
-    #     # the supplied value. Otherwise, just use the part.
-    #     # if uri_part.startswith("_"):
-    #     #     part = (str(kwargs.pop(uri_part, uri_part)))
-    #     # else:
-    #     #     part = uri_part
-    #     part = uri_part
-    #     uri_parts.append(part)
-    # uri = '/'.join(uri_parts)
-    # # import pdb; pdb.set_trace()
-    # # If an id kwarg is present and there is no id to fill in in
-    # # the list of uriparts, assume the id goes at the end.
-    # # id = kwargs.pop('id', None)
     return uri
 
 def build_query_parmas(query_params):
@@ -109,27 +101,15 @@ def check_http_method(http_method):
     else:
         raise HttpMethodNotAllowedException
 
-# def wrap_response(response, headers):
-#     response_typ = type(response)
-#     if response_typ is dict:
-#         res = TwitterDictResponse(response)
-#         res.headers = headers
-#     elif response_typ is list:
-#         res = TwitterListResponse(response)
-#         res.headers = headers
-#     else:
-#         res = response
-#     return res
-
 
 class RestCall(object):
     '''
     ref：https://github.com/sixohsix/twitter/blob/master/twitter/api.py
     '''
 
-    def __init__(self, callable_cls, domain, uri_parts=[],
+    def __init__(self, callable_cls, service_conf, uri_parts=[],
                  ssl_enable=True, timeout=None, retry=0):
-        self.domain = domain
+        self.service_conf = service_conf
         self.callable_cls = callable_cls
         # self.uri = uri
         self.uri_parts = uri_parts
@@ -153,7 +133,7 @@ class RestCall(object):
                 # print(arg)
                 return self.callable_cls(
                     callable_cls=self.callable_cls,
-                    domain=self.domain, 
+                    service_conf=self.service_conf, 
                     uri_parts=self.uri_parts + [arg],
                     ssl_enable=self.ssl_enable,
                     timeout=self.timeout, 
@@ -162,14 +142,8 @@ class RestCall(object):
 
 
 
-    def __call__(
-        self, http_method='get', 
-        headers={}, 
-        payload={}, 
-        query_params=None, 
-        uri_params=[],
-        append_slash=True):
-
+    def __call__(self, http_method='get', headers={}, payload={}, 
+        query_params=None, uri_params=[], append_slash=True):
         '''
         使父类成为可调用类
         '''
@@ -181,7 +155,7 @@ class RestCall(object):
             append_slash=append_slash
             )
         # logger.info(uri)
-        domain = self.domain
+        domain = get_service_addr(self.service_conf)
         # 检查是否使用 https
         secure_str = ''
         if self.ssl_enable:
@@ -193,9 +167,9 @@ class RestCall(object):
         if query_str:
             url = url + "?" + query_str
         # import pdb; pdb.set_trace()
-        logger.debug("url=%s" % url)
-        logger.debug("payload=%s" % payload)
-        logger.debug("headers=%s" % headers)
+        # print("url=%s" % url)
+        # print("payload=%s" % payload)
+        # print("headers=%s" % headers)
         re = getattr(requests, lower_http_method)(url, json=payload, headers=headers)
         # return re.json()
         return self._handle_response(re=re)
@@ -213,12 +187,7 @@ class RestCall(object):
 
 class RestClient(RestCall):
 
-    def __init__(
-        self, domain, 
-        uri_parts=[], 
-        ssl_enable=False, 
-        timeout=None, 
-        retry=0):
+    def __init__(self, service_conf, uri_parts=[], ssl_enable=False, timeout=None, retry=0):
         '''
         @ssl_enable: 是否使用 https, 默认使用 http
         @domain: api域名
@@ -226,14 +195,9 @@ class RestClient(RestCall):
         @uri_parts = ["api", "sparrow_product"]
         @timeout: 请求的超时时间, 无默认值
         '''
-        RestCall.__init__(
-            self, domain=domain, 
-            callable_cls=RestCall, 
-            uri_parts=uri_parts, 
-            ssl_enable=ssl_enable, 
-            timeout=timeout, 
-            retry=retry
-        )
+        RestCall.__init__(self, 
+            service_conf=service_conf, callable_cls=RestCall, uri_parts=uri_parts, 
+            ssl_enable=ssl_enable, timeout=timeout, retry=retry)
 
 
 __all__ = ["RestClient", "RestCall"]

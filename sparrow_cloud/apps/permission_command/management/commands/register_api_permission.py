@@ -1,7 +1,7 @@
 import json
 import logging
 
-from django.conf import settings
+from sparrow_cloud.utils import get_settings_value
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand
 from django.utils.module_loading import import_string
@@ -95,7 +95,14 @@ class Command(BaseCommand):
             generator = self.get_schema_generator("sparrow_cloud.apps.permission_command.generators_django_1.SchemaGenerator", "API",
                                                   "1.0")
         schema = self.get_schema(generator, None, True)
-        pprint(schema)
+
+        service_conf = get_settings_value("SERVICE_CONFIG")
+        service_name = service_conf.get("NAME")
+        resutl = {
+            "service_name": service_name,
+            "api_list": schema
+        }
+        pprint(resutl)
         # for xx in schema:
             # if xx['is_regex']:
             # pprint(xx)
