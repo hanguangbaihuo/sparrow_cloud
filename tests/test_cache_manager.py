@@ -21,7 +21,7 @@ class TestCacheManager(unittest.TestCase):
     @mock.patch('django.db.models.Manager', side_effect=MockModelsManager())
     def test_cache_manager(self, Manager):
         from sparrow_cloud.cache.cache_manager import CacheManager
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
         cache_manager = CacheManager()
         data = cache_manager.get(id='123')
         self.assertEqual(data, data)
