@@ -24,7 +24,7 @@ def mocked_requests_post(*args, **kwargs):
 
 class RestClientTestCase(unittest.TestCase):
 
-    @mock.patch("sparrow_cloud.restclient.rest_client.consul_service", return_value="http://127.0.0.1:8500")
+    @mock.patch("sparrow_cloud.restclient.rest_client.consul_service", return_value="127.0.0.1:8500")
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     def test_post(self, mock_post, mock_consul_service):
         # import pdb; pdb.set_trace()

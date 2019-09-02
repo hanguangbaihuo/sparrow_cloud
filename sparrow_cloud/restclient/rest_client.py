@@ -31,6 +31,7 @@ def post(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     # import pdb; pdb.set_trace()
     servicer_addr = consul_service(service_conf)
+    # import pdb; pdb.set_trace()
     url = _build_url(service_conf, api_path)
     res = requests.post(url, json=payload, *args, **kwargs)
     return _handle_response(res)
@@ -38,7 +39,7 @@ def post(service_conf, api_path, payload=None, *args, **kwargs):
 
 def _build_url(service_conf, api_path):
     servicer_addr = consul_service(service_conf)
-    return "{}{}".format(servicer_addr, api_path)
+    return "http://{}{}".format(servicer_addr, api_path)
 
 
 def _handle_response(response):
