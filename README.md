@@ -127,7 +127,7 @@ REST_FRAMEWORK = {
 ```
 # 本服务配置
 SERVICE_CONFIG = {
-    "NAME": "SPARROW_PURCHASE_LIMIT",  # 本服务的名称
+    "NAME": "",  # 本服务的名称
 }
 
 
