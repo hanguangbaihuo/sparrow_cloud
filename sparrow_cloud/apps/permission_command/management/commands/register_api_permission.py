@@ -74,7 +74,8 @@ class Command(BaseCommand):
     #         print("issue")
 
     def register(self, api_list):
-        permission_service_conf = settings.PERMISSION_SERVICE_CONF
+        import pdb; pdb.set_trace()
+        permission_service_conf = settings.PERMISSION_SERVICE_CONFIG
         api_path = permission_service_conf.get("REGISTER_API")
         # import pdb; pdb.set_trace()
         try:
