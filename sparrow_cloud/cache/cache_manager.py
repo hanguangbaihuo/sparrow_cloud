@@ -4,7 +4,7 @@ from django.conf import settings
 
 class CacheManager(models.Manager):
 
-    def get(self, *args, **kwargs):        
+    def get(self, *args, **kwargs):
         if self.model and self.model._meta and self.model._meta.db_table:
             pk_name = self.model._meta.pk.attname
             if len(kwargs)==1 and (pk_name in kwargs or 'pk' in kwargs):
