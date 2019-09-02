@@ -1,6 +1,6 @@
 import logging
 import consul
-from django.core.cache import cache
+from random import randint
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
@@ -25,9 +25,6 @@ def consul_service(service_conf):
     if service_host:
         return service_host
     if service_name:
-        service_cache = cache.get(service_name)
-        if service_cache:
-            return service_cache
         if (consul_host and consul_port) is None:
             raise NotImplementedError("CONSUL_CLIENT_ADDR 参数不全，请检查settings中的参数配置")
         if consul_host and consul_port:
@@ -35,10 +32,13 @@ def consul_service(service_conf):
                                           port=consul_port,
                                           scheme="http")
             try:
-                port = consul_client.catalog.service(service_name)[1][0]['ServicePort']
-                address = consul_client.catalog.service(service_name)[1][0]['ServiceAddress']
+                consul_data = consul_client.catalog.service(service_name)[1]
+                index = get_loadbalance_index(len(consul_data))
+                port = consul_data[index]['ServicePort']
+                address = consul_data[index]['ServiceAddress']
+                # port = consul_client.catalog.service(service_name)[1][0]['ServicePort']
+                # address = consul_client.catalog.service(service_name)[1][0]['ServiceAddress']
                 domain = "{address}:{port}".format(address=address, port=port)
-                cache.set(service_name, domain, timeout=30)
             except:
                 raise ImproperlyConfigured(
                     'consul服务暂时不可用, 临时解决方法： 在service_conf中配置service_host')
@@ -46,3 +46,11 @@ def consul_service(service_conf):
         else:
             raise ImproperlyConfigured(
                 '参数不正确，请检查consul 配置是否争取或service_conf参数是否正确')
+
+
+def get_loadbalance_index(value):
+    """返回一个0， value 之间的随机数， consul负载均衡使用"""
+    return randint(0, int(value)-1)
+
+
+

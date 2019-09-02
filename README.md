@@ -31,21 +31,20 @@ CACHES = {
 
 # consul_service 依赖配置
 CONSUL_CLIENT_ADDR = {
-    "host": "127.0.0.1",  # consul host
-    "port": 8500  # consul port
+    "HOST": "127.0.0.1",  # consul host, 必填
+    "PORT": 8500  # consul port, 必填
 }
 
 使用方法：
 from sparrow_cloud.registry.service_registry import consul_service
 # host 为默认参数，非必填， 如果传了此项参数， 会直接返回参数， 不过不传，则从consul中找服务地址
 service_conf = {
-        "service_name": "",  # k8s上的服务名称
-        "host": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
+        "NAME_SVC": "",  # k8s上的服务名称
+        "HOST": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
     }
 service_addr = consul_service(service_conf)
 # 输出"127.0.0.1:8001"
 ```
-
 #### cache_manager
 > 描述 ： cache_manager 会把model的get方法使用缓存
 ```
@@ -83,7 +82,7 @@ model 示例路径， sparrow_demo/models.py
 > 将以下参数添加到settings.py
 ```
 JWT_MIDDLEWARE = {
-    "JWT_SECRET": "问 tianyi"
+    "JWT_SECRET": "", # JWT_SECRET, 必填
 }
 ``` 
 >参数说明： JWT_SECRET : jwt_secret
@@ -119,4 +118,41 @@ REST_FRAMEWORK = {
         'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
     )
 }
+```
+
+#### permission_command  API权限服务
+> 描述： 主动注册API到权限服务
+#### 配置 permission_command 需要的参数
+
+```
+# 本服务配置
+SERVICE_CONFIG = {
+    "NAME": "",  # 本服务的名称
+}
+
+
+# API 权限服务配置
+PERMISSION_SERVICE_CONFIG = {
+    "SERVICE_NAME": "SPARROW_PERMISSION",  # 权限服务的名称，默认为：SPARROW_PERMISSION
+    "NAME_SVC": "",  #  权限服务，服务发现的名称
+    "HOST": "",  # 默认为""
+    "REGISTER_API": ""  # 权限服务的PATH
+}
+
+```
+
+
+#### METHOD_MIDDLEWARE
+> 兼容阿里不支持 put/delete 请求
+#### 配置METHOD_MIDDLEWARE需要的参数
+```
+# 将以下参数添加到settings.py
+METHOD_MIDDLEWARE = {
+    "METHOD_MAP": ('PUT', 'DELETE',), 
+}
+# 注册 METHOD_MIDDLEWARE
+MIDDLEWARE_CLASSES = (
+    'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware',      #兼容阿里请求方式中间件
+)
+
 ```
