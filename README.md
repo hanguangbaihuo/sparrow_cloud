@@ -1,5 +1,13 @@
 ## sparrow cloud ##
 
+## 测试运行 ##
+
+    运行所有测试: 
+        py.test
+    运行单个测试:
+        py.test tests/test_rest_client.py
+
+
 ### 安装 sparrow cloud ###
 ```
 pip install git+https://github.com/hanguangbaihuo/sparrow_cloud.git

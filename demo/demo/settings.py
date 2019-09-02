@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # sparrow cloud
     "sparrow_cloud.apps.ping",
     "sparrow_cloud.apps.permission_command",
+    "testpermission_path",
 ]
 
 MIDDLEWARE = [
@@ -168,7 +169,7 @@ SPARROW_AUTHENTICATION = {
 
 # JWTMiddleware 依赖配置
 JWT_MIDDLEWARE = {
-    "JWT_SECRET": "问tianyi"
+    "JWT_SECRET": os.environ.get("JWT_SECRET", "w(9c%u@z$^*wiue7^wh)+&c2q$3(egzcvson@-x5i09^$vf+syh"),
 }
 
 # cache_manager 依赖配置
@@ -180,3 +181,4 @@ CACHE_REDIS_POOL = redis.ConnectionPool(
     decode_responses=True)
 
 
+SERVICE_NAME = "demo"

@@ -7,6 +7,5 @@ from . import views
 
 
 urlpatterns = [
-    path('xx/', views.ping, name="ping"),
-    re_path(r'^re_path/(?P<username>\w+)/$', views.ping, name="ping"),
+    path('', views.ping, name="ping"),
 ]
