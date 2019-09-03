@@ -10,8 +10,7 @@ def get(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
-            "SERVICE_NAME": "xxxxxx",   # 服务名称
-            "NAME_SVC": "xxxxxx_svc",   # consul 服务发现中心的注册名字
+            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
             "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
         }
     '''
@@ -24,8 +23,7 @@ def post(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
-            "SERVICE_NAME": "xxxxxx",   # 服务名称
-            "NAME_SVC": "xxxxxx_svc",   # consul 服务发现中心的注册名字
+            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
             "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
         }
     '''

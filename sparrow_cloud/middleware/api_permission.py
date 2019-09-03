@@ -52,12 +52,12 @@ class PermissionMiddleware(MiddlewareMixin):
             permission_service = GetSettingsValue().get_middleware_value('PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE')
             if permission_service['HOST']:
                 service_conf = {
-                    "NAME_SVC": permission_service['NAME'],
+                    "SERVICE_REGISTER_NAME": permission_service['NAME'],
                     "HOST": permission_service['HOST'] + ':' + str(permission_service['PORT']),
                 }
             else:
                 service_conf = {
-                    "NAME_SVC": permission_service['NAME'],
+                    "SERVICE_REGISTER_NAME": permission_service['NAME'],
                     "HOST": "",
                 }
             domain = consul_service(service_conf)
