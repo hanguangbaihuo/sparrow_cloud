@@ -6,7 +6,7 @@ from .exception import HTTPException
 
 
 
-def get(service_conf, api_path, payload=None, *args, **kwargs):
+def get(service_conf, api_path, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
@@ -16,7 +16,7 @@ def get(service_conf, api_path, payload=None, *args, **kwargs):
     '''
     servicer_addr = consul_service(service_conf)
     url = _build_url(service_conf, api_path)
-    res = requests.get(url, json=payload, *args, **kwargs)
+    res = requests.get(url, *args, **kwargs)
     return _handle_response(res)
 
 def post(service_conf, api_path, payload=None, *args, **kwargs):
@@ -31,7 +31,7 @@ def post(service_conf, api_path, payload=None, *args, **kwargs):
     servicer_addr = consul_service(service_conf)
     # import pdb; pdb.set_trace()
     url = _build_url(service_conf, api_path)
-    res = requests.post(url, json=payload, *args, **kwargs)
+    res = requests.post(url, *args, **kwargs)
     return _handle_response(res)
 
 
