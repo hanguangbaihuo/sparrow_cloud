@@ -10,7 +10,12 @@ class HTTPException(APIException):
     default_code = ''
 
     def __init__(self, detail=None, code=None):
+        '''
+        为了兼容 drf 3.4: APIException 没有 code 初始化参数
+        '''
         try:
+            # drf 3.10
             super(HTTPException, self).__init__(detail=detail, code=code)
         except:
+            # drf 3.4
             super(HTTPException, self).__init__(detail=detail)
