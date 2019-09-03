@@ -57,12 +57,9 @@ class PermissionMiddleware(MiddlewareMixin):
                             logger.error("permission is not avaiable. detail={}".format(ex.detail))
                             # return JsonResponse({"message": ex.ex.detail}, status=ex.status_code)
                             return
-                        if ex.status_code >= 400:
-                            return JsonResponse({"message": "detail={}".format(ex.detail)}, status=ex.status_code)
-                        if ex.status_code >= 300:
-                            logger.error(ex.detail)
-                            return
-                        
+                        elif ex.status_code >= 300:
+                            msg = "中间件调用错误: {},status_code={}".format(ex.detail, ex.status_code)
+                            return JsonResponse({"message": msg}, status=400)
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
