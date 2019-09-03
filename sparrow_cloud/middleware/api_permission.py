@@ -81,7 +81,7 @@ class PermissionMiddleware(MiddlewareMixin):
                 logger.error(data["message"])
                 return True
             if response.status_code == 400:
-                raise APIException("缺少path或method参数")
+                raise APIException(str(response.json()))
             if 200 <= response.status_code < 300 and data['has_perm']:
                 return True
         return False
