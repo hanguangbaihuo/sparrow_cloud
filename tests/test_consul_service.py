@@ -13,7 +13,7 @@ def mock_get_settings_value(name):
 
 
 SERVICE = {
-    "NAME_SVC": "service",
+    "SERVICE_REGISTER_NAME": "service",
     "HOST": "127.0.0.1:8001"
 }
 

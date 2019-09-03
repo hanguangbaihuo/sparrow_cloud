@@ -74,8 +74,8 @@ class Command(BaseCommand):
     #         print("issue")
 
     def register(self, api_list):
-        import pdb; pdb.set_trace()
-        permission_service_conf = settings.PERMISSION_SERVICE_CONFIG
+        # import pdb; pdb.set_trace()
+        permission_service_conf = settings.PERMISSION_SERVICE_CONF
         api_path = permission_service_conf.get("REGISTER_API")
         # import pdb; pdb.set_trace()
         try:
@@ -105,7 +105,7 @@ class Command(BaseCommand):
                                                   "1.0")
         schema = self.get_schema(generator, None, True)
 
-        service_conf = settings.SERVICE_CONFIG
+        service_conf = settings.SERVICE_CONF
         service_name = service_conf.get("NAME")
         resutl = {
             "service_name": service_name,

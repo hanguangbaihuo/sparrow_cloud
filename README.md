@@ -32,7 +32,7 @@ CONSUL_CLIENT_ADDR = {
 from sparrow_cloud.registry.service_registry import consul_service
 # host 为默认参数，非必填， 如果传了此项参数， 会直接返回参数， 不过不传，则从consul中找服务地址
 service_conf = {
-        "NAME_SVC": "",  # k8s上的服务名称
+        "SERVICE_REGISTER_NAME": "",  # k8s上的服务名称
         "HOST": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
     }
 service_addr = consul_service(service_conf)
@@ -119,15 +119,14 @@ REST_FRAMEWORK = {
 
 ```
 # 本服务配置
-SERVICE_CONFIG = {
+SERVICE_CONF = {
     "NAME": "",  # 本服务的名称
 }
 
 
 # API 权限服务配置
-PERMISSION_SERVICE_CONFIG = {
-    "SERVICE_NAME": "SPARROW_PERMISSION",  # 权限服务的名称，默认为：SPARROW_PERMISSION
-    "NAME_SVC": "",  #  权限服务，服务发现的名称
+PERMISSION_SERVICE_CONF = {
+    "SERVICE_REGISTER_NAME": "",  #  权限服务，服务发现的名称
     "HOST": "",  # 默认为""
     "REGISTER_API": ""  # 权限服务的PATH
 }
