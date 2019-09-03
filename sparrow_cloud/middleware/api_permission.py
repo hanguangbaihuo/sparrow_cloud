@@ -44,7 +44,8 @@ class PermissionMiddleware(MiddlewareMixin):
             # 只校验有 不在 FILTER_PATH 中的url
             if path not in self.FILTER_PATH:
                 if request.META['REMOTE_USER']:
-                    logging.info(path, method, request.META['REMOTE_USER'])
+                    msg = "{},{},{}".format(path, method, request.META['REMOTE_USER'])
+                    logging.info(msg)
                     self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
                 if not self.HAS_PERMISSION:
                     return JsonResponse({"message": "无访问权限"}, status=403)
