@@ -19,7 +19,6 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
     path('test_demo/', views.consul_service_demo, name='token_verification'),
-    path('test_demo/', views.consul_service_demo, name='token_verification'),
 ]
 
 router = DefaultRouter()

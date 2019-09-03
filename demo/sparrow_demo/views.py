@@ -10,7 +10,7 @@ from rest_framework import status
 @api_view(('GET',))
 def consul_service_demo(request):
     service_conf = {
-        "service_name": "sparrow-permission-svc",  # k8s上的服务名称
+        "SERVICE_REGISTER_NAME": "sparrow-xxxxxxxxx",  # k8s上的服务名称
         "host": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
     }
     try:
