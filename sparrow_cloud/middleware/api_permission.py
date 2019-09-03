@@ -36,6 +36,7 @@ class PermissionMiddleware(MiddlewareMixin):
     SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIP_PERMISSION')
 
     def process_request(self, request):
+
         path = request.path
         method = request.method.upper()
         # 是否跳过中间件， true跳过， false不跳过
@@ -43,6 +44,7 @@ class PermissionMiddleware(MiddlewareMixin):
             # 只校验有 不在 FILTER_PATH 中的url
             if path not in self.FILTER_PATH:
                 if request.META['REMOTE_USER']:
+                    logging.info(path, method, request.META['REMOTE_USER'])
                     self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
                 if not self.HAS_PERMISSION:
                     return JsonResponse({"message": "无访问权限"}, status=403)
@@ -81,4 +83,4 @@ class PermissionMiddleware(MiddlewareMixin):
                 raise APIException("缺少path或method参数")
             if 200 <= response.status_code < 300 and data['has_perm']:
                 return True
-            return False
+        return False
