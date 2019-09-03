@@ -21,13 +21,6 @@ pip install git+https://github.com/hanguangbaihuo/sparrow_cloud.git
 ```
 依赖settings配置：
 
-CACHES = {
-    'default': {
-        'BACKEND': '',
-        'LOCATION': '',
-    }
-}
-
 
 # consul_service 依赖配置
 CONSUL_CLIENT_ADDR = {
@@ -154,5 +147,31 @@ METHOD_MIDDLEWARE = {
 MIDDLEWARE_CLASSES = (
     'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware',      #兼容阿里请求方式中间件
 )
+
+```
+
+#### 权限中间件配置
+> 权限中间件
+#### 配置PERMISSION_MIDDLEWARE需要的参数
+```
+# 将以下参数添加到settings.py 
+PERMISSION_MIDDLEWARE = {
+    # 权限验证服务的配置
+    "PERMISSION_SERVICE":{
+        "NAME": "", #服务名称（k8s上的服务名）, 必填
+        "HOST": "", #IP, 开发环境必填（开发环境使用转发到本地的host）
+        "PORT": 8001, # 服务端口, dev环境需要注意， 配置写的端口需要和转发到本地的端口保持一致, 必填
+        "PATH": "", # url, 必填
+    },
+    "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
+    "SKIP_PERMISSION": False, # 是否启用权限中间件， SKIP_PERMISSION:True, 则跳过中间件， 如果不配置SKIP_PERMISSION，或者SKIP_PERMISSION:False，则不跳过中间件
+}
+
+
+# 权限中间件需要到consul中去发现权限服务的地址， 所以需要配置consul服务的地址
+CONSUL_CLIENT_ADDR = {
+    "HOST": "127.0.0.1",  # consul host, 必填
+    "PORT": 8500  # consul port, 必填
+}
 
 ```
