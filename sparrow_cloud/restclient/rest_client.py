@@ -19,7 +19,7 @@ def get(service_conf, api_path, *args, **kwargs):
     res = requests.get(url, *args, **kwargs)
     return _handle_response(res)
 
-def post(service_conf, api_path, payload=None, *args, **kwargs):
+def post(service_conf, api_path, *args, **kwargs):
     '''
     service_conf: 服务配置
         {
