@@ -77,9 +77,10 @@ class Command(BaseCommand):
         # import pdb; pdb.set_trace()
         permission_service_conf = settings.PERMISSION_SERVICE_CONF
         api_path = permission_service_conf.get("REGISTER_API")
+        service_addr_conf = permission_service_conf.get("SERVICE_ADDR_CONF")
         # import pdb; pdb.set_trace()
         try:
-            rest_client.post(permission_service_conf, api_path, api_list)
+            rest_client.post(service_addr_conf, api_path, api_list)
         except Exception as ex:
             traceback.print_exc()
 

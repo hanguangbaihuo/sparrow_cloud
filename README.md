@@ -1,19 +1,15 @@
 ## sparrow cloud ##
 
+## install ##
+
+    pip install sparrowcloud
+
 ## 测试运行 ##
 
     运行所有测试: 
         py.test
     运行单个测试:
         py.test tests/test_rest_client.py
-
-
-### 安装 sparrow cloud ###
-```
-pip install git+https://github.com/hanguangbaihuo/sparrow_cloud.git
-
-```
-
 
 #### service_registry
 > 描述： consul服务发现
@@ -126,8 +122,10 @@ SERVICE_CONF = {
 
 # API 权限服务配置
 PERMISSION_SERVICE_CONF = {
-    "SERVICE_REGISTER_NAME": "",  #  权限服务，服务发现的名称
-    "HOST": "",  # 默认为""
+    "SERVICE_ADDR_CONF": {
+        "SERVICE_REGISTER_NAME": "",  #  权限服务，服务发现的名称
+        "HOST": "",  # 默认为""
+    },
     "REGISTER_API": ""  # 权限服务的PATH
 }
 
