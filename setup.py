@@ -16,7 +16,7 @@ setup(
     description='',
     long_description="",
     # long_description_content_type='text/markdown',
-    author='',
+    author='sparrow',
     author_email='',  # SEE NOTE BELOW (*)
     packages=find_packages(include=['sparrow_cloud', 'sparrow_cloud.*', '*.sparrow_cloud.*', '*.sparrow_cloud']),
     include_package_data=True,
@@ -25,6 +25,8 @@ setup(
         'python-consul>=1.1.0',
         'coreapi>=2.3.3',
         'PyJWT>=1.7.1',
+        "sparrow-task-sender>=0.0.3",        # 消息发送
+        "sparrow-rabbitmq-consumer>=0.0.8",  # 消息处理
     ],
     python_requires=">=3.7",
     zip_safe=False,
