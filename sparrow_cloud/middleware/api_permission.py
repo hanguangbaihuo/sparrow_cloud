@@ -3,12 +3,15 @@ import logging
 
 from django.http import JsonResponse
 from django.core.exceptions import ImproperlyConfigured
+from rest_framework.exceptions import APIException
 
 from sparrow_cloud.utils.validation_data import VerificationConfiguration
-from sparrow_cloud.registry.service_registry import consul_service
+# from sparrow_cloud.registry.service_registry import consul_service
 from sparrow_cloud.utils.get_settings_value import GetSettingsValue
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 from sparrow_cloud.utils.normalize_url import NormalizeUrl
+from sparrow_cloud.restclient import rest_client
+from sparrow_cloud.restclient.exception import HTTP5XXException, HTTP4XXException
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +38,7 @@ class PermissionMiddleware(MiddlewareMixin):
     SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIP_PERMISSION')
 
     def process_request(self, request):
+
         path = request.path
         method = request.method.upper()
         # 是否跳过中间件， true跳过， false不跳过
@@ -42,6 +46,8 @@ class PermissionMiddleware(MiddlewareMixin):
             # 只校验有 不在 FILTER_PATH 中的url
             if path not in self.FILTER_PATH:
                 if request.META['REMOTE_USER']:
+                    msg = "{},{},{}".format(path, method, request.META['REMOTE_USER'])
+                    logging.info(msg)
                     self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
                 if not self.HAS_PERMISSION:
                     return JsonResponse({"message": "无访问权限"}, status=403)
@@ -60,22 +66,45 @@ class PermissionMiddleware(MiddlewareMixin):
                     "SERVICE_REGISTER_NAME": permission_service['NAME'],
                     "HOST": "",
                 }
-            domain = consul_service(service_conf)
-            url_path = self.URL_JOIN.normalize_url(
-                domain=domain, path=permission_service['PATH'])
-            url = url_path + '?userid={0}&path={1}&method={2}'.format(user_id, path, method)
+            api_path = permission_service['PATH']
+            payload = {
+                "method": method,
+                "path": path,
+                "user_id": user_id,
+            }
             try:
-                response = requests.get(url)
+                response = rest_client.get(service_conf, api_path=api_path, payload=payload)
+                if 200 <= response['status_code'] < 300 and response['has_perm']:
+                    return True
+                else:
+                    logger.info("something is wrong. {}".format(response))
+                    return False
             except Exception as ex:
-                logger.error(ex)
-                return True
-            if response.status_code == 404:
-                raise ImproperlyConfigured(
-                    "请检查settings.py的permission_service配置的%s是否正确" % permission_service['PATH'])
-            data = response.json()
-            if response.status_code == 500:
-                logger.error(data["message"])
-                return True
-            if 200 <= response.status_code < 300 and data['status']:
-                return True
-            return False
+                if ex.code == 404:
+                    raise APIException("请检查settings.py的permission_service配置的%s是否正确" % api_path)
+                elif ex.code == 500:
+                    logger.info("permission is not avaiable. detail={}".format(ex.detail))
+                    return True
+                elif ex.code == 400:
+                    raise ex
+
+            # url_path = self.URL_JOIN.normalize_url(
+            #     domain=domain, path=permission_service['PATH'])
+            # url = url_path + '?user_id={0}&path={1}&method={2}'.format(user_id, path, method)
+            # try:
+            #     response = requests.get(url)
+            # except Exception as ex:
+            #     logger.error(ex)
+            # #     return True
+            # if response.status_code == 404:
+            #     raise ImproperlyConfigured(
+            #         "请检查settings.py的permission_service配置的%s是否正确" % permission_service['PATH'])
+            # data = response.json()
+            # if response.status_code == 500:
+            #     logger.error(data["message"])
+            #     return True
+            # if response.status_code == 400:
+            #     raise APIException(str(response.json()))
+            # if 200 <= response.status_code < 300 and data['has_perm']:
+            #     return True
+        return False

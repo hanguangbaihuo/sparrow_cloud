@@ -18,3 +18,4 @@ sqlparse==0.3.0
 urllib3==1.25.3
 wcwidth==0.1.7
 zipp==0.6.0
+sparrow_task_sender==0.0.3
