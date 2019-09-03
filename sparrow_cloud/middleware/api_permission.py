@@ -48,9 +48,20 @@ class PermissionMiddleware(MiddlewareMixin):
                 if request.META['REMOTE_USER']:
                     msg = "{},{},{}".format(path, method, request.META['REMOTE_USER'])
                     logging.info(msg)
-                    self.HAS_PERMISSION = self.valid_permission(path, method, request.META['REMOTE_USER'])
-                if not self.HAS_PERMISSION:
-                    return JsonResponse({"message": "无访问权限"}, status=403)
+                    try:
+                        if not self.valid_permission(path, method, request.META['REMOTE_USER']):
+                            return JsonResponse({"message": "无访问权限"}, status=403)
+                    except HTTPException as ex:
+                        if ex.status_code >= 500:
+                            logger.error("permission is not avaiable. detail={}".format(ex.detail))
+                            # return JsonResponse({"message": ex.ex.detail}, status=ex.status_code)
+                            return
+                        if ex.status_code >= 400:
+                            return JsonResponse({"message": "detail={}".format(ex.detail)}, status=status_code)
+                        if ex.status_code >= 300:
+                            logger.error(ex.detail)
+                            return
+                        
 
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
@@ -72,7 +83,6 @@ class PermissionMiddleware(MiddlewareMixin):
                 "path": path,
                 "user_id": user_id,
             }
-            import pdb; pdb.set_trace()
             try:
                 response = rest_client.get(service_conf, api_path=api_path, payload=payload)
                 if 200 <= response['status_code'] < 300 and response['has_perm']:
@@ -81,31 +91,5 @@ class PermissionMiddleware(MiddlewareMixin):
                     logger.info("something is wrong. {}".format(response))
                     return False
             except HTTPException as ex:
-                if ex.status_code == 404:
-                    raise APIException("请检查settings.py的permission_service配置的%s是否正确" % api_path)
-                elif ex.status_code == 500:
-                    logger.info("permission is not avaiable. detail={}".format(ex.detail))
-                    return True
-                elif ex.status_code == 400:
-                    raise ex
-
-            # url_path = self.URL_JOIN.normalize_url(
-            #     domain=domain, path=permission_service['PATH'])
-            # url = url_path + '?user_id={0}&path={1}&method={2}'.format(user_id, path, method)
-            # try:
-            #     response = requests.get(url)
-            # except Exception as ex:
-            #     logger.error(ex)
-            # #     return True
-            # if response.status_code == 404:
-            #     raise ImproperlyConfigured(
-            #         "请检查settings.py的permission_service配置的%s是否正确" % permission_service['PATH'])
-            # data = response.json()
-            # if response.status_code == 500:
-            #     logger.error(data["message"])
-            #     return True
-            # if response.status_code == 400:
-            #     raise APIException(str(response.json()))
-            # if 200 <= response.status_code < 300 and data['has_perm']:
-            #     return True
+                raise ex
         return False
