@@ -173,6 +173,10 @@ CONSUL_CLIENT_ADDR = {
     "PORT": 8500  # consul port, 必填
 }
 
-# 
+# 注册中间件
+MIDDLEWARE = [
+    'sparrow_cloud.middleware.api_permission.PermissionMiddleware',
+]
+
 
 ```

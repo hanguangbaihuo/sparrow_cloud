@@ -41,7 +41,6 @@ class PermissionMiddleware(MiddlewareMixin):
 
         path = request.path
         method = request.method.upper()
-        import pdb; pdb.set_trace()
         # 是否跳过中间件， true跳过， false不跳过
         if self.SKIP_PERMISSION is False:
             # 只校验有 不在 FILTER_PATH 中的url
