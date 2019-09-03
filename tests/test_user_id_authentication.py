@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from sparrow_django_common.common.user import User
+from sparrow_cloud.auth.user import User
 
 
 AUTH = b'Token eyJhUzI1NiIs'

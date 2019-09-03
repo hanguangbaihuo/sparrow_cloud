@@ -42,7 +42,7 @@ class TestPermissionMiddleware(unittest.TestCase):
     @mock.patch('sparrow_cloud.utils.normalize_url.NormalizeUrl.normalize_url',
                 return_value='http://127.0.0.1:9999/api')
     def test_have_authority(self, NormalizeUrl, settings, valid_permission_svc, requests, verify_middleware_location):
-        from sparrow_django_common.middleware.permission_middleware import PermissionMiddleware
+        from sparrow_cloud.middleware.api_permissiong import PermissionMiddleware
         self.assertEqual(PermissionMiddleware().process_request(MockRequests()), None)
 
 
