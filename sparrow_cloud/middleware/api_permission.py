@@ -82,7 +82,7 @@ class PermissionMiddleware(MiddlewareMixin):
                 "user_id": user_id,
             }
             try:
-                response = rest_client.get(service_conf, api_path=api_path, parmas=payload)
+                response = rest_client.get(service_conf, api_path=api_path, params=payload)
                 if 200 <= response['status_code'] < 300 and response['has_perm']:
                     return True
                 else:
