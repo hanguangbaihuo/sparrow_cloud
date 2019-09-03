@@ -36,8 +36,6 @@ def consul_service(service_conf):
                 index = get_loadbalance_index(len(consul_data))
                 port = consul_data[index]['ServicePort']
                 address = consul_data[index]['ServiceAddress']
-                # port = consul_client.catalog.service(service_name)[1][0]['ServicePort']
-                # address = consul_client.catalog.service(service_name)[1][0]['ServiceAddress']
                 domain = "{address}:{port}".format(address=address, port=port)
             except:
                 raise ImproperlyConfigured(
@@ -51,6 +49,3 @@ def consul_service(service_conf):
 def get_loadbalance_index(value):
     """返回一个0， value 之间的随机数， consul负载均衡使用"""
     return randint(0, int(value)-1)
-
-
-
