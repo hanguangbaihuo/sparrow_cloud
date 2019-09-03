@@ -26,13 +26,5 @@ class CacheManager(models.Manager):
                             setattr(redis_obj, k, v)
                     if exist_flag:
                         return redis_obj
-        # db_obj = None
-        # try:
-        #     db_obj= super(CacheManager, self).get(*args, **kwargs)
-        # except:
-        #     # print("object is not available both in redis and db!")
-        #     db_obj = None
-        # return db_obj
-
         db_obj = super(CacheManager, self).get(*args, **kwargs)
         return db_obj
