@@ -72,6 +72,7 @@ class PermissionMiddleware(MiddlewareMixin):
                 "path": path,
                 "user_id": user_id,
             }
+            import pdb; pdb.set_trace()
             try:
                 response = rest_client.get(service_conf, api_path=api_path, payload=payload)
                 if 200 <= response['status_code'] < 300 and response['has_perm']:
