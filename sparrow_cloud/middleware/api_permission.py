@@ -41,6 +41,7 @@ class PermissionMiddleware(MiddlewareMixin):
 
         path = request.path
         method = request.method.upper()
+        import pdb; pdb.set_trace()
         # 是否跳过中间件， true跳过， false不跳过
         if self.SKIP_PERMISSION is False:
             # 只校验有 不在 FILTER_PATH 中的url
@@ -57,7 +58,7 @@ class PermissionMiddleware(MiddlewareMixin):
                             # return JsonResponse({"message": ex.ex.detail}, status=ex.status_code)
                             return
                         if ex.status_code >= 400:
-                            return JsonResponse({"message": "detail={}".format(ex.detail)}, status=status_code)
+                            return JsonResponse({"message": "detail={}".format(ex.detail)}, status=ex.status_code)
                         if ex.status_code >= 300:
                             logger.error(ex.detail)
                             return
