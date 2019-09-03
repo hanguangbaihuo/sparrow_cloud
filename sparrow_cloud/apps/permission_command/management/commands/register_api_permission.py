@@ -17,34 +17,34 @@ class Command(BaseCommand):
     help = '实时注册APIs到认证中心'
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            'auth_centre', metavar='auth-centre',
-            nargs='?',
-            default='',
-            type=str,
-            help='认证中心提供的注册接口地址'
-        )
+        # parser.add_argument(
+        #     'auth_centre', metavar='auth-centre',
+        #     nargs='?',
+        #     default='',
+        #     type=str,
+        #     help='认证中心提供的注册接口地址'
+        # )
         parser.add_argument(
             '-d', '--django', dest='dj_ver',
             default="2", choices=["1", "2"],
             help='指定django的版本，可选值为1或2。如果django版本>=1.11,请选择2'
         )
 
-        parser.add_argument(
-            '-l', '--local', dest='local',
-            default="0", choices=["0","1"],
-            help='指定是不是permission本地导入，换句话说就是可以直接访问到permission自己的数据库'
-        )
+        # parser.add_argument(
+        #     '-l', '--local', dest='local',
+        #     default="0", choices=["0","1"],
+        #     help='指定是不是permission本地导入，换句话说就是可以直接访问到permission自己的数据库'
+        # )
 
-    def get_api_name(self, _paths, path, _method):
-        # 获得权限的名字，从description中取前60个字符
-        _api = _paths[path][_method]
-        _name = _api["description"]
-        if len(_name) == 0:
-            _name = _api["operationId"]
-        else:
-            _name = _name[0:60]
-        return _name
+    # def get_api_name(self, _paths, path, _method):
+    #     # 获得权限的名字，从description中取前60个字符
+    #     _api = _paths[path][_method]
+    #     _name = _api["description"]
+    #     if len(_name) == 0:
+    #         _name = _api["operationId"]
+    #     else:
+    #         _name = _name[0:60]
+    #     return _name
 
     def register(self, api_list):
         # import pdb; pdb.set_trace()
@@ -89,14 +89,4 @@ class Command(BaseCommand):
         # pprint(resutl)
         # 注册/更新 api 权限
         self.register(resutl)
-        # for xx in schema:
-            # if xx['is_regex']:
-            # pprint(xx)
-        # if not auth_centre:
-        #     auth_centre=settings.AUTH_CENTRE
-        # if local=="0":
-        #     _local=False
-        # else:
-        #     _local=True
-        # self.register(schema, auth_centre, local=_local,upd=True)
 
