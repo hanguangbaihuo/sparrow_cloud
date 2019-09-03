@@ -11,7 +11,7 @@ from sparrow_cloud.utils.get_settings_value import GetSettingsValue
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 from sparrow_cloud.utils.normalize_url import NormalizeUrl
 from sparrow_cloud.restclient import rest_client
-from sparrow_cloud.restclient.exception import HTTP5XXException, HTTP4XXException
+from sparrow_cloud.restclient.exception import HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -79,13 +79,13 @@ class PermissionMiddleware(MiddlewareMixin):
                 else:
                     logger.info("something is wrong. {}".format(response))
                     return False
-            except Exception as ex:
-                if ex.code == 404:
+            except HTTPException as ex:
+                if ex.status_code == 404:
                     raise APIException("请检查settings.py的permission_service配置的%s是否正确" % api_path)
-                elif ex.code == 500:
+                elif ex.status_code == 500:
                     logger.info("permission is not avaiable. detail={}".format(ex.detail))
                     return True
-                elif ex.code == 400:
+                elif ex.status_code == 400:
                     raise ex
 
             # url_path = self.URL_JOIN.normalize_url(

@@ -2,7 +2,7 @@
 
 import requests
 from sparrow_cloud.registry.service_registry import consul_service
-from .exception import HTTP5XXException, HTTP4XXException, HTTPException
+from .exception import HTTPException
 
 
 
@@ -41,22 +41,14 @@ def _build_url(service_conf, api_path):
 
 
 def _handle_response(response):
-    if response.status_code >= 500:
-        raise HTTP5XXException(
-            code=response.status_code,
-            detail=response.content
-        )
-    elif response.status_code >=400:
-        raise HTTP4XXException(
-            code=response.status_code,
-            detail=response.content,
-        )
-    elif response.status_code >=200:
+    if 200 <= response.status_code < 300:
         res_result = response.json()
         res_result['status_code'] = response.status_code
         return res_result
     else:
-        raise HTTPException(
-            code=response.status_code,
-            detail=response.content
+        xx = HTTPException(
+            code="http_exception",
+            detail=response.content,
         )
+        xx.status_code = response.status_code
+        raise xx
