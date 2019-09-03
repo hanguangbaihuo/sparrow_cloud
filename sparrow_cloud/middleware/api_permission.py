@@ -3,6 +3,7 @@ import logging
 
 from django.http import JsonResponse
 from django.core.exceptions import ImproperlyConfigured
+from rest_framework.exceptions import APIException
 
 from sparrow_cloud.utils.validation_data import VerificationConfiguration
 from sparrow_cloud.registry.service_registry import consul_service
@@ -76,6 +77,8 @@ class PermissionMiddleware(MiddlewareMixin):
             if response.status_code == 500:
                 logger.error(data["message"])
                 return True
-            if 200 <= response.status_code < 300 and data['status']:
+            if response.status_code == 400:
+                raise APIException("缺少path或method参数")
+            if 200 <= response.status_code < 300 and data['has_perm']:
                 return True
             return False
