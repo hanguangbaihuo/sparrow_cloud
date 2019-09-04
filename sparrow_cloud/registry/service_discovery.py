@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 def get_settings_value(name):
     """获取settings中的配置"""
-    import pdb; pdb.set_trace()
     value = getattr(settings, name, None)
     if value == '' or value is None:
         raise NotImplementedError("没有配置这个参数%s" % name)

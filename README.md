@@ -1,15 +1,21 @@
 ## sparrow cloud组件 ##
 
 [Service Discovery](#service_registry)
+
 [Cache Service](#cache_manager)
+
 [API Permission Register](#api-permission-register)
+
 [RestClient](#restcliet-使用说明)
 
 
 ## sparrow cloud中间件 ##
 [JWT Middleware](#jwtmiddleware)
+
 [UserID Authentication](#useridauthentication)
+
 [Request Method Middleware](#method_middleware)
+
 [Permission Verify Middleware](#permission_middleware)
 
 ## installation ##
@@ -38,12 +44,11 @@ CONSUL_CLIENT_ADDR = {
 
 使用方法：
 from sparrow_cloud.registry.service_registry import consul_service
-# host 为默认参数，非必填， 如果传了此项参数， 会直接返回参数， 不过不传，则从consul中找服务地址
-service_conf = {
-        "SERVICE_REGISTER_NAME": "",  # k8s上的服务名称
-        "HOST": "127.0.0.1:8001",  # 服务的真实host， 应用场景，consul服务故障， 或dev/test环境
-    }
-service_addr = consul_service(service_conf)
+
+# 依赖settings的配置
+SERVICE_SETTINGS_KEY_NAME = SERVICE_SETTINGS_KEY_NAME # k8s上的服务名称
+
+service_addr = consul_service(SERVICE_SETTINGS_KEY_NAME) # 传入参数：settings里面服务的key
 # 输出"127.0.0.1:8001"
 ```
 
