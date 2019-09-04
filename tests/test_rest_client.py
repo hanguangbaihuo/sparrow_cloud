@@ -13,7 +13,6 @@ def mocked_requests_post(*args, **kwargs):
 
         def json(self):
             return self.json_data
-
     if args[0] == 'http://127.0.0.1:8500/api/xxx/':
         return MockResponse({"key1": "value1"}, 200)
     # elif args[0] == 'http://someotherurl.com/anothertest.json':
@@ -39,5 +38,21 @@ class RestClientTestCase(unittest.TestCase):
         res = rest_client.post(service_conf, api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
 
+
+    @mock.patch("sparrow_cloud.restclient.rest_client.consul_service", return_value="127.0.0.1:8500")
+    @mock.patch('requests.get', side_effect=mocked_requests_post)
+    def test_get(self, mock_post, mock_consul_service):
+        service_conf = {
+            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
+            "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
+        }
+        api_path = "/api/xxx/"
+        data = {
+            "key": "value",
+        }
+        res = rest_client.get(service_conf, api_path, params=data)
+        self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
+
+    
 if __name__ == '__main__':
     unittest.main()

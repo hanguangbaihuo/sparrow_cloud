@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
-from sparrow_cloud.registry.service_registry import consul_service
+from sparrow_cloud.registry.service_discovery import consul_service
 from .exception import HTTPException
 
 
