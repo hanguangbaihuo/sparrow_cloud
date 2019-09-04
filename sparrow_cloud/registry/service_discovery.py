@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 def get_settings_value(name):
     """获取settings中的配置"""
+    import pdb; pdb.set_trace()
     value = getattr(settings, name, None)
     if value == '' or value is None:
         raise NotImplementedError("没有配置这个参数%s" % name)
@@ -29,6 +30,7 @@ def consul_service(SERVICE_SETTINGS_KEY_NAME):
                 consul_service("SPARROW_PERMISSION_REGISTER_NAME")
     """
     # 获取 _HOST 对应的环境变量是否存在
+    # import pdb; pdb.set_trace()
     env_service_host = _build_env_host_name(SERVICE_SETTINGS_KEY_NAME)
     if env_service_host:
         # 1 获取对应的环境变量, 如果环境变量存在, 返回对应的环境变量
@@ -54,9 +56,6 @@ def consul_service(SERVICE_SETTINGS_KEY_NAME):
                 raise ImproperlyConfigured(
                     'consul服务暂时不可用, 临时解决方法： 在service_conf中配置service_host')
             return domain
-            else:
-                raise ImproperlyConfigured(
-                    '参数不正确，请检查consul 配置是否争取或service_conf参数是否正确')
 
 
 def get_loadbalance_index(value):
