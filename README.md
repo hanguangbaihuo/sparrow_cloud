@@ -32,24 +32,31 @@
 ## service_registry
 
 > 描述： consul服务发现
+> sparrow_cloud 项目的许多组件对 consul服务发现 有重度依赖, 需配置 consul
 
 ```
-# 依赖settings配置：
-
-# consul_service 依赖配置
+# 在 settings里面配置 consul参数
 CONSUL_CLIENT_ADDR = {
-    "HOST": "127.0.0.1",  # consul host, 必填
-    "PORT": 8500  # consul port, 必填
+    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
+    "PORT": os.environ.get("CONSUL_PORT", 8500)
 }
 
 使用方法：
 from sparrow_cloud.registry.service_registry import consul_service
+> consul_service("SERVICE_SETTINGS_KEY_NAME")
+> "127.0.0.1:8001"
 
-# 依赖settings的配置
-SERVICE_SETTINGS_KEY_NAME = SERVICE_SETTINGS_KEY_NAME # k8s上的服务名称
+参数说明:
+  SERVICE_SETTINGS_KEY_NAME: settings里面的 key 值
+例如, 在 settings 里面有如下配置:
+  SPARROW_PRODUCT_REGISTER_NAME = "sparrow-product-svc"
+  则, 参数为 : "SPARROW_PRODUCT_REGISTER_NAME"
+  consul_service("SPARROW_PRODUCT_REGISTER_NAME")
+如果有环境变量 SPARROW_PRODUCT_REGISTER_NAME_HOST 存在, 则覆盖 consul
 
-service_addr = consul_service(SERVICE_SETTINGS_KEY_NAME) # 传入参数：settings里面服务的key
-# 输出"127.0.0.1:8001"
+consul_service: 返回地址的方法:
+  1 如果有 SERVICE_SETTINGS_KEY_NAME_HOST (参数名字_HOST)环境变量存在, 则直接返回该环境变量的值作为地址.
+  2 如果没有, 则使用 consul 服务发现中心返回地址
 ```
 
 ## cache_manager
@@ -126,13 +133,13 @@ SERVICE_CONF = {
 
 
 # API 权限服务配置
-PERMISSION_SERVICE_CONF = {
-    "SERVICE_ADDR_CONF": {
-        "SERVICE_REGISTER_NAME": "",  #  权限服务，服务发现的名称
-        "HOST": "",  # 默认为""
-    },
-    "REGISTER_API": ""  # 权限服务的PATH
-}
+### api permission 依赖 ###
+环境变量名字
+SPARROW_PERMISSION_REGISTER_NAME = "sparrow-purchase-limit-svc"
+SPARROW_PERMISSION_REGISTER_API = "/api/permission_i/register/"
+
+ps: 环境变量名字不能修改, SPARROW_PERMISSION_REGISTER_NAME 可由
+SPARROW_PERMISSION_REGISTER_NAME_HOST = "127.0.0.1:8001" 覆盖
 
 ```
 ## METHOD_MIDDLEWARE
@@ -180,14 +187,11 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 > 服务调用中间件
 ```
   from sparrow_cloud.restclient import rest_client
-  rest_client.post(service_addr_conf, api_path, json=api_list)
+  rest_client.post(service_settings_key, api_path, json=api_list)
 ```
     参数说明:
-    service_addr_conf:
-      {
-        "SERVICE_REGISTER_NAME": "服务注册名字(consul)",
-        "HOST": "ip 地址(用来覆盖掉 consul 服务)"
-      }
-    api_path: 请求的服务路径,例如 /api/xx/yy/
+    service_settings_key:
+      SERVICE_REGISTER_NAME = "xxxxx-svc"
+      api_path: 请求的服务路径,例如 /api/xx/yy/
     ps:
       剩余参数与 requests.get/post 等方法保持一致

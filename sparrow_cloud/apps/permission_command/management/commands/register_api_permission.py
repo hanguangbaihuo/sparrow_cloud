@@ -47,9 +47,9 @@ class Command(BaseCommand):
     #     return _name
 
     def register(self, api_list):
-        api_path = settings.API_PERMISSION_REGISTER_API
+        api_path = settings.SPARROW_PERMISSION_REGISTER_API
         try:
-            rest_client.post("API_PERMISSION_REGISTER_NAME", api_path, json=api_list)
+            rest_client.post("SPARROW_PERMISSION_REGISTER_NAME", api_path, json=api_list)
             print("api 注册成功")
         except HTTPException as ex:
             print("api 注册失败. message={}, conf={}".format(ex.detail, permission_service_conf))
