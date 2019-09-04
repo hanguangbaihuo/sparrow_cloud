@@ -1,4 +1,16 @@
-## sparrow cloud ##
+## sparrow cloud组件 ##
+
+[Service Discovery](#service_registry)
+[Cache Service](#cache_manager)
+[API Permission Register](#api-permission-register)
+[RestClient](#restcliet-使用说明)
+
+
+## sparrow cloud中间件 ##
+[JWT Middleware](#jwtmiddleware)
+[UserID Authentication](#useridauthentication)
+[Request Method Middleware](#method_middleware)
+[Permission Verify Middleware](#permission_middleware)
 
 ## installation ##
 
@@ -11,7 +23,7 @@
     运行单个测试:
         py.test tests/test_rest_client.py
 
-## service_registry ##
+## service_registry
 
 > 描述： consul服务发现
 
@@ -56,18 +68,14 @@ from sparrow_cloud.sparrow_cloud.cache.cache_manager import CacheManager
 
 # 在需要使用缓存的model中加入
 objects = CacheManager()
-
-
 demo中可查看示例
 model 示例路径， sparrow_demo/models.py
-
 ```
 
-
 ## JWTMiddleware
-> 描述：Token 解析
 
-## 配置 JWTMiddleware 中间件需要的参数
+> 描述：Token 解析
+> 配置 JWTMiddleware 中间件需要的参数
 
 ```
 注册中间件
@@ -82,8 +90,7 @@ JWT_MIDDLEWARE = {
 
 ## UserIDAuthentication
 > 描述： user_id 解析
-
-## 配置 UserIDAuthentication 认证需要的参数(仅兼容django2.2以上版本)
+> 配置 UserIDAuthentication 认证需要的参数(仅兼容django2.2以上版本)
 
 ```
 SPARROW_AUTHENTICATION = {
@@ -101,10 +108,10 @@ REST_FRAMEWORK = {
 }
 ```
 
-## permission_command  API权限服务
-> 描述： 主动注册API到权限服务
+## API Permission Register
 
-## 配置 permission_command 需要的参数
+> 描述： 主动注册API到权限服务
+> 配置 permission_command 需要的参数
 
 ```
 # 本服务配置
@@ -125,8 +132,7 @@ PERMISSION_SERVICE_CONF = {
 ```
 ## METHOD_MIDDLEWARE
 > 兼容阿里不支持 put/delete 请求
-
-## 配置METHOD_MIDDLEWARE需要的参数
+> 配置METHOD_MIDDLEWARE需要的参数
 
 ```
   # 将以下参数添加到settings.py #
@@ -139,10 +145,9 @@ PERMISSION_SERVICE_CONF = {
   )
 ```
 
-## 权限中间件配置
+## PERMISSION_MIDDLEWARE
 > 权限中间件
-
-## 配置PERMISSION_MIDDLEWARE需要的参数
+> 配置PERMISSION_MIDDLEWARE需要的参数
 ```
 # 将以下参数添加到settings.py
 PERMISSION_MIDDLEWARE = {
@@ -165,15 +170,13 @@ MIDDLEWARE = [
 PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件依赖 consul
 ```
 
-## restcliet 使用说明 ##
+## restcliet 使用说明
 
->
-
+> 服务调用中间件
 ```
   from sparrow_cloud.restclient import rest_client
   rest_client.post(service_addr_conf, api_path, json=api_list)
 ```
-
     参数说明:
     service_addr_conf:
       {

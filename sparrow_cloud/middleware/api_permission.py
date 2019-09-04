@@ -24,9 +24,9 @@ class PermissionMiddleware(MiddlewareMixin):
         2.将此中间件放在 AuthenticationMiddleware 之后
     工作原理：
                                 (url + method + user_id)
-                                        |               / 有权限则允许通过
-    request -> PermissionMiddleware ---https---> 权限模块
-                                                        \ 无权限则返回HTTP 403错误
+                                        |                - 有权限则允许通过
+    request -> PermissionMiddleware ---https---> 权限模块|
+                                                         - 无权限则返回HTTP 403错误
     """
     VERIFICATION_CONGIGURATION = VerificationConfiguration()
     VERIFICATION_CONGIGURATION.valid_permission_svc()
