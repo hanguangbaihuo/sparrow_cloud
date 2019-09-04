@@ -1,4 +1,5 @@
 import unittest
+import importlib
 from unittest import mock
 
 from sparrow_cloud.auth.user import User
@@ -18,20 +19,26 @@ class MockRequest(object):
     }
 
 
-class TestJWTAuthentication(unittest.TestCase):
-    @mock.patch('sparrow_cloud.auth.user_id_authentication.UserIDAuthentication.get_user', return_value=USER_ID)
-    @mock.patch('sparrow_cloud.auth.user_id_authentication.UserIDAuthentication.USER_CLASS', return_value=USER)
-    @mock.patch('rest_framework.authentication.get_authorization_header', return_value=AUTH)
-    @mock.patch('sparrow_cloud.utils.get_settings_value', return_value='sparrow_cloud.auth.user.User')
-    @mock.patch('sparrow_cloud.utils.get_user.get_user_class', return_value=USER)
-    @mock.patch('django.conf.settings', return_value='')
-    @mock.patch('sparrow_cloud.utils.decode_jwt.DecodeJwt.decode_jwt', return_value=PAYLOAD)
-    @mock.patch('sparrow_cloud.utils.get_settings_value.GetSettingsValue.get_middleware_value',
-                return_value='mock_value')
-    def test_users(self, get_middleware_value, DecodeJwt, settings, get_user_class, get_settings_value,
-                 get_authorization_header, USER_CLASS, get_user):
+def value():
+    user_class_path = "sparrow_cloud.auth.user.User"
+    module_path, cls_name = user_class_path.rsplit(".", 1)
+    user_cls = getattr(importlib.import_module(module_path), cls_name)
+    user = user_cls(user_id=USER_ID)
+    return user
+
+
+class TestUserIDAuthentication(unittest.TestCase):
+    """测试 UserIDAuthentication"""
+
+    @mock.patch('sparrow_cloud.utils.get_user.get_settings_value', return_value="sparrow_cloud.auth.user.User")
+    def test_user(self, mock_user):
         from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
-        self.assertEqual(UserIDAuthentication().authenticate(MockRequest()), (USER_ID, PAYLOAD))
+        user_info = UserIDAuthentication().authenticate(MockRequest())
+        user = user_info[0]
+        payload = user_info[1]
+        _user = value()
+        self.assertEqual(type(user), type(_user))
+        self.assertEqual(payload, PAYLOAD)
 
 
 if __name__ == '__main__':

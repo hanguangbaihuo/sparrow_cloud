@@ -12,7 +12,7 @@ def get(service_conf, api_path, *args, **kwargs):
         {
             "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
             "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
-        }
+        }` 
     '''
     servicer_addr = consul_service(service_conf)
     url = _build_url(service_conf, api_path)

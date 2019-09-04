@@ -1,6 +1,6 @@
 # # 发送非延时任务
 from task_sender import TaskSender
-from sparrow_cloud.registry.service_registry import consul_service
+# from sparrow_cloud.registry.service_registry import consul_service
 
 
 #
