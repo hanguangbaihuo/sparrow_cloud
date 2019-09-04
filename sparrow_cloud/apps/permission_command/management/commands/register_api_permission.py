@@ -68,7 +68,7 @@ class Command(BaseCommand):
     def get_schema(self, generator, request, public):
         return generator.get_schema(request=request, public=public)
 
-    def handle(self, auth_centre, dj_ver,local, *args, **kwargs):
+    def handle(self, dj_ver, *args, **kwargs):
         # disable logs of WARNING and below
         logging.disable(logging.WARNING)
 
