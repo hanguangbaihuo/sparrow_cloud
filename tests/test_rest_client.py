@@ -2,10 +2,11 @@
 import unittest
 from unittest import mock
 from sparrow_cloud.restclient import rest_client
+import os
 
 
 # This method will be used by the mock to replace requests.post
-def mocked_requests_post(*args, **kwargs):
+def mocked_requests(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -13,7 +14,7 @@ def mocked_requests_post(*args, **kwargs):
 
         def json(self):
             return self.json_data
-    if args[0] == 'http://127.0.0.1:8500/api/xxx/':
+    if args[0].endswith('/api/xxx/'):
         return MockResponse({"key1": "value1"}, 200)
     # elif args[0] == 'http://someotherurl.com/anothertest.json':
     #     return MockResponse({"key2": "value2"}, 200)
@@ -21,38 +22,50 @@ def mocked_requests_post(*args, **kwargs):
     return MockResponse(None, 404)
 
 
+CONSUL_RETURN_DATA = (
+    "name", 
+    [
+        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001,},
+        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001,},
+        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001,},
+    ]
+)
+
+
 class RestClientTestCase(unittest.TestCase):
 
-    @mock.patch("sparrow_cloud.restclient.rest_client.consul_service", return_value="127.0.0.1:8500")
-    @mock.patch('requests.post', side_effect=mocked_requests_post)
-    def test_post(self, mock_post, mock_consul_service):
-        # 
-        service_conf = {
-            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
-            "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
-        }
+    def setUp(self):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
+
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
+    @mock.patch('requests.post', side_effect=mocked_requests)
+    def test_post(self, mock_post, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
         }
-        res = rest_client.post(service_conf, api_path, data=data)
+        from django.conf import settings
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": "127.0.0.1",
+            "PORT": 8500
+        }
+        settings.SERVICE_REGISTER_NAME = "xxxx-svc"
+        res = rest_client.post("SERVICE_REGISTER_NAME", api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
 
 
-    @mock.patch("sparrow_cloud.restclient.rest_client.consul_service", return_value="127.0.0.1:8500")
-    @mock.patch('requests.get', side_effect=mocked_requests_post)
-    def test_get(self, mock_post, mock_consul_service):
-        service_conf = {
-            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
-            "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
-        }
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
+    @mock.patch('requests.get', side_effect=mocked_requests)
+    def test_get(self, mock_get, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
         }
-        res = rest_client.get(service_conf, api_path, params=data)
+        from django.conf import settings
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": "127.0.0.1",
+            "PORT": 8500
+        }
+        settings.SERVICE_REGISTER_NAME = "xxxx-svc"
+        res = rest_client.get("SERVICE_REGISTER_NAME", api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
-
-    
-if __name__ == '__main__':
-    unittest.main()

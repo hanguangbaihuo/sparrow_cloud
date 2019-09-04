@@ -19,6 +19,7 @@ def post(service_settings_key, api_path, *args, **kwargs):
     service_settings_key: settings 里面配置的服务注册 key 值
     '''
     url = _build_url(service_settings_key, api_path)
+    # import pdb; pdb.set_trace()
     res = requests.post(url, *args, **kwargs)
     return _handle_response(res)
 
