@@ -6,37 +6,25 @@ from .exception import HTTPException
 
 
 
-def get(service_conf, api_path, *args, **kwargs):
+def get(service_settings_key, api_path, *args, **kwargs):
     '''
-    service_conf: 服务配置
-        {
-            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
-            "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
-        }
+    service_settings_key: settings 里面配置的服务注册 key 值
     '''
-    servicer_addr = consul_service(service_conf)
-    url = _build_url(service_conf, api_path)
+    url = _build_url(service_settings_key, api_path)
     res = requests.get(url, *args, **kwargs)
     return _handle_response(res)
 
-def post(service_conf, api_path, *args, **kwargs):
+def post(service_settings_key, api_path, *args, **kwargs):
     '''
-    service_conf: 服务配置
-        {
-            "SERVICE_REGISTER_NAME": "xxxxxx_svc",   # consul 服务发现中心的注册名字
-            "HOST": "127.0.0.1:8500",   # 本地配置, 可以覆盖 consul
-        }
+    service_settings_key: settings 里面配置的服务注册 key 值
     '''
-    # import pdb; pdb.set_trace()
-    servicer_addr = consul_service(service_conf)
-    # import pdb; pdb.set_trace()
-    url = _build_url(service_conf, api_path)
+    url = _build_url(service_settings_key, api_path)
     res = requests.post(url, *args, **kwargs)
     return _handle_response(res)
 
 
-def _build_url(service_conf, api_path):
-    servicer_addr = consul_service(service_conf)
+def _build_url(service_settings_key, api_path):
+    servicer_addr = consul_service(service_settings_key)
     return "http://{}{}".format(servicer_addr, api_path)
 
 
