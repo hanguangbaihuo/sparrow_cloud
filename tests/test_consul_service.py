@@ -8,7 +8,7 @@ from sparrow_cloud.registry.service_registry import consul_service
 #     service_conf = {
 #         "HOST": "127.0.0.1",
 #         "PORT": 8500
-#         }
+#     }
 #     return service_conf
 
 CONSUL_CONF = {
