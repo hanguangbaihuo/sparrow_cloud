@@ -13,6 +13,7 @@ from pprint import pprint
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     help = '实时注册APIs到认证中心'
 
@@ -52,7 +53,7 @@ class Command(BaseCommand):
             rest_client.post("SPARROW_PERMISSION_REGISTER_NAME", api_path, json=api_list)
             print("api 注册成功")
         except HTTPException as ex:
-            print("api 注册失败. message={}, conf={}".format(ex.detail, permission_service_conf))
+            print("api 注册失败. message={}, service_name={}".format(ex.detail, "SPARROW_PERMISSION_REGISTER_NAME"))
 
     def get_schema_generator(self, generator_class_name, api_name, api_version):
         generator_class = import_string(generator_class_name)

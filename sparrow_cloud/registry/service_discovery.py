@@ -14,10 +14,12 @@ def get_settings_value(name):
         raise NotImplementedError("没有配置这个参数%s" % name)
     return value
 
+
 def _build_env_host_name(NAME):
     ENV_SERVICE_HOST_KEY = NAME + "_HOST"
     env_service_host = os.environ.get(ENV_SERVICE_HOST_KEY, "")
     return env_service_host
+
 
 def consul_service(SERVICE_SETTINGS_KEY_NAME):
     """
