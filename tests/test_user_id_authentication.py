@@ -1,5 +1,7 @@
 import unittest
 import importlib
+import os
+from django.conf import settings
 from unittest import mock
 
 from sparrow_cloud.auth.user import User
@@ -30,8 +32,11 @@ def value():
 class TestUserIDAuthentication(unittest.TestCase):
     """测试 UserIDAuthentication"""
 
-    @mock.patch('sparrow_cloud.utils.get_user.get_settings_value', return_value="sparrow_cloud.auth.user.User")
-    def test_user(self, mock_user):
+    def setUp(self):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
+        settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
+
+    def test_user(self):
         from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
         user_info = UserIDAuthentication().authenticate(MockRequest())
         user = user_info[0]
