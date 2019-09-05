@@ -60,5 +60,9 @@ class TestPermissionMiddleware(unittest.TestCase):
         self.assertEqual(PermissionMiddleware().process_request(MockRequests()), None)
 
 
+    def tearDown(self):
+        # import pdb; pdb.set_trace()
+        del os.environ["DJANGO_SETTINGS_MODULE"]
+
 if __name__ == '__main__':
     unittest.main()

@@ -32,6 +32,8 @@ class TestJWTAuthentication(unittest.TestCase):
         from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         self.assertEqual(JWTMiddleware().process_request(MockRequest()), None)
 
+    def tearDown(self):
+        del os.environ["DJANGO_SETTINGS_MODULE"]
 
 if __name__ == '__main__':
     unittest.main()

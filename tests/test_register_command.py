@@ -1,39 +1,81 @@
-# import io
-# import pytest
-# import unittest
-# from django.core.management import call_command
-# from django.test.utils import override_settings
-# from sparrow_cloud.apps.permission_command.management.commands import register_api_permission
-#
-#
-# class TestRegisterApiPermission(unittest.TestCase):
-#     """Tests for register_api_permission command"""
-#
-#     def setUp(self):
-#         self.out = io.StringIO()
-#
-#     @override_settings(ROOT_URLCONF=__name__)
-#     def test_add_arguments(self):
-#         import pdb;pdb.set_trace()
-#         call_command(register_api_permission,
-#                      '-d',
-#                      stdout=self.out)
-#         # parser.add_argument('--format', dest="format", choices=['openapi', 'openapi-json', 'corejson'],
-#         #                     default='openapi', type=str)
-#         # parser.add_argument('--title', dest="title", default='', type=str)
-#         # parser.add_argument('--url', dest="url", default=None, type=str)
-#         # parser.add_argument('--description', dest="description", default=None, type=str)
-#         # if self.get_mode() == COREAPI_MODE:
-#         #     parser.add_argument('--format', dest="format", choices=['openapi', 'openapi-json', 'corejson'],
-#         #                         default='openapi', type=str)
-#         # else:
-#         #     parser.add_argument('--format', dest="format", choices=['openapi', 'openapi-json'], default='openapi',
-#         #                         type=str)
-#         # parser.add_argument('--urlconf', dest="urlconf", default=None, type=str)
-#         # parser.add_argument('--generator_class', dest="generator_class", default=None, type=str)
-#
-#         # parser.add_argument(
-#         #     '-d', '--django', dest='dj_ver',
-#         #     default="2", choices=["1", "2"],
-#         #     help='指定django的版本，可选值为1或2。如果django版本>=1.11,请选择2'
-#         # )
+import unittest
+from unittest import mock
+import os
+import django
+
+
+from io import StringIO
+from django.core.management import call_command
+from django.test import TestCase
+
+# class ClosepollTest(TestCase):
+#     def test_command_output(self):
+#         out = StringIO()
+#         call_command('register_api_permission', stdout=out)
+#         self.assertIn('Expected output', out.getvalue())
+
+
+import os
+from django.conf.urls import url
+from django.http import HttpResponse
+
+
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+
+urlpatterns = [
+    url(r'^/ssss/$', detail)
+]
+
+
+
+class RestClientTestCase(unittest.TestCase):
+
+    def setUp(self):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
+        
+    def test_get(self):
+        from django.conf import settings
+        # import pdb; pdb.set_trace()
+        # 配置 settings, 初始化 settings
+        # import pdb; pdb.set_trace()
+        # settings.configure()
+        #  初始化
+        self.setup_settings(settings)
+        
+        django.setup()
+        # import pdb; pdb.set_trace()
+        out = StringIO()
+        # call_command('rap', stdout=out)
+        import pdb; pdb.set_trace()
+        call_command('register_api_permission', '-d', '2', stdout=out)
+        
+        print(settings)
+
+
+    def setup_settings(self, settings):
+        settings.XX = "1"
+        settings.SECRET_KEY = "ss"
+        settings.INSTALLED_APPS = [
+            "sparrow_cloud.apps.permission_command",
+        ]
+        settings.ROOT_URLCONF = __name__
+
+        settings.SPARROW_PERMISSION_REGISTER_CONF = {
+            "PERMISSION_SERVICE": {
+                "ENV_NAME": "PERMISSION_SERVICE_HOST",
+                "VALUE": "xxxxx-svc"
+            },
+            "API_PATH": "/api/permission_i/register/"
+        }
+        settings.SERVICE_CONF = {
+            "NAME": "permiss"
+        }
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
+            "PORT": os.environ.get("CONSUL_PORT", 8500)
+        }
+
+
+

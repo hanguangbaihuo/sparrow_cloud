@@ -45,6 +45,9 @@ class TestUserIDAuthentication(unittest.TestCase):
         self.assertEqual(type(user), type(_user))
         self.assertEqual(payload, PAYLOAD)
 
+    def tearDown(self):
+        del os.environ["DJANGO_SETTINGS_MODULE"]
+
 
 if __name__ == '__main__':
     unittest.main()
