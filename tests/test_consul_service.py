@@ -28,6 +28,7 @@ class ConsulServiceTest(unittest.TestCase):
         测试未设置环境变量
         """   
         from django.conf import settings
+        os.environ["SPARROW_SERVICE_REGISTER_NAME_HOST"] = ""
         settings.SPARROW_SERVICE_REGISTER_NAME = "xxxx-svc"
         settings.CONSUL_CLIENT_ADDR = {
             "HOST": "127.0.0.1",
@@ -39,7 +40,7 @@ class ConsulServiceTest(unittest.TestCase):
         self.assertEqual(addr in expect_result_list, True)
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    def test_consul_parameter_variable(self, mock_consul_service):
+    def test_consul_parameter_no_variable(self, mock_consul_service):
         """
         测试设置环境变量:
         os.environ["SPARROW_SERVICE_REGISTER_NAME_HOST"] = "127.0.0.1:8001"
