@@ -7,6 +7,13 @@ import os
 # 与 SPARROW_SERVICE_REGISTER_NAME 对应的 _HOST
 SPARROW_SERVICE_REGISTER_NAME_HOST = "162.23.7.247:8001"
 
+
+SERVICE_CONF = {
+    "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+    "VALUE": "sprrow-permission-svc"
+    }
+
+
 CONSUL_RETURN_DATA = (
     "name", 
     [
@@ -15,7 +22,7 @@ CONSUL_RETURN_DATA = (
         {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001,},
     ]
 )
-    
+
 
 class ConsulServiceTest(unittest.TestCase):
 
@@ -28,13 +35,13 @@ class ConsulServiceTest(unittest.TestCase):
         测试未设置环境变量
         """   
         from django.conf import settings
-        os.environ["SPARROW_SERVICE_REGISTER_NAME_HOST"] = ""
-        settings.SPARROW_SERVICE_REGISTER_NAME = "xxxx-svc"
+        os.environ["PERMISSION_REGISTER_NAME_HOST"] = ""
         settings.CONSUL_CLIENT_ADDR = {
             "HOST": "127.0.0.1",
             "PORT": 8500
         }
-        addr = consul_service("SPARROW_SERVICE_REGISTER_NAME")
+        settings.SERVICE_CONF = SERVICE_CONF
+        addr = consul_service(SERVICE_CONF)
         expect_result_list = ['{}:{}'.format(
             ii["ServiceAddress"], ii['ServicePort']) for ii in CONSUL_RETURN_DATA[1]]
         self.assertEqual(addr in expect_result_list, True)
@@ -44,13 +51,13 @@ class ConsulServiceTest(unittest.TestCase):
         """
         测试设置环境变量:
         os.environ["SPARROW_SERVICE_REGISTER_NAME_HOST"] = "127.0.0.1:8001"
-        """   
+        """
         from django.conf import settings
-        os.environ["SPARROW_SERVICE_REGISTER_NAME_HOST"] = "127.0.0.1:8001"
-        settings.SPARROW_SERVICE_REGISTER_NAME = "xxxx-svc"
+        os.environ["PERMISSION_REGISTER_NAME_HOST"] = "127.0.0.1:8001"
         settings.CONSUL_CLIENT_ADDR = {
             "HOST": "127.0.0.1",
             "PORT": 8500
         }
-        addr = consul_service("SPARROW_SERVICE_REGISTER_NAME")
+        settings.SERVICE_CONF = SERVICE_CONF
+        addr = consul_service(SERVICE_CONF)
         self.assertEqual(addr, '127.0.0.1:8001')

@@ -6,26 +6,26 @@ from .exception import HTTPException
 
 
 
-def get(service_settings_key, api_path, *args, **kwargs):
+def get(service_conf, api_path, *args, **kwargs):
     '''
-    service_settings_key: settings 里面配置的服务注册 key 值
+    service_conf: 服务配置
     '''
-    url = _build_url(service_settings_key, api_path)
+    url = _build_url(service_conf, api_path)
     res = requests.get(url, *args, **kwargs)
     return _handle_response(res)
 
-def post(service_settings_key, api_path, *args, **kwargs):
+def post(service_conf, api_path, *args, **kwargs):
     '''
-    service_settings_key: settings 里面配置的服务注册 key 值
+    service_conf: settings 里面配置的服务注册 key 值
     '''
-    url = _build_url(service_settings_key, api_path)
+    url = _build_url(service_conf, api_path)
     # import pdb; pdb.set_trace()
     res = requests.post(url, *args, **kwargs)
     return _handle_response(res)
 
 
-def _build_url(service_settings_key, api_path):
-    servicer_addr = consul_service(service_settings_key)
+def _build_url(service_conf, api_path):
+    servicer_addr = consul_service(service_conf)
     return "http://{}{}".format(servicer_addr, api_path)
 
 

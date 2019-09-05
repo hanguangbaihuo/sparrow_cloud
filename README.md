@@ -43,16 +43,17 @@ CONSUL_CLIENT_ADDR = {
 
 使用方法：
 from sparrow_cloud.registry.service_registry import consul_service
-> consul_service("SERVICE_SETTINGS_KEY_NAME")
+> consul_service(SERVICE_CONF)
 > "127.0.0.1:8001"
 
 参数说明:
-  SERVICE_SETTINGS_KEY_NAME: settings里面的 key 值
-例如, 在 settings 里面有如下配置:
-  SPARROW_PRODUCT_REGISTER_NAME = "sparrow-product-svc"
-  则, 参数为 : "SPARROW_PRODUCT_REGISTER_NAME"
-  consul_service("SPARROW_PRODUCT_REGISTER_NAME")
-如果有环境变量 SPARROW_PRODUCT_REGISTER_NAME_HOST 存在, 则覆盖 consul
+  SERVICE_CONF = {
+        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+        "VALUE": "sprrow-permission-svc"
+    }
+    ENV_NAME: 用来覆盖 consul 的环境变量名
+    VALUE: consul服务注册名字
+如果有环境变量 PERMISSION_REGISTER_NAME_HOST 存在, 则覆盖 consul
 
 consul_service: 返回地址的方法:
   1 如果有 SERVICE_SETTINGS_KEY_NAME_HOST (参数名字_HOST)环境变量存在, 则直接返回该环境变量的值作为地址.
@@ -187,11 +188,14 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 > 服务调用中间件
 ```
   from sparrow_cloud.restclient import rest_client
-  rest_client.post(service_settings_key, api_path, json=api_list)
+  rest_client.post(SERVICE_CONF, api_path, json=api_list)
 ```
     参数说明:
-    service_settings_key:
-      SERVICE_REGISTER_NAME = "xxxxx-svc"
-      api_path: 请求的服务路径,例如 /api/xx/yy/
+    SERVICE_CONF = {
+        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+        "VALUE": "sprrow-permission-svc"
+    }
+    ENV_NAME: 用来覆盖 consul 的环境变量名
+    VALUE: consul服务注册名字
     ps:
       剩余参数与 requests.get/post 等方法保持一致
