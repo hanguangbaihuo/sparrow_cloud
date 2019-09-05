@@ -31,6 +31,11 @@ CONSUL_RETURN_DATA = (
     ]
 )
 
+SERVICE_CONF = {
+    "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+    "VALUE": "sprrow-permission-svc"
+    }
+
 
 class RestClientTestCase(unittest.TestCase):
 
@@ -49,8 +54,8 @@ class RestClientTestCase(unittest.TestCase):
             "HOST": "127.0.0.1",
             "PORT": 8500
         }
-        settings.SERVICE_REGISTER_NAME = "xxxx-svc"
-        res = rest_client.post("SERVICE_REGISTER_NAME", api_path, data=data)
+        settings.SERVICE_CONF = SERVICE_CONF
+        res = rest_client.post(SERVICE_CONF, api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
 
 
@@ -66,6 +71,6 @@ class RestClientTestCase(unittest.TestCase):
             "HOST": "127.0.0.1",
             "PORT": 8500
         }
-        settings.SERVICE_REGISTER_NAME = "xxxx-svc"
-        res = rest_client.get("SERVICE_REGISTER_NAME", api_path, data=data)
+        settings.SERVICE_CONF = SERVICE_CONF
+        res = rest_client.get(SERVICE_CONF, api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
