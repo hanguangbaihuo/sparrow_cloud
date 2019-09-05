@@ -161,6 +161,7 @@ SPARROW_PERMISSION_REGISTER_NAME_HOST = "127.0.0.1:8001" 覆盖
 ## PERMISSION_MIDDLEWARE
 > 权限中间件
 > 配置PERMISSION_MIDDLEWARE需要的参数
+
 ```
 # 将以下参数添加到settings.py
 PERMISSION_MIDDLEWARE = {
@@ -186,6 +187,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 ## restcliet 使用说明
 
 > 服务调用中间件
+
 ```
   from sparrow_cloud.restclient import rest_client
   rest_client.post(SERVICE_CONF, api_path, json=api_list)
@@ -199,3 +201,22 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     VALUE: consul服务注册名字
     ps:
       剩余参数与 requests.get/post 等方法保持一致
+      
+## message_client 使用说明
+
+> 麻雀任务发送
+> 1. 注册消息 2. 发送消息
+
+```
+    from sparrow_cloud.meassge_service.sender import send_task
+    data = send_task(exchange=exchange, 
+                     routing_key=routing_key, 
+                     message_code=message_code, 
+                     *args,
+                     **kwargs)
+    ps:
+       exchange: 交换机
+       routing_key: 路由
+       message_code: 消息码
+```
+
