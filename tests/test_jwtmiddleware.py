@@ -1,6 +1,8 @@
 import unittest
 import jwt
 import time
+import os
+from django.conf import settings
 from unittest import mock
 
 from sparrow_cloud.auth.user import User
@@ -19,9 +21,14 @@ class MockRequest(object):
 
 class TestJWTAuthentication(unittest.TestCase):
 
-    @mock.patch('sparrow_cloud.utils.get_settings_value.GetSettingsValue.get_middleware_value', return_value='123131313')
+    def setUp(self):
+        os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
+        settings.JWT_MIDDLEWARE = {
+            "JWT_SECRET": "123131313",  # JWT_SECRET, 必填
+        }
+
     @mock.patch('rest_framework.authentication.get_authorization_header', return_value=AUTH)
-    def test_users(self, get_authorization_header, get_middleware_value):
+    def test_users(self, get_authorization_header):
         from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         self.assertEqual(JWTMiddleware().process_request(MockRequest()), None)
 
