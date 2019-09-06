@@ -241,31 +241,61 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 > 1. 获取队列 2. 消费任务
 ```
     settings配置
-    
+
         SPARROW_RABBITMQ_CONSUMER_CONF = {
-            "SERVICE_CONF": {
-                    "ENV_NAME": "DLJFLS_LSDK_LDKEND",
-                    "VALUE": "xxxxx-svc",
+
+            "MESSAGE_BROKER_CONF": {
+                "USER_NAME": "hg_test",
+                "PASSWORD": "jft87JheHe23",
+                "BROKER_SERVICE_CONF": {
+                    "ENV_NAME": "SPARROW_BROKER_HOST",
+                    "VALUE": "sparrow-demo",
                 },
-            "MESSAGE_BROKER": "",
-            "MESSAGE_BACKEND": "",
-        }
-    
-        QUEUE_CONF_1 = {
-            "QUEUE": "XXX",
-            "TARGET_FUNC_MAP : {
-                "xxx": "xx.xx"
+            },
+            "MESSAGE_BACKEND_CONF": {
+                "BACKEND_SERVICE_CONF": {
+                        "ENV_NAME": "SPARROW_BACKEND_HOST",
+                        "VALUE": "sparrow-demo",
+                },
+                "API_PATH": "/api/sparrow_task/task/update/"
             }
         }
-        ps:
-            SPARROW_RABBITMQ_CONSUMER_CONF  # consumer的配置
-                SERVICE_CONF  # consumer依赖consul
-                MESSAGE_BROKER  # 必填 rabbitmq 的地址
-                MESSAGE_BACKEND # 选填的配置，如果设置了message_backend,则在任务执行完成之后会向该设置里的url发送任务执行完成结果，post请求
-                                  
-            QUEUE_CONF_1  # 队列的配置
-                QUEUE  # 队列名称
-                TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，对应的值为执行该消息的任务函数路径字符串）
-                                
 
+        QUEUE_CONF_1 = {
+            "QUEUE": "ORDER_PAY_SUC_ALL",
+            "TARGET_FUNC_MAP": {
+                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1"
+            }
+        }
+
+
+        ps:
+                SPARROW_RABBITMQ_CONSUMER_CONF  # consumer的配置
+                    MESSAGE_BROKER_CONF  # rabbitmq配置
+                        USER_NAME # 用户名
+                        PASSWORD # 密码
+                        BROKER_SERVICE_CONF  # 依赖consul服务的配置
+                    MESSAGE_BACKEND_CONF
+                        BACKEND_SERVICE_CONF # 依赖consul服务的配置
+                        API_PATH # api 路径
+                QUEUE_CONF_1  # 队列的配置
+                    QUEUE  # 队列名称
+                    TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，对应的值为执行该消息的任务函数路径字符串）
+
+
+    调用方式：
+        注册服务到 settings 下的 INSTALLED_APPS中
+        
+        INSTALLED_APPS = [
+            "message_service",
+        ]
+        
+        调用命令：
+        python3 manage.py rabbitmq_consumer --queue QUEUE_CONF_1
+        
+        ps：
+        参数说明
+            --queue ： 指定发送队列配置名称， 参照settings中QUEUE_CONF_1配置
+            
+    
 ```

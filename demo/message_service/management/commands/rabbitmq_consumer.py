@@ -20,7 +20,3 @@ class Command(BaseCommand):
             except Exception as ex:
                 logger.error(ex)
                 print('消息接受失败，message={}'.format(ex))
-
-
-
-
