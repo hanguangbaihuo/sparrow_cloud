@@ -76,5 +76,4 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
 
     def tearDown(self):
-        # import pdb; pdb.set_trace()
         del os.environ["DJANGO_SETTINGS_MODULE"]
