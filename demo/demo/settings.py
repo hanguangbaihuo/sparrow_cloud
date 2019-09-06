@@ -38,14 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # sparrow cloud
-    "sparrow_cloud.apps.ping",
-    "sparrow_cloud.apps.permission_command",
-    "testpermission_path",
+    # "sparrow_cloud.apps.ping",
+    # "sparrow_cloud.apps.permission_command",
+    # "testpermission_path",
+    "message_service",
 ]
 
 MIDDLEWARE = [
     # JWTMiddleware
-    'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware',
+    # 'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -102,7 +103,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     # SparrowAuthentication
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
+        # 'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
     ),
     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
@@ -158,8 +159,8 @@ CACHES = {
 
 # consul_service 依赖配置
 CONSUL_CLIENT_ADDR = {
-    "host": "127.0.0.1",  # consul host
-    "port": 8500  # consul port
+    "HOST": "127.0.0.1",  # consul host
+    "PORT": 8500  # consul port
 }
 
 # UserIDAuthentication 依赖配置
@@ -173,12 +174,41 @@ JWT_MIDDLEWARE = {
 }
 
 # cache_manager 依赖配置
-import redis
-CACHE_REDIS_POOL = redis.ConnectionPool(
-    host='REDIS_HOST',  # redis host
-    port='REDIS_PORT',  # redis port
-    password='REDIS_PASSWORD',  # redis password
-    decode_responses=True)
+# import redis
+# CACHE_REDIS_POOL = redis.ConnectionPool(
+#     host='REDIS_HOST',  # redis host
+#     port='REDIS_PORT',  # redis port
+#     password='REDIS_PASSWORD',  # redis password
+#     decode_responses=True)
 
 
 SERVICE_NAME = "demo"
+
+SPARROW_RABBITMQ_CONSUMER_CONF = {
+
+    "MESSAGE_BROKER_CONF": {
+        "USER_NAME": "hg_test",
+        "PASSWORD": "jft87JheHe23",
+        "BROKER_SERVICE_CONF": {
+            "ENV_NAME": "SPARROW_BROKER_HOST",
+            "VALUE": "sparrow-demo",
+        },
+    },
+    "MESSAGE_BACKEND_CONF": {
+        "BACKEND_SERVICE_CONF": {
+            "ENV_NAME": "SPARROW_BACKEND_HOST",
+            "VALUE": "sparrow-demo",
+        },
+        "API_PATH": "/api/sparrow_task/task/update/"
+    }
+}
+
+
+QUEUE_CONF_1 = {
+            "QUEUE": "ORDER_PAY_SUC_ALL",
+            "TARGET_FUNC_MAP": {
+                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1"
+            }
+        }
+
+# SPARROW_BROKER_SERVICE_HOST=127.0.0.1:5672 SPARROW_MESSAGE_BACKEND_HOST=backend5.dongyouliang.com python3 manage.py rabbitmq_consumer

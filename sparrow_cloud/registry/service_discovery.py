@@ -33,8 +33,6 @@ def consul_service(service_conf):
     """
     # 获取 _HOST 对应的环境变量是否存在
 
-
-    # service_conf= get_settings_value(service_conf)
     name = service_conf['ENV_NAME']
     env_service_host = os.environ.get(name, "")
     if env_service_host:
@@ -49,7 +47,6 @@ def consul_service(service_conf):
         if service_register_name:
             if (consul_host and consul_port) is None:
                 raise NotImplementedError("CONSUL_CLIENT_ADDR:consul_host={},consul_port={},必须同时配置")
-            # if consul_host and consul_port:
             consul_client = consul.Consul(host=consul_host, port=consul_port, scheme="http")
             try:
                 consul_data = consul_client.catalog.service(service_register_name)[1]

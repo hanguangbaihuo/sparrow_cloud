@@ -190,14 +190,14 @@ class OpenAPISchemaGenerator(object):
     def get_schema(self, request=None, public=False):
         endpoints = self.get_endpoints(request)
         # return self.get_paths(endpoints, None, request, public=False)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         register_api = self.get_register_api(endpoints, None, request, public=False)
         return self.handle_api_path(register_api)
 
     def get_endpoints(self, request):
         enumerator = self.endpoint_enumerator_class(self._gen.patterns, self._gen.urlconf, request=request)
         endpoints = []
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         enumerator.get_api_endpoints(final_arrays=endpoints)
         ret=[]
         for group in endpoints:

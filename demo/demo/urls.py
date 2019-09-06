@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/ping/', include("sparrow_cloud.apps.ping.urls")),
-    path('demo/', include("sparrow_demo.urls")),
-    path('testpermission_path/', include("testpermission_path.urls")),
+    # path('admin/', admin.site.urls),
+    # path('api/ping/', include("sparrow_cloud.apps.ping.urls")),
+    # path('demo/', include("sparrow_demo.urls")),
+    # path('testpermission_path/', include("testpermission_path.urls")),
 ]

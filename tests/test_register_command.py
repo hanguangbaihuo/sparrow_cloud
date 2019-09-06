@@ -78,5 +78,3 @@ class RestClientTestCase(unittest.TestCase):
             "API_PATH": "/api/permission_i/register/",
         }
 
-
-

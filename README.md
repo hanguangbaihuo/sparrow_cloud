@@ -127,20 +127,23 @@ REST_FRAMEWORK = {
 > 配置 permission_command 需要的参数
 
 ```
-# 本服务配置
-SERVICE_CONF = {
-    "NAME": "",  # 本服务的名称
-}
+    settings 配置:
+    # 本服务配置
+    SERVICE_CONF = {
+        "NAME": "",  # 本服务的名称
+    }
+    
+    
+    SPARROW_PERMISSION_REGISTER_CONF = {
+        "PERMISSION_SERVICE": {
+            "ENV_NAME": "PERMISSION_SERVICE_HOST",
+            "VALUE": "xxxxx-svc"
+        }
+        "API_PATH": "/api/permission_i/register/"
+    }
 
-
-# API 权限服务配置
-### api permission 依赖 ###
-环境变量名字
-SPARROW_PERMISSION_REGISTER_NAME = "sparrow-purchase-limit-svc"
-SPARROW_PERMISSION_REGISTER_API = "/api/permission_i/register/"
-
-ps: 环境变量名字不能修改, SPARROW_PERMISSION_REGISTER_NAME 可由
-SPARROW_PERMISSION_REGISTER_NAME_HOST = "127.0.0.1:8001" 覆盖
+    调用方式：
+        python3 manage.py -d 2 
 
 ```
 ## METHOD_MIDDLEWARE
@@ -161,6 +164,7 @@ SPARROW_PERMISSION_REGISTER_NAME_HOST = "127.0.0.1:8001" 覆盖
 ## PERMISSION_MIDDLEWARE
 > 权限中间件
 > 配置PERMISSION_MIDDLEWARE需要的参数
+
 ```
 # 将以下参数添加到settings.py
 PERMISSION_MIDDLEWARE = {
@@ -186,6 +190,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 ## restcliet 使用说明
 
 > 服务调用中间件
+
 ```
   from sparrow_cloud.restclient import rest_client
   rest_client.post(SERVICE_CONF, api_path, json=api_list)
@@ -199,3 +204,101 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     VALUE: consul服务注册名字
     ps:
       剩余参数与 requests.get/post 等方法保持一致
+      
+## message_client 使用说明
+
+> 麻雀任务发送
+> 1. 注册消息 2. 发送消息
+
+```
+    settings配置
+        MESSAGE_SENDER_CONF = {
+            "SERVICE_CONF": {
+                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
+                "VALUE": "xxxxx-svc",
+            },
+            "API_PATH": "/api/sparrow_task/producer/send/",
+        }
+        ps: 
+            MESSAGE_SENDER_CONF  # 配置
+                SERVICE_CONF  # message_client依赖consul
+                API_PATH  # message_client 发送消息地址
+    
+    调用方式：
+        from sparrow_cloud.meassge_service.sender import send_task
+        data = send_task(exchange=exchange, 
+                         routing_kshiyey=routing_key, 
+                         message_code=message_code, 
+                         *args,
+                         **kwargs)
+        ps:
+           exchange: 交换机
+           routing_key: 路由
+           message_code: 消息码
+```
+
+
+## rebbitmq_consumer 使用说明
+
+> 麻雀任务消费
+> 1. 获取队列 2. 消费任务
+```
+    settings配置
+
+        SPARROW_RABBITMQ_CONSUMER_CONF = {
+
+            "MESSAGE_BROKER_CONF": {
+                "USER_NAME": "hg_test",
+                "PASSWORD": "jft87JheHe23",
+                "BROKER_SERVICE_CONF": {
+                    "ENV_NAME": "SPARROW_BROKER_HOST",
+                    "VALUE": "sparrow-demo",
+                },
+            },
+            "MESSAGE_BACKEND_CONF": {
+                "BACKEND_SERVICE_CONF": {
+                        "ENV_NAME": "SPARROW_BACKEND_HOST",
+                        "VALUE": "sparrow-demo",
+                },
+                "API_PATH": "/api/sparrow_task/task/update/"
+            }
+        }
+
+        QUEUE_CONF_1 = {
+            "QUEUE": "ORDER_PAY_SUC_ALL",
+            "TARGET_FUNC_MAP": {
+                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1"
+            }
+        }
+
+
+        ps:
+                SPARROW_RABBITMQ_CONSUMER_CONF  # consumer的配置
+                    MESSAGE_BROKER_CONF  # rabbitmq配置
+                        USER_NAME # 用户名
+                        PASSWORD # 密码
+                        BROKER_SERVICE_CONF  # 依赖consul服务的配置
+                    MESSAGE_BACKEND_CONF
+                        BACKEND_SERVICE_CONF # 依赖consul服务的配置
+                        API_PATH # api 路径
+                QUEUE_CONF_1  # 队列的配置
+                    QUEUE  # 队列名称
+                    TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，对应的值为执行该消息的任务函数路径字符串）
+
+
+    调用方式：
+        注册服务到 settings 下的 INSTALLED_APPS中
+        
+        INSTALLED_APPS = [
+            "message_service",
+        ]
+        
+        调用命令：
+        python3 manage.py rabbitmq_consumer --queue QUEUE_CONF_1
+        
+        ps：
+        参数说明
+            --queue ： 指定发送队列配置名称， 参照settings中QUEUE_CONF_1配置
+            
+    
+```
