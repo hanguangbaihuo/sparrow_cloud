@@ -208,15 +208,64 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 > 1. 注册消息 2. 发送消息
 
 ```
-    from sparrow_cloud.meassge_service.sender import send_task
-    data = send_task(exchange=exchange, 
-                     routing_key=routing_key, 
-                     message_code=message_code, 
-                     *args,
-                     **kwargs)
-    ps:
-       exchange: 交换机
-       routing_key: 路由
-       message_code: 消息码
+    settings配置
+        MESSAGE_SENDER_CONF = {
+            "SERVICE_CONF": {
+                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
+                "VALUE": "xxxxx-svc",
+            },
+            "API_PATH": "/api/sparrow_task/producer/send/",
+        }
+        ps: 
+            MESSAGE_SENDER_CONF  # 配置
+                SERVICE_CONF  # message_client依赖consul
+                API_PATH  # message_client 发送消息地址
+    
+    调用方式：
+        from sparrow_cloud.meassge_service.sender import send_task
+        data = send_task(exchange=exchange, 
+                         routing_kshiyey=routing_key, 
+                         message_code=message_code, 
+                         *args,
+                         **kwargs)
+        ps:
+           exchange: 交换机
+           routing_key: 路由
+           message_code: 消息码
 ```
 
+
+## rebbitmq_consumer 使用说明
+
+> 麻雀任务消费
+> 1. 获取队列 2. 消费任务
+```
+    settings配置
+    
+        SPARROW_RABBITMQ_CONSUMER_CONF = {
+            "SERVICE_CONF": {
+                    "ENV_NAME": "DLJFLS_LSDK_LDKEND",
+                    "VALUE": "xxxxx-svc",
+                },
+            "MESSAGE_BROKER": "",
+            "MESSAGE_BACKEND": "",
+        }
+    
+        QUEUE_CONF_1 = {
+            "QUEUE": "XXX",
+            "TARGET_FUNC_MAP : {
+                "xxx": "xx.xx"
+            }
+        }
+        ps:
+            SPARROW_RABBITMQ_CONSUMER_CONF  # consumer的配置
+                SERVICE_CONF  # consumer依赖consul
+                MESSAGE_BROKER  # 必填 rabbitmq 的地址
+                MESSAGE_BACKEND # 选填的配置，如果设置了message_backend,则在任务执行完成之后会向该设置里的url发送任务执行完成结果，post请求
+                                  
+            QUEUE_CONF_1  # 队列的配置
+                QUEUE  # 队列名称
+                TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，对应的值为执行该消息的任务函数路径字符串）
+                                
+
+```

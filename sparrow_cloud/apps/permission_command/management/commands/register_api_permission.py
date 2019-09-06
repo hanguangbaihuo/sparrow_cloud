@@ -92,7 +92,7 @@ class Command(BaseCommand):
             "service_name": service_name,
             "api_list": schema
         }
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         pprint(resutl)
         # 注册/更新 api 权限
         # self.register(resutl)

@@ -48,7 +48,7 @@ class RestClientTestCase(unittest.TestCase):
         # import pdb; pdb.set_trace()
         out = StringIO()
         # call_command('rap', stdout=out)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         call_command('register_api_permission', '-d', '2', stdout=out)
         
         print(settings)
