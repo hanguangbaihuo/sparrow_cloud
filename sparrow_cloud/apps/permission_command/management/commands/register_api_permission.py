@@ -13,14 +13,19 @@ from pprint import pprint
 
 logger = logging.getLogger(__name__)
 
+'''
+settings 配置:
 
-# SPARROW_PERMISSION_REGISTER_CONF = {
-#     "PERMISSION_SERVICE": {
-#         "ENV_NAME": "PERMISSION_SERVICE_HOST",
-#         "VALUE": "xxxxx-svc"
-#     }
-#     "API_PATH": ""
-# }
+SPARROW_PERMISSION_REGISTER_CONF = {
+    "PERMISSION_SERVICE": {
+        "ENV_NAME": "PERMISSION_SERVICE_HOST",
+        "VALUE": "xxxxx-svc"
+    }
+    "API_PATH": "/api/permission_i/register/"
+}
+'''
+
+
 
 
 class Command(BaseCommand):
@@ -57,9 +62,11 @@ class Command(BaseCommand):
     #     return _name
 
     def register(self, api_list):
-        api_path = settings.SPARROW_PERMISSION_REGISTER_API
+        sparrow_permission_register_conf = settings.SPARROW_PERMISSION_REGISTER_CONF
+        api_path = sparrow_permission_register_conf['API_PATH']
+        permission_service_conf = sparrow_permission_register_conf["PERMISSION_SERVICE"]
         try:
-            rest_client.post("SPARROW_PERMISSION_REGISTER_NAME", api_path, json=api_list)
+            rest_client.post(permission_service_conf, api_path, json=api_list)
             print("api 注册成功")
         except HTTPException as ex:
             print("api 注册失败. message={}, service_name={}".format(ex.detail, "SPARROW_PERMISSION_REGISTER_NAME"))
@@ -95,5 +102,5 @@ class Command(BaseCommand):
         # import pdb; pdb.set_trace()
         pprint(resutl)
         # 注册/更新 api 权限
-        # self.register(resutl)
+        self.register(resutl)
 

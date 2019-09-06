@@ -127,20 +127,23 @@ REST_FRAMEWORK = {
 > 配置 permission_command 需要的参数
 
 ```
-# 本服务配置
-SERVICE_CONF = {
-    "NAME": "",  # 本服务的名称
-}
+    settings 配置:
+    # 本服务配置
+    SERVICE_CONF = {
+        "NAME": "",  # 本服务的名称
+    }
+    
+    
+    SPARROW_PERMISSION_REGISTER_CONF = {
+        "PERMISSION_SERVICE": {
+            "ENV_NAME": "PERMISSION_SERVICE_HOST",
+            "VALUE": "xxxxx-svc"
+        }
+        "API_PATH": "/api/permission_i/register/"
+    }
 
-
-# API 权限服务配置
-### api permission 依赖 ###
-环境变量名字
-SPARROW_PERMISSION_REGISTER_NAME = "sparrow-purchase-limit-svc"
-SPARROW_PERMISSION_REGISTER_API = "/api/permission_i/register/"
-
-ps: 环境变量名字不能修改, SPARROW_PERMISSION_REGISTER_NAME 可由
-SPARROW_PERMISSION_REGISTER_NAME_HOST = "127.0.0.1:8001" 覆盖
+    调用方式：
+        python3 manage.py -d 2 
 
 ```
 ## METHOD_MIDDLEWARE
