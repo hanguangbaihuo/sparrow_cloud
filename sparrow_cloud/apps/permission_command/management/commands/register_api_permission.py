@@ -14,6 +14,15 @@ from pprint import pprint
 logger = logging.getLogger(__name__)
 
 
+# SPARROW_PERMISSION_REGISTER_CONF = {
+#     "PERMISSION_SERVICE": {
+#         "ENV_NAME": "PERMISSION_SERVICE_HOST",
+#         "VALUE": "xxxxx-svc"
+#     }
+#     "API_PATH": ""
+# }
+
+
 class Command(BaseCommand):
     help = '实时注册APIs到认证中心'
 
@@ -83,7 +92,8 @@ class Command(BaseCommand):
             "service_name": service_name,
             "api_list": schema
         }
-        # pprint(resutl)
+        import pdb; pdb.set_trace()
+        pprint(resutl)
         # 注册/更新 api 权限
-        self.register(resutl)
+        # self.register(resutl)
 

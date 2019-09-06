@@ -61,3 +61,6 @@ class ConsulServiceTest(unittest.TestCase):
         settings.SERVICE_CONF = SERVICE_CONF
         addr = consul_service(SERVICE_CONF)
         self.assertEqual(addr, '127.0.0.1:8001')
+
+    def tearDown(self):
+        del os.environ["DJANGO_SETTINGS_MODULE"]

@@ -74,3 +74,7 @@ class RestClientTestCase(unittest.TestCase):
         settings.SERVICE_CONF = SERVICE_CONF
         res = rest_client.get(SERVICE_CONF, api_path, data=data)
         self.assertEqual(res, {'key1': 'value1', 'status_code': 200})
+
+    def tearDown(self):
+        # import pdb; pdb.set_trace()
+        del os.environ["DJANGO_SETTINGS_MODULE"]
