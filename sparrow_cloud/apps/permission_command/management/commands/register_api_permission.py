@@ -26,8 +26,6 @@ SPARROW_PERMISSION_REGISTER_CONF = {
 '''
 
 
-
-
 class Command(BaseCommand):
     help = '实时注册APIs到认证中心'
 
