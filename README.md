@@ -214,8 +214,8 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     settings配置
         MESSAGE_SENDER_CONF = {
             "SERVICE_CONF": {
-                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
-                "VALUE": "xxxxx-svc",
+                "ENV_NAME": "MESSAGE_REGISTER_NAME_HOST",
+                "VALUE": "sparrow-task-test-svc",
             },
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
@@ -227,7 +227,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     调用方式：
         from sparrow_cloud.meassge_service.sender import send_task
         data = send_task(exchange=exchange, 
-                         routing_kshiyey=routing_key, 
+                         routing_key=routing_key, 
                          message_code=message_code, 
                          *args,
                          **kwargs)
