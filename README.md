@@ -128,19 +128,24 @@ REST_FRAMEWORK = {
 
 ```
     settings 配置:
-    # 本服务配置
-    SERVICE_CONF = {
-        "NAME": "",  # 本服务的名称
-    }
+        # 注册服务到 settings 下的 INSTALLED_APPS中
+        INSTALLED_APPS = [
+            "sparrow_cloud.apps.permission_command",
+        ]
     
-    
-    SPARROW_PERMISSION_REGISTER_CONF = {
-        "PERMISSION_SERVICE": {
-            "ENV_NAME": "PERMISSION_SERVICE_HOST",
-            "VALUE": "xxxxx-svc"
+        # 本服务配置
+        SERVICE_CONF = {
+            "NAME": "",  # 本服务的名称
         }
-        "API_PATH": "/api/permission_i/register/"
-    }
+        
+        # 注册服务的配置
+        SPARROW_PERMISSION_REGISTER_CONF = {
+            "PERMISSION_SERVICE": {
+                "ENV_NAME": "PERMISSION_SERVICE_HOST",
+                "VALUE": "xxxxx-svc"
+            }
+            "API_PATH": "/api/permission_i/register/"
+        }
 
     调用方式：
         python3 manage.py -d 2 
@@ -187,7 +192,7 @@ MIDDLEWARE = [
 PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件依赖 consul
 ```
 
-## restcliet 使用说明
+## restclient 使用说明
 
 > 服务调用中间件
 
@@ -199,7 +204,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     SERVICE_CONF = {
         "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
         "VALUE": "sprrow-permission-svc"
-    }
+    },
     ENV_NAME: 用来覆盖 consul 的环境变量名
     VALUE: consul服务注册名字
     ps:
@@ -225,7 +230,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                 API_PATH  # message_client 发送消息地址
     
     调用方式：
-        from sparrow_cloud.meassge_service.sender import send_task
+        from sparrow_cloud.message_service.sender import send_task
         data = send_task(exchange=exchange, 
                          routing_key=routing_key, 
                          message_code=message_code, 
@@ -238,7 +243,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 ```
 
 
-## rebbitmq_consumer 使用说明
+## rabbitmq_consumer 使用说明
 
 > 麻雀任务消费
 > 1. 获取队列 2. 消费任务
@@ -248,8 +253,9 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         SPARROW_RABBITMQ_CONSUMER_CONF = {
 
             "MESSAGE_BROKER_CONF": {
-                "USER_NAME": "hg_test",
-                "PASSWORD": "jft87JheHe23",
+                "USER_NAME": "test",
+                "PASSWORD": "jfdskafsake",
+                "VIRTUAL_HOST": "sparrow_test",
                 "BROKER_SERVICE_CONF": {
                     "ENV_NAME": "SPARROW_BROKER_HOST",
                     "VALUE": "sparrow-demo",
@@ -277,6 +283,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                     MESSAGE_BROKER_CONF  # rabbitmq配置
                         USER_NAME # 用户名
                         PASSWORD # 密码
+                        VIRTUAL_HOST # 虚拟主机
                         BROKER_SERVICE_CONF  # 依赖consul服务的配置
                     MESSAGE_BACKEND_CONF
                         BACKEND_SERVICE_CONF # 依赖consul服务的配置
@@ -290,7 +297,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         注册服务到 settings 下的 INSTALLED_APPS中
         
         INSTALLED_APPS = [
-            "message_service",
+            "sparrow_cloud.apps.message_service",
         ]
         
         调用命令：

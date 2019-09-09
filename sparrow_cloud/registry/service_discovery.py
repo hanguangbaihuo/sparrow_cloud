@@ -58,6 +58,8 @@ def consul_service(service_conf):
                 raise ImproperlyConfigured(
                     'consul服务暂时不可用, 临时解决方法： 在service_conf中配置service_host')
             return domain
+        else:
+            raise ImproperlyConfigured('请检查配置：SERVICE_CONF，ENV_NAME和VALUE必须配置一个。')
 
 
 def get_loadbalance_index(value):
