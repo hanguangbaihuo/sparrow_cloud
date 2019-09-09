@@ -12,27 +12,6 @@ def task(*args, **kwargs):
     print('*'*10)
 
 
-# SPARROW_RABBITMQ_CONSUMER_CONF = {
-#
-#     "MESSAGE_BROKER_CONF": {
-#         "USER_NAME": "test_name",
-#         "PASSWORD": "test_password",
-#         "VIRTUAL_HOST": "test_virtual",
-#         "BROKER_SERVICE_CONF": {
-#             "ENV_NAME": "SPARROW_BROKER_HOST",
-#             "VALUE": "sparrow-test",
-#         },
-#     },
-#     "MESSAGE_BACKEND_CONF": {
-#         "BACKEND_SERVICE_CONF": {
-#             "ENV_NAME": "SPARROW_BACKEND_HOST",
-#             "VALUE": "sparrow-demo",
-#         },
-#         "API_PATH": "/api/sparrow_test/task/test_update/"
-#     }
-# }
-
-
 def detail(request, question_id):
     return HttpResponse("You're looking at question %s." % question_id)
 
