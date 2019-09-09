@@ -70,9 +70,10 @@ def rabbitmq_consumer(queue):
     broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
     broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
     broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
+    virtual_host = consumer_conf['MESSAGE_BROKER_CONF'].get('VIRTUAL_HOST', None)
     broker_service_addr = consul_service(broker_service_conf)
 
-    broker_conf = 'amqp'+"://"+broker_service_username+":"+broker_service_password+'@'+broker_service_addr
+    broker_conf = 'amqp'+"://"+broker_service_username+":"+broker_service_password+'@'+broker_service_addr+"/"+virtual_host
     if message_backend_path:
         backend_service_addr = consul_service(backend_service_conf)
         consumer = RabbitMQConsumer(

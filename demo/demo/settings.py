@@ -189,6 +189,7 @@ SPARROW_RABBITMQ_CONSUMER_CONF = {
     "MESSAGE_BROKER_CONF": {
         "USER_NAME": "hg_test",
         "PASSWORD": "jft87JheHe23",
+        "VIRTUAL_HOST": "sparrow_test",
         "BROKER_SERVICE_CONF": {
             "ENV_NAME": "SPARROW_BROKER_HOST",
             "VALUE": "sparrow-demo",
@@ -207,8 +208,19 @@ SPARROW_RABBITMQ_CONSUMER_CONF = {
 QUEUE_CONF_1 = {
             "QUEUE": "ORDER_PAY_SUC_ALL",
             "TARGET_FUNC_MAP": {
-                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1"
+                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1",
+                "order_pay_success": "message_service.task.task1"
             }
         }
+
+
+MESSAGE_SENDER_CONF = {
+            "SERVICE_CONF": {
+                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
+                "VALUE": "xxxxx-svc",
+            },
+            "API_PATH": "/api/sparrow_task/producer/send/",
+        }
+
 
 # SPARROW_BROKER_SERVICE_HOST=127.0.0.1:5672 SPARROW_MESSAGE_BACKEND_HOST=backend5.dongyouliang.com python3 manage.py rabbitmq_consumer

@@ -15,8 +15,7 @@ class Command(BaseCommand):
         queue = kwargs['queue']
         if queue:
             try:
+                # import pdb;pdb.set_trace()
                 rabbitmq_consumer(queue=queue)
-                print('消息接受成功')
             except Exception as ex:
                 logger.error(ex)
-                print('消息接受失败，message={}'.format(ex))
