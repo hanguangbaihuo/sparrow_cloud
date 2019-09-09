@@ -12,14 +12,12 @@ class Command(BaseCommand):
         parser.add_argument('--queue', dest="queue", default='', type=str)
 
     def handle(self, *args, **kwargs):
-        queue = kwargs['queue']
+        queue = kwargs.get('queue', None)
         if queue:
-            try:
-                rabbitmq_consumer(queue=queue)
-                print('消息接受成功')
-            except Exception as ex:
-                logger.error(ex)
-                print('消息接受失败，message={}'.format(ex))
+            rabbitmq_consumer(queue=queue)
+        else:
+            logger.error('请在调用命令时传入参数：--queue')
+            print('请在调用命令时传入参数：--queue')
 
 
 

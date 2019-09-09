@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # "sparrow_cloud.apps.ping",
     # "sparrow_cloud.apps.permission_command",
     # "testpermission_path",
+    # "sparrow_cloud.apps.message_service",
     "message_service",
 ]
 
