@@ -188,11 +188,11 @@ SERVICE_NAME = "demo"
 SPARROW_RABBITMQ_CONSUMER_CONF = {
 
     "MESSAGE_BROKER_CONF": {
-        "USER_NAME": "hg_test",
-        "PASSWORD": "jft87JheHe23",
-        "VIRTUAL_HOST": "sparrow_test",
+        "USER_NAME": "xx",
+        "PASSWORD": "xxxx",
+        "VIRTUAL_HOST": "xxx",
         "BROKER_SERVICE_CONF": {
-            "ENV_NAME": "SPARROW_BROKER_HOST",
+            "ENV_NAME": "xxxx",
             "VALUE": "sparrow-demo",
         },
     },
@@ -201,7 +201,7 @@ SPARROW_RABBITMQ_CONSUMER_CONF = {
             "ENV_NAME": "SPARROW_BACKEND_HOST",
             "VALUE": "sparrow-demo",
         },
-        "API_PATH": "/api/sparrow_task/task/update/"
+        "API_PATH": "/api/sparrow_task/test/update/"
     }
 }
 

@@ -24,7 +24,7 @@ class RestClientTestCase(unittest.TestCase):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value='注册成功')
-    def test_get(self, mock_post):
+    def test_register_command(self, mock_post):
         from django.conf import settings
         self.setup_settings(settings)
 
@@ -39,9 +39,6 @@ class RestClientTestCase(unittest.TestCase):
     def setup_settings(self, settings):
         settings.XX = "1"
         settings.SECRET_KEY = "ss"
-        settings.INSTALLED_APPS = [
-            "sparrow_cloud.apps.permission_command",
-        ]
         settings.ROOT_URLCONF = __name__
 
         settings.SPARROW_PERMISSION_REGISTER_CONF = {

@@ -12,6 +12,7 @@ class Command(BaseCommand):
         parser.add_argument('--queue', dest="queue", default='', type=str)
 
     def handle(self, *args, **kwargs):
+        import pdb;pdb.set_trace()
         queue = kwargs.get('queue', None)
         if queue:
             rabbitmq_consumer(queue=queue)
