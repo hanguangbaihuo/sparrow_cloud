@@ -10,9 +10,6 @@ class VerificationConfiguration(object):
         try:
             self.PERMISSION_SERVICE = settings.PERMISSION_MIDDLEWARE['PERMISSION_SERVICE']
             self.FILTER_PATH = settings.PERMISSION_MIDDLEWARE['FILTER_PATH']
-            self.PERMISSION_SERVICE['NAME']
-            self.PERMISSION_SERVICE['HOST']
-            self.PERMISSION_SERVICE['PATH']
         except KeyError as ex:
             raise NotImplementedError("没有配置这个参数%s"% ex)
 

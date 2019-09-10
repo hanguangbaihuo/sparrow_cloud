@@ -1,12 +1,6 @@
-import requests
 import logging
-
 from django.http import JsonResponse
-from django.core.exceptions import ImproperlyConfigured
-from rest_framework.exceptions import APIException
-
 from sparrow_cloud.utils.validation_data import VerificationConfiguration
-# from sparrow_cloud.registry.service_registry import consul_service
 from sparrow_cloud.utils.get_settings_value import GetSettingsValue
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 from sparrow_cloud.utils.normalize_url import NormalizeUrl
@@ -38,7 +32,6 @@ class PermissionMiddleware(MiddlewareMixin):
     SKIP_PERMISSION = SETTINGS_VALUE.get_value('PERMISSION_MIDDLEWARE', 'SKIP_PERMISSION')
 
     def process_request(self, request):
-
         path = request.path
         method = request.method.upper()
         # 是否跳过中间件， true跳过， false不跳过
@@ -54,7 +47,6 @@ class PermissionMiddleware(MiddlewareMixin):
                     except HTTPException as ex:
                         if ex.status_code >= 500:
                             logger.error("permission is not avaiable. detail={}".format(ex.detail))
-                            # return JsonResponse({"message": ex.ex.detail}, status=ex.status_code)
                             return
                         elif ex.status_code >= 300:
                             msg = "中间件调用错误: {},status_code={}".format(ex.detail, ex.status_code)
@@ -63,18 +55,8 @@ class PermissionMiddleware(MiddlewareMixin):
     def valid_permission(self, path, method, user_id):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
-            permission_service = GetSettingsValue().get_middleware_value('PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE')
-            if permission_service['HOST']:
-                service_conf = {
-                    "SERVICE_REGISTER_NAME": permission_service['NAME'],
-                    "HOST": permission_service['HOST'] + ':' + str(permission_service['PORT']),
-                }
-            else:
-                service_conf = {
-                    "SERVICE_REGISTER_NAME": permission_service['NAME'],
-                    "HOST": "",
-                }
-            api_path = permission_service['PATH']
+            service_conf = GetSettingsValue().get_middleware_value('PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE')
+            api_path = self.SETTINGS_VALUE.get_middleware_value('PERMISSION_MIDDLEWARE', 'API_PATH')
             payload = {
                 "method": method,
                 "path": path,
