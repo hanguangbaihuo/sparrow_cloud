@@ -42,7 +42,7 @@ CONSUL_CLIENT_ADDR = {
 }
 
 使用方法：
-from sparrow_cloud.registry.service_registry import consul_service
+from sparrow_cloud.registry.service_discovery import consul_service
 > consul_service(SERVICE_CONF)
 > "127.0.0.1:8001"
 
