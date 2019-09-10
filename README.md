@@ -117,7 +117,7 @@ SPARROW_AUTHENTICATION = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'sparrow_cloud.auth.user_id_authentication.UserIDAuthentication',
-    )
+    ),
 }
 ```
 
@@ -142,9 +142,9 @@ REST_FRAMEWORK = {
         SPARROW_PERMISSION_REGISTER_CONF = {
             "PERMISSION_SERVICE": {
                 "ENV_NAME": "PERMISSION_SERVICE_HOST",
-                "VALUE": "xxxxx-svc"
-            }
-            "API_PATH": "/api/permission_i/register/"
+                "VALUE": "xxxxx-svc",
+            },
+            "API_PATH": "/api/permission_i/register/",
         }
 
     调用方式：
@@ -203,7 +203,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     参数说明:
     SERVICE_CONF = {
         "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-        "VALUE": "sprrow-permission-svc"
+        "VALUE": "sprrow-permission-svc",
     },
     ENV_NAME: 用来覆盖 consul 的环境变量名
     VALUE: consul服务注册名字
@@ -266,15 +266,15 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                         "ENV_NAME": "SPARROW_BACKEND_HOST",
                         "VALUE": "sparrow-demo",
                 },
-                "API_PATH": "/api/sparrow_task/task/update/"
+                "API_PATH": "/api/sparrow_task/task/update/",
             }
         }
 
         QUEUE_CONF_1 = {
             "QUEUE": "ORDER_PAY_SUC_ALL",
             "TARGET_FUNC_MAP": {
-                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1"
-            }
+                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1",
+            },
         }
 
 
