@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
   }
   # 注册 METHOD_MIDDLEWARE
   MIDDLEWARE_CLASSES = (
-      'sparrow_django_common.middleware.methodconvert.MethodConvertMiddleware',      #兼容阿里请求方式中间件
+      'sparrow_cloud.middleware.methodconvert.MethodConvertMiddleware',  #兼容阿里请求方式中间件
   )
 ```
 
