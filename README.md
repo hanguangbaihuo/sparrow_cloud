@@ -50,7 +50,7 @@ from sparrow_cloud.registry.service_discovery import consul_service
   SERVICE_CONF = {
         "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
         "VALUE": "sprrow-permission-svc"
-    }
+    },
     ENV_NAME: 用来覆盖 consul 的环境变量名
     VALUE: consul服务注册名字
 如果有环境变量 PERMISSION_REGISTER_NAME_HOST 存在, 则覆盖 consul
