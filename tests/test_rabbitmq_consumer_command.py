@@ -37,28 +37,29 @@ class RestClientTestCase(unittest.TestCase):
         django.setup()
         out = StringIO()
         call_command('rabbitmq_consumer', '--queue', 'QUEUE_CONF', stdout=out)
+        self.assertEqual(out.read(), '')
 
     def setup_settings(self, settings):
         settings.XX = "1"
         settings.SECRET_KEY = "ss"
         settings.SPARROW_RABBITMQ_CONSUMER_CONF = {
-                                "MESSAGE_BROKER_CONF": {
-                                    "USER_NAME": "test_name",
-                                    "PASSWORD": "test_password",
-                                    "VIRTUAL_HOST": "test_virtual",
-                                    "BROKER_SERVICE_CONF": {
-                                        "ENV_NAME": "SPARROW_BROKER_HOST",
-                                        "VALUE": "sparrow-test",
-                                    },
-                                },
-                                "MESSAGE_BACKEND_CONF": {
-                                    "BACKEND_SERVICE_CONF": {
-                                        "ENV_NAME": "SPARROW_BACKEND_HOST",
-                                        "VALUE": "sparrow-demo",
-                                    },
-                                    "API_PATH": "/api/sparrow_test/task/test_update/"
-                                }
-                            }
+            "MESSAGE_BROKER_CONF": {
+                "USER_NAME": "test_name",
+                "PASSWORD": "test_password",
+                "VIRTUAL_HOST": "test_virtual",
+                "BROKER_SERVICE_CONF": {
+                    "ENV_NAME": "SPARROW_BROKER_HOST",
+                    "VALUE": "sparrow-test",
+                },
+            },
+            "MESSAGE_BACKEND_CONF": {
+                "BACKEND_SERVICE_CONF": {
+                    "ENV_NAME": "SPARROW_BACKEND_HOST",
+                    "VALUE": "sparrow-demo",
+                },
+                "API_PATH": "/api/sparrow_test/task/test_update/"
+            }
+        }
 
         settings.QUEUE_CONF={
             "QUEUE": "TEST_QUEUE",
