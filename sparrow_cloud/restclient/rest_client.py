@@ -31,8 +31,16 @@ def _build_url(service_conf, api_path):
 
 def _handle_response(response):
     if 200 <= response.status_code < 300:
-        res_result = response.json()
-        res_result['status_code'] = response.status_code
+        if response.content:
+            try:
+                res_result = response.json()
+            except Exception as ex:
+                res_result = {
+                    "data": response.content,
+                    "message": str(ex),
+                }
+        else:
+            res_result = {}
         return res_result
     else:
         xx = HTTPException(
