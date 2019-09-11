@@ -213,6 +213,26 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     ps:
       剩余参数与 requests.get/post 等方法保持一致
       
+
+## requestsclient 使用说明
+
+> 服务调用中间件（返回结果未封装）
+
+```
+  from sparrow_cloud.restclient import requests_client
+  requests_client.post(SERVICE_CONF, api_path, json=api_list)
+```
+    参数说明:
+    SERVICE_CONF = {
+        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+        "VALUE": "sprrow-permission-svc",
+    },
+    ENV_NAME: 用来覆盖 consul 的环境变量名
+    VALUE: consul服务注册名字
+    ps:
+      剩余参数与 requests.get/post 等方法保持一致      
+
+      
 ## message_client 使用说明
 
 > 麻雀任务发送
