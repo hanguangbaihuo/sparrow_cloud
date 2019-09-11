@@ -9,14 +9,17 @@
 [RestClient](#restcliet-使用说明)
 
 
-## sparrow cloud中间件 ##
+## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
-
-[UserID Authentication](#useridauthentication)
 
 [Request Method Middleware](#method_middleware)
 
 [Permission Verify Middleware](#permission_middleware)
+
+
+## rest_framework中间件 ##
+[UserID Authentication](#useridauthentication)
+
 
 ## installation ##
 
