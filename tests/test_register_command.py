@@ -23,15 +23,26 @@ class RestClientTestCase(unittest.TestCase):
     def setUp(self):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
-    @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value='注册成功')
-    def test_register_command(self, mock_post):
+    @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value={})
+    def test_register_command_list(self, mock_post):
         from django.conf import settings
         self.setup_settings(settings)
 
         django.setup()
         out = StringIO()
         os.environ["PERMISSION_SERVICE_HOST"] = "127.0.0.1:8001"
+        call_command('register_api_permission', '-d', '2', '-l', stdout=out)
+        self.assertEqual(out.read(), '')
+
+    @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value={})
+    def test_register_command(self, mock_post):
+        from django.conf import settings
+        self.setup_settings(settings)
+        django.setup()
+        out = StringIO()
+        os.environ["PERMISSION_SERVICE_HOST"] = "127.0.0.1:8001"
         call_command('register_api_permission', '-d', '2', stdout=out)
+        self.assertEqual(out.read(), '')
 
     def tearDown(self):
         del os.environ["PERMISSION_SERVICE_HOST"]
