@@ -176,15 +176,16 @@ REST_FRAMEWORK = {
 ```
 # 将以下参数添加到settings.py
 PERMISSION_MIDDLEWARE = {
-    # 权限验证服务的配置
-    "PERMISSION_SERVICE":{
-        "NAME": "", #服务名称（k8s上的服务名）, 必填
-        "HOST": "", #IP, 开发环境必填（开发环境使用转发到本地的host）
-        "PORT": 8001, # 服务端口, dev环境需要注意， 配置写的端口需要和转发到本地的端口保持一致, 必填
-        "PATH": "", # url, 必填
+    "PERMISSION_SERVICE": {
+        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
+        "ENV_NAME": "",
+        # VALUE 为服务发现的注册名称
+        "VALUE": "",
     },
-    "FILTER_PATH" : [''], # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-    "SKIP_PERMISSION": False, # 是否启用权限中间件， SKIP_PERMISSION:True, 则跳过中间件， 如果不配置SKIP_PERMISSION，或者SKIP_PERMISSION:False，则不跳过中间件
+    "API_PATH": "",
+    "FILTER_PATH": [''],  # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
+    # 是否启用权限中间件， SKIP_PERMISSION:True, 则跳过中间件，如果不配置SKIP_PERMISSION，或者SKIP_PERMISSION:False，则不跳过中间件
+    "SKIP_PERMISSION": False
 }
 
 注册中间件
