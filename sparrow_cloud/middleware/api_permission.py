@@ -48,6 +48,9 @@ class PermissionMiddleware(MiddlewareMixin):
                         if ex.status_code >= 500:
                             logger.error("permission is not avaiable. detail={}".format(ex.detail))
                             return
+                        elif ex.status_code == 403:
+                            msg = "无权限访问: {},status_code={}".format(ex.detail, ex.status_code)
+                            return JsonResponse({"message": msg}, status=403)
                         elif ex.status_code >= 300:
                             msg = "中间件调用错误: {},status_code={}".format(ex.detail, ex.status_code)
                             return JsonResponse({"message": msg}, status=400)
