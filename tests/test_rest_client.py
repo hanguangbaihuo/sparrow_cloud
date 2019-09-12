@@ -95,6 +95,22 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
+    @mock.patch('requests.delete', side_effect=mocked_requests)
+    def test_delete(self, mock_delete, mock_service):
+        api_path = "/api/xxx/"
+        data = {
+            "key": "value",
+        }
+        from django.conf import settings
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": "127.0.0.1",
+            "PORT": 8500
+        }
+        settings.SERVICE_CONF = SERVICE_CONF
+        res = rest_client.delete(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res, {'key1': 'value1'})
+
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.get', side_effect=mocked_requests_empty_data)
     def test_empty_data(self, mock_get, mock_service):
         api_path = "/api/xxx/"

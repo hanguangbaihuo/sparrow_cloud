@@ -23,6 +23,15 @@ def post(service_conf, api_path, *args, **kwargs):
     res = requests.post(url, *args, **kwargs)
     return _handle_response(res)
 
+def delete(service_conf, api_path, *args, **kwargs):
+    '''
+    service_conf: settings 里面配置的服务注册 key 值
+    '''
+    url = _build_url(service_conf, api_path)
+    # import pdb; pdb.set_trace()
+    res = requests.delete(url, *args, **kwargs)
+    return _handle_response(res)
+
 
 def _build_url(service_conf, api_path):
     servicer_addr = consul_service(service_conf)
