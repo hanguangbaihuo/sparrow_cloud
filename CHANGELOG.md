@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [1.0.8] - 2019-09-11
+### Added
+- requests_client
+
 ## [1.0.6] - 2019-09-11
 ### Added
 - requests_client
