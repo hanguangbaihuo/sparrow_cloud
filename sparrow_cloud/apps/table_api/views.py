@@ -1,20 +1,26 @@
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, generics
 from django.apps import apps
+from .serializers import TableSerializer
+from rest_framework.response import Response
 
 
-@api_view()
-@permission_classes([AllowAny])
-def table_api(request, *args, **kwargs):
-    app_lable = kwargs.get('app_lable')
-    model = kwargs.get('model')
-    data = kwargs.get('data')
-    try:
-        model = apps.get_model(app_lable, model)
-        data = model.objects.filter(data)
+class TableView(generics.ListAPIView):
+    serializer_class = TableSerializer
 
-    except Exception as ex:
-        return Response({"message": str(ex)})
-    return Response({"message": "ok"})
+    def list(self, request, *args, **kwargs):
+        app_lable = self.request.query_params.get('app_lable')
+        model = self.request.query_params.get('app_lable')
+        filter_condition = self.request.query_params.get('filter_condition')
+        if not app_lable or not model or not filter_condition:
+            return Response({'code': 1, 'message': '参数不全，请检查参数：app_lable/model/filter_condition'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            model = apps.get_model(app_lable, model)
+            data = model.objects.filter(**filter_condition)
+            TableSerializer.Meta.model = model
+            serializer = self.get_serializer(data, many=True)
+            result = {'code': 0, 'message': 'ok', 'data': serializer.data}
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as ex:
+            return Response({'code': 1, "message": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
 

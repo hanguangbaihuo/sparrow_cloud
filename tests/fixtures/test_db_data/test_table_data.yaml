@@ -1,0 +1,8 @@
+# install
+# ./manage.py loaddata test_db_data/tast_table_data.yaml
+# test table
+
+
+#- model: sparrow_cloud.apps.table_api.testtable
+#  pk: 1
+#  fields: {brand_num: "2586", name: test_table1}

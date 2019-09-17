@@ -56,7 +56,7 @@ def consul_service(service_conf):
                 domain = "{address}:{port}".format(address=address, port=port)
             except:
                 raise ImproperlyConfigured(
-                    'consul服务暂时不可用, 临时解决方法： 在service_conf中配置service_host')
+                    'consul服务暂时不可用, service:{}, 临时解决方法： 在service_conf中配置service_host'.format(name))
             return domain
         else:
             raise ImproperlyConfigured('请检查配置：SERVICE_CONF，ENV_NAME和VALUE必须配置一个。')
