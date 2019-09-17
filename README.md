@@ -151,7 +151,7 @@ REST_FRAMEWORK = {
         }
 
     调用方式：
-        python3 manage.py -d 2 
+        python3 manage.py register_api_permission  -d 2
 
 ```
 ## METHOD_MIDDLEWARE
@@ -332,4 +332,37 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
             --queue ： 指定发送队列配置名称， 参照settings中QUEUE_CONF_1配置
             
     
+```
+
+
+## table_api 使用说明
+> 根据查询条件返回django model 序列化后的数据
+> 分为server端和client端
+
+```
+
+ # server 端配置
+    # settings注册服务
+    INSTALLED_APPS = [
+        "sparrow_cloud.apps.table_api",
+    ]
+    url配置
+    urlpatterns = [
+    path('table/api/', include("sparrow_cloud.apps.table_api.urls")),
+    ]
+
+
+ # client端调用 
+    from sparrow_cloud.restclient import rest_client
+    SERVICE_CONF = {
+             "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
+             "VALUE": "sprrow-permission-svc"
+         }
+    payload = {
+        "app_lable":"product",
+        "model":"SparrowProductsProductoperationlog",
+        "filter_condition":{"product_id":"74101"}
+    }
+    response = rest_client.get(SERVICE_CONF, api_path='/api/table_api/', json=payload)
+    #  返回的数据结构：{'code': 0, 'message': 'ok', 'data': [{}]}
 ```

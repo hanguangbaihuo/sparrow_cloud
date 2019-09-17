@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
 
-class MessageService(AppConfig):
-    name = 'message_service'
+class TableAPIService(AppConfig):
+    name = 'table_api'
+    verbose_name = 'table_api'
