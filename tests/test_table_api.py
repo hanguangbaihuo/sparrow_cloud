@@ -20,7 +20,7 @@ setup_settings(settings)
 django.setup()
 
 urlpatterns = [
-        path("api/", include("sparrow_cloud.apps.table_api.urls"))
+        path("table/api/", include("sparrow_cloud.apps.table_api.urls"))
     ]
 
 

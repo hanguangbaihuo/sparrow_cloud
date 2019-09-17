@@ -336,7 +336,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 
 
 ## table_api 使用说明
-> 根据查询条件返回django model 序列化后的数据
+> 接受查询条件返回django model 序列化后的数据
 > 分为server端和client端
 
 ```
@@ -365,4 +365,11 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     }
     response = rest_client.get(SERVICE_CONF, api_path='/api/table_api/', json=payload)
     #  返回的数据结构：{'code': 0, 'message': 'ok', 'data': [{}]}
+    
+    
+    ps:
+        app_lable: app_name(INSTALLED_APPS里面注册的服务的名字)
+        model: app_lable下的model名字，不区分大小写
+        filter_condition: 过滤数据， kwargs
+        server端使用orm filter查询数据，当前版本不支持order_by
 ```
