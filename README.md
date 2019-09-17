@@ -348,7 +348,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     ]
     url配置
     urlpatterns = [
-    path('api/', include("sparrow_cloud.apps.table_api.urls")),
+    path('table/api/', include("sparrow_cloud.apps.table_api.urls")),
     ]
 
 
