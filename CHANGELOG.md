@@ -12,7 +12,7 @@
 
 ### Changed
 - fix bug for api_permission middleware
-- service_discovery exception reminder adds service name
+- service_discovery exception reminder add service name
 
 
 ## [1.0.8] - 2019-09-11
