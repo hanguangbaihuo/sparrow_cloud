@@ -8,14 +8,13 @@ class TableView(generics.ListAPIView):
     serializer_class = TableSerializer
 
     def list(self, request, *args, **kwargs):
-        app_lable = self.request.data.get('app_lable', None)
-        model = self.request.data.get('model', None)
+        app_lable_model = self.request.data.get('app_lable_model', None)
         filter_condition = self.request.data.get('filter_condition', None)
-        if (app_lable and model and filter_condition) is None:
-            return Response({'code': 1, 'message': '参数不全，请检查参数：app_lable/model/filter_condition'},
+        if (app_lable_model and filter_condition) is None:
+            return Response({'code': 1, 'message': '参数不全，请检查参数：app_lable_model/filter_condition'},
                             status=status.HTTP_400_BAD_REQUEST)
         try:
-            model = apps.get_model(app_lable, model)
+            model = apps.get_model(app_lable_model)
             data = model.objects.filter(**filter_condition)
             TableSerializer.Meta.model = model
             serializer = self.get_serializer(data, many=True)

@@ -367,8 +367,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
              "VALUE": "sprrow-permission-svc"
          }
     payload = {
-        "app_lable":"product",
-        "model":"SparrowProductsProductoperationlog",
+        "app_lable_model":"app_lable.model",
         "filter_condition":{"product_id":"74101"}
     }
     response = rest_client.get(SERVICE_CONF, api_path='/api/table_api/', json=payload)
@@ -376,8 +375,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     
     
     ps:
-        app_lable: app_name(INSTALLED_APPS里面注册的服务的名字)
-        model: app_lable下的model名字，不区分大小写
+        app_lable_model: app_name.model(app_name:INSTALLED_APPS里面注册的服务的名字, model:app_lable下的model名字，不区分大小写)
         filter_condition: 过滤数据， kwargs
         server端使用orm filter查询数据，当前版本不支持order_by
 ```
