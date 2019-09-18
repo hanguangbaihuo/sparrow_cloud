@@ -6,13 +6,13 @@
 
 [API Permission Register](#api-permission-register)
 
-[RestClient](#restcliet-使用说明)
+[RestClient](#restclient-)
 
-[Message_Client](#message_client)
+[Message_Client](#message_client-)
 
-[Rabbitmq_Consumer](#rabbitmq_consumer)
+[Rabbitmq_Consumer](#rabbitmq_consumer-)
 
-[Table_API](#table_api)
+[Table_API](#table_api-)
 
 
 ## django中间件 ##
@@ -25,8 +25,6 @@
 
 ## rest_framework中间件 ##
 [UserID Authentication](#useridauthentication)
-
-
 
 
 ## installation ##
@@ -381,3 +379,5 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         filter_condition: 过滤数据， kwargs
         server端使用orm filter查询数据，当前版本不支持order_by
 ```
+
+[#message_client]: #message_client
