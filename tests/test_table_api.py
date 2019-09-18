@@ -35,13 +35,12 @@ class TestTableAPI(APITestCase):
         url = reverse('table_api')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'code': 1, 'message': '参数不全，请检查参数：app_lable/model/filter_condition'})
+        self.assertEqual(response.json(), {'code': 1, 'message': '参数不全，请检查参数：app_lable_model/filter_condition'})
 
     # def test_table_api_bad_parameter(self):
     #     """错误参数"""
     #     filter_data = {
-    #         "app_lable": "table_api",
-    #         "model": "TestTable",
+    #         "app_lable_model": "table_api.model",
     #         "filter_condition": {"brand_num": "1", "name": "lisi"}
     #     }
     #     url = reverse('table_api')
