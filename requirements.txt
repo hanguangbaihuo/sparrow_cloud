@@ -30,3 +30,4 @@ uritemplate==3.0.0
 urllib3==1.25.3
 wcwidth==0.1.7
 zipp==0.6.0
+pytest-cov==2.7.1
