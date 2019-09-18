@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2019-09-18
+### Changed
+- change table_api
+
 ## [1.1.0] - 2019-09-18
 ### Changed
 - fix bug for api_permission middleware
