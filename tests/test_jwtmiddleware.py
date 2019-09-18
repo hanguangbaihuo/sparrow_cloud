@@ -35,5 +35,6 @@ class TestJWTAuthentication(unittest.TestCase):
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
 
+
 if __name__ == '__main__':
     unittest.main()
