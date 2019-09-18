@@ -6,13 +6,15 @@
 
 [API Permission Register](#api-permission-register)
 
-[RestClient](#restclient-)
+[RestClient](#restclient)
 
-[Message_Client](#message_client-)
+[RequestsClient](#requestsclient)
 
-[Rabbitmq_Consumer](#rabbitmq_consumer-)
+[Message_Client](#message_client)
 
-[Table_API](#table_api-)
+[Rabbitmq_Consumer](#rabbitmq_consumer)
+
+[Table_API](#table_api)
 
 
 ## django中间件 ##
@@ -202,7 +204,7 @@ MIDDLEWARE = [
 PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件依赖 consul
 ```
 
-## restclient 使用说明
+## restclient
 
 > 服务调用中间件
 
@@ -221,7 +223,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
       剩余参数与 requests.get/post 等方法保持一致
       
 
-## requestsclient 使用说明
+## requestsclient
 
 > 服务调用中间件（返回结果未封装）
 
@@ -240,7 +242,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
       剩余参数与 requests.get/post 等方法保持一致      
 
       
-## message_client 使用说明
+## message_client
 
 > 麻雀任务发送
 > 1. 注册消息 2. 发送消息
@@ -273,7 +275,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 ```
 
 
-## rabbitmq_consumer 使用说明
+## rabbitmq_consumer
 
 > 麻雀任务消费
 > 1. 获取队列 2. 消费任务
@@ -341,7 +343,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 ```
 
 
-## table_api 使用说明
+## table_api
 > 接受查询条件返回django model 序列化后的数据
 > 分为server端和client端
 
@@ -379,5 +381,3 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         filter_condition: 过滤数据， kwargs
         server端使用orm filter查询数据，当前版本不支持order_by
 ```
-
-[#message_client]: #message_client
