@@ -24,6 +24,5 @@ def get_user_class():
     try:
         user_cls = getattr(importlib.import_module(module_path), cls_name)
     except Exception as ex:
-        raise AuthenticationValidError('请检查settings下JWT_AUTHENTICATION_MIDDLEWARE中的USER_CLASS_PATH或'
-                                       'USER_CLASS_PATH路径下的user是否正确')
+        raise AuthenticationValidError('UserIDAuthentication ERROR: USER_CLASS_PATH ，MESSAGE:{}'.format(str(ex)))
     return user_cls
