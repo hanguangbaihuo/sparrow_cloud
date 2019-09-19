@@ -37,6 +37,16 @@ def post(service_conf, api_path, *args, **kwargs):
     res = requests.post(url, *args, **kwargs)
     return res
 
+
+def put(service_conf, api_path, *args, **kwargs):
+    '''
+    service_conf: settings 里面配置的服务注册 key 值
+    '''
+    url = _build_url(service_conf, api_path)
+    res = requests.put(url, *args, **kwargs)
+    return res
+
+
 def delete(service_conf, api_path, *args, **kwargs):
     '''
     service_conf: settings 里面配置的服务注册 key 值

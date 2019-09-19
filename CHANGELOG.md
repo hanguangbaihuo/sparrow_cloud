@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [1.1.2] - 2019-09-19
+### Changed
+- rest_client requests_client add put 
+
 ## [1.1.1] - 2019-09-18
 ### Changed
 - change table_api

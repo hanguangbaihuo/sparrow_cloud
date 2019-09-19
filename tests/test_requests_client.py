@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from unittest import mock
-from sparrow_cloud.restclient import rest_client
+from sparrow_cloud.restclient import requests_client
 import os
 
 
@@ -43,7 +43,7 @@ def mocked_requests_not_empty_data(*args, **kwargs):
 
 
 CONSUL_RETURN_DATA = (
-    "name", 
+    "name",
     [
         {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001},
         {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001},
@@ -75,8 +75,8 @@ class RestClientTestCase(unittest.TestCase):
             "PORT": 8500
         }
         settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.post(SERVICE_CONF, api_path, data=data)
-        self.assertEqual(res, {'key1': 'value1'})
+        res = requests_client.post(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res.json(), {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.put', side_effect=mocked_requests)
@@ -91,8 +91,8 @@ class RestClientTestCase(unittest.TestCase):
             "PORT": 8500
         }
         settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.put(SERVICE_CONF, api_path, data=data)
-        self.assertEqual(res, {'key1': 'value1'})
+        res = requests_client.put(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res.json(), {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.get', side_effect=mocked_requests)
@@ -107,8 +107,8 @@ class RestClientTestCase(unittest.TestCase):
             "PORT": 8500
         }
         settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.get(SERVICE_CONF, api_path, data=data)
-        self.assertEqual(res, {'key1': 'value1'})
+        res = requests_client.get(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res.json(), {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.delete', side_effect=mocked_requests)
@@ -123,34 +123,8 @@ class RestClientTestCase(unittest.TestCase):
             "PORT": 8500
         }
         settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.delete(SERVICE_CONF, api_path, data=data)
-        self.assertEqual(res, {'key1': 'value1'})
-
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.get', side_effect=mocked_requests_empty_data)
-    def test_empty_data(self, mock_get, mock_service):
-        api_path = "/api/xxx/"
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.get(SERVICE_CONF, api_path)
-        self.assertEqual(res, '')
-
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.get', side_effect=mocked_requests_not_empty_data)
-    def test_empty_data(self, mock_get, mock_service):
-        api_path = "/api/xxx/"
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = rest_client.get(SERVICE_CONF, api_path)
-        self.assertEqual(res, {'data': {'key2': 'value2'}, 'message': "'MockResponse' object has no attribute 'json'"})
+        res = requests_client.delete(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res.json(), {'key1': 'value1'})
 
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
