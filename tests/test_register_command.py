@@ -66,12 +66,3 @@ class RestClientTestCase(unittest.TestCase):
             "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
             "PORT": os.environ.get("CONSUL_PORT", 8500)
         }
-        settings.ROOT_URLCONF = __name__
-        settings.SPARROW_PERMISSION_REGISTER_CONF = {
-            "PERMISSION_SERVICE": {
-                "ENV_NAME": "PERMISSION_SERVICE_HOST",
-                "VALUE": "xxxxx-svc",
-            },
-            "API_PATH": "/api/permission_i/register/",
-        }
-
