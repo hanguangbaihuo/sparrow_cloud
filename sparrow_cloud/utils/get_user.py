@@ -9,7 +9,7 @@ SPARROW_AUTHENTICATION = 'SPARROW_AUTHENTICATION'
 USER_CLASS_PATH = 'USER_CLASS_PATH'
 
 
-def get_settings_value():
+def get_user_class_path():
     """Get the data in settings and add value validation"""
     settings_value = GetSettingsValue()
     user_class_path = settings_value.get_middleware_value(
@@ -19,7 +19,7 @@ def get_settings_value():
 
 @functools.lru_cache(maxsize=None)
 def get_user_class():
-    user_class_path = get_settings_value()
+    user_class_path = get_user_class_path()
     module_path, cls_name = user_class_path.rsplit(".", 1)
     try:
         user_cls = getattr(importlib.import_module(module_path), cls_name)
