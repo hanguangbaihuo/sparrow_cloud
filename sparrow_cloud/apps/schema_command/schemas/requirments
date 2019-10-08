@@ -1,0 +1,7 @@
+openapi_codec
+coreapi
+coreschema
+json
+django >= 1.9.6
+drf >= 3.4.7
+python>=3.5
