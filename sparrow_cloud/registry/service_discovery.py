@@ -1,9 +1,11 @@
-import logging
+import os
 import consul
+import logging
 from random import randint
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-import os
+from requests.exceptions import ConnectionError
+
 logger = logging.getLogger(__name__)
 
 
@@ -54,9 +56,10 @@ def consul_service(service_conf):
                 port = consul_data[index]['ServicePort']
                 address = consul_data[index]['ServiceAddress']
                 domain = "{address}:{port}".format(address=address, port=port)
-            except:
-                raise ImproperlyConfigured(
-                    'consul服务暂时不可用, service:{}, 临时解决方法： 在service_conf中配置service_host'.format(name))
+            except ConnectionError:
+                raise ConnectionError('consul服务无法连接， 请检查配置')
+            except ValueError:
+                raise ImproperlyConfigured('consul中不存在：{}， 请检查服务名称是否正确'.format(service_conf['VALUE']))
             return domain
         else:
             raise ImproperlyConfigured('请检查配置：SERVICE_CONF，ENV_NAME和VALUE必须配置一个。')
