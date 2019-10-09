@@ -37,7 +37,7 @@ class RestClientTestCase(unittest.TestCase):
     def test_register_schema_command(self, mock_post):
         out = StringIO()
         os.environ["SCHEMA_SERVICE_HOST"] = "127.0.0.1:8001"
-        call_command('register_api_schema', '-p', stdout=out)
+        call_command('register_api_schema', stdout=out)
         r = out.read()
         print(r)
         self.assertEqual(r, '')
