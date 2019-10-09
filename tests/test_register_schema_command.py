@@ -20,7 +20,8 @@ class RestClientTestCase(unittest.TestCase):
         django.setup()
 
         from rest_framework.decorators import api_view
-        from sparrow_cloud.apps.schema_command.schemas.generators import patch_apiview_schema
+
+        from sparrow_cloud.apps.schema_command.schemas import patch_apiview_schema
         patch_apiview_schema()
 
         @api_view()

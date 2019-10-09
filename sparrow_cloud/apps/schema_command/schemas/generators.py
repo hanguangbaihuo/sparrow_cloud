@@ -11,7 +11,7 @@ from django.conf import settings
 from django.contrib.admindocs.views import simplify_regex
 
 from django.utils import six
-from rest_framework.views import APIView
+
 
 from ..schemas.compat import (
     URLPattern, URLResolver, coreapi, coreschema, get_original_route
@@ -21,8 +21,6 @@ from ..schemas import incompatible_settings
 
 from .utils import is_list_view
 from openapi_codec import generate_swagger_object
-from .inspectors import DefaultSchema
-
 
 
 def common_path(paths):
@@ -230,12 +228,6 @@ class EndpointEnumerator(object):
         return [method for method in methods if method not in ('OPTIONS', 'HEAD')]
 
 
-# 改变drf默认的 ApiView类的schema属性
-def patch_apiview_schema():
-    # 为APIView添加schema描述对象
-    setattr(APIView, "schema", DefaultSchema())
-
-
 class SchemaGenerator(object):
     # Map HTTP methods onto actions.
     default_mapping = {
@@ -275,15 +267,10 @@ class SchemaGenerator(object):
         self.url = url
         self.endpoints = None
 
-    def prepare_get_schema(self):
-        patch_apiview_schema()
-
     def get_schema(self):
         """
         Generate a `coreapi.Document` representing the API schema.
         """
-        # 补丁 改变apiview的schema对象
-        self.prepare_get_schema()
         if self.endpoints is None:
             inspector = self.endpoint_inspector_cls(self.patterns, self.urlconf)
             self.endpoints = inspector.get_api_endpoints()
