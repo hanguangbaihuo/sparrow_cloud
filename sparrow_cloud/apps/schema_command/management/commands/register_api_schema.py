@@ -9,17 +9,17 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '-p', '--print',
-            default="", action="store_false",
+            default=False, action="store_true",
             help='打印api schema 到控制台'
         )
 
     def handle(self, *args, **options):
-
+        print(options)
         sg = SchemaGenerator()
         schema = sg.get_schema_dict()
         # print(schema)
         data = json.dumps(schema, ensure_ascii=False)
-        if options["print"]:
+        if options["print"] is True:
             print(data)
         return data
 
