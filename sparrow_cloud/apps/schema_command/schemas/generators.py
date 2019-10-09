@@ -288,8 +288,9 @@ class SchemaGenerator(object):
             返回coreapi.Document的swagger字典形式
         """
         documents = self.get_schema()
-        swagger_dict = generate_swagger_object(documents)
-        return swagger_dict
+        if documents:
+            swagger_dict = generate_swagger_object(documents)
+            return swagger_dict
 
     def get_links(self):
         """
