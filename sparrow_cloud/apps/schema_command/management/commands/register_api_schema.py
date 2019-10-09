@@ -1,6 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 from sparrow_cloud.apps.schema_command.schemas.generators import SchemaGenerator
+from sparrow_cloud.apps.schema_command.contributor import get_git_contributors
 
 
 class Command(BaseCommand):
@@ -17,6 +18,9 @@ class Command(BaseCommand):
         sg = SchemaGenerator()
         schema = sg.get_schema_dict()
         # print(schema)
+        if not schema:
+            return
+        schema["contributors"] = get_git_contributors() or []
         data = json.dumps(schema, ensure_ascii=False)
         if options["print"] is True:
             print(data)
