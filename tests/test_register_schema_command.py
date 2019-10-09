@@ -20,9 +20,9 @@ class RestClientTestCase(unittest.TestCase):
         django.setup()
 
         from rest_framework.decorators import api_view
-        from rest_framework.views import APIView
-        from sparrow_cloud.apps.schema_command.schemas import DefaultSchema
-        setattr(APIView, "schema", DefaultSchema())
+        from sparrow_cloud.apps.schema_command.schemas.generators import patch_apiview_schema
+        patch_apiview_schema()
+
         @api_view()
         def detail(request, question_id):
             return HttpResponse("You're looking at question %s." % question_id)
@@ -37,7 +37,7 @@ class RestClientTestCase(unittest.TestCase):
     def test_register_schema_command(self, mock_post):
         out = StringIO()
         os.environ["SCHEMA_SERVICE_HOST"] = "127.0.0.1:8001"
-        call_command('register_api_schema', stdout=out)
+        call_command('register_api_schema', '-p', stdout=out)
         r = out.read()
         print(r)
         self.assertEqual(r, '')

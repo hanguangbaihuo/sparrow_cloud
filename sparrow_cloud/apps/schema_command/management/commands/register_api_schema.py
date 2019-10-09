@@ -14,9 +14,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        import pdb
-        pdb.set_trace()
-        print(options)
         sg = SchemaGenerator()
         schema = sg.get_schema_dict()
         # print(schema)
