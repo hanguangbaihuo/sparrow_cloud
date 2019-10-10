@@ -9,7 +9,7 @@ def get_git_contributors(head_file_path=None):
     """从项目目录下的.git文件获取作者信息"""
     if head_file_path is None:
         head_file_path = ".git/logs/HEAD"
-    head_info_re = re.compile("\w+\s\w+\s(.*?)\s.*?\n")
+    head_info_re = re.compile(r"\w+\s\w+\s(.*?)\s.*?\n")
     if os.path.isfile(head_file_path):
         with open(head_file_path, "r") as f:
             head_text = f.read()
