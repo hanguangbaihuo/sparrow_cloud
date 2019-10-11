@@ -48,6 +48,7 @@ setup(
         'python-consul>=1.1.0',
         'coreapi>=2.3.3',
         'PyJWT>=1.7.1',
+        'openapi_codec>=1.3.2'
         "sparrow-task-sender>=0.0.3",        # 消息发送
         "sparrow-rabbitmq-consumer>=0.0.8",  # 消息处理
     ],
