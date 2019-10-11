@@ -2,22 +2,27 @@
     获取项目的贡献者
 """
 import os
-import re
+from git import Repo
 
 
-def get_git_contributors(head_file_path=None):
-    """从项目目录下的.git文件获取作者信息"""
-    if head_file_path is None:
-        head_file_path = ".git/logs/HEAD"
-    head_info_re = re.compile(r"\w+\s\w+\s(.*?)\s.*?\n")
-    if os.path.isfile(head_file_path):
-        with open(head_file_path, "r") as f:
-            head_text = f.read()
-            names = re.findall(head_info_re, head_text)
-            if names:
-                unique_names = set(names)
-                return list(unique_names)
+def get_git_contributors(git_dir_path=None):
+    """从项目目录下的.git文件获取贡献者的信息"""
+    if git_dir_path is None:
+        work_dir = os.getcwd()
+        git_dir_path = os.path.join(work_dir, ".git")
+    if not os.path.isdir(git_dir_path):
+        return
+    repo = Repo(git_dir_path)
+    names = set()
+    contributors = []
+    for commit in repo.iter_commits('master', max_count=1024):
+        if commit.summary and "merge" not in commit.summary.lower():
+            if commit.committer.name in names:
+                continue
+            names.add(commit.committer.name)
+            contributors.append("{0} <{1}>".format(commit.committer.name, commit.committer.email))
+    return contributors
 
 
 if __name__ == "__main__":
-    print(get_git_contributors("/Users/zhangshishan/Documents/work/pySpace/sparrow_cloud/.git/logs/HEAD"))
+    print(get_git_contributors("/Users/zhangshishan/Documents/work/pySpace/sparrow_order"))
