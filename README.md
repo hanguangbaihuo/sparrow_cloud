@@ -16,6 +16,7 @@
 
 [Table_API](#table_api)
 
+[Api Schema Register](#api-schema-register)
 
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
