@@ -379,3 +379,30 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         filter_condition: 过滤数据， kwargs
         server端使用orm filter查询数据，当前版本不支持order_by
 ```
+
+## API SCHEMA REGISTER
+>描述：主动注册API 描述到文档服务 配置schema_command 需要的参数
+```
+    settings 配置:
+        # 注册服务到 settings 下的 INSTALLED_APPS中
+        INSTALLED_APPS = [
+            ""sparrow_cloud.apps.schema_command",
+        ]
+    
+        # 本服务配置
+        SERVICE_CONF = {
+            "NAME": "",  # 本服务的名称
+        }
+        
+        # 文档服务的配置
+        SPARROW_SCHEMA_REGISTER_CONF = {
+            "PERMISSION_SERVICE": {
+                "ENV_NAME": "SCHEMA_SERVICE_HOST",
+                "VALUE": "sparrow-schema-svc",
+            },
+            "API_PATH": "/api/schema_i/register/",
+        }
+
+    调用方式：
+        python3 manage.py register_api_schema
+```
