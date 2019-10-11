@@ -16,13 +16,13 @@ def get_git_contributors(git_dir_path=None):
     names = set()
     contributors = []
     for commit in repo.iter_commits('master', max_count=1024):
-        if commit.summary and "merge" not in commit.summary.lower():
+        if commit.committer.name not in ("GitHub", ):
             if commit.committer.name in names:
                 continue
             names.add(commit.committer.name)
-            contributors.append("{0} <{1}>".format(commit.committer.name, commit.committer.email))
+            contributors.append(commit.committer.name)
     return contributors
 
 
 if __name__ == "__main__":
-    print(get_git_contributors("/Users/zhangshishan/Documents/work/pySpace/sparrow_order"))
+    print(get_git_contributors("/Users/zhangshishan/Documents/work/pySpace/sparrow_common/.git"))
