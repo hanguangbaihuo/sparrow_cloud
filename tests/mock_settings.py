@@ -7,6 +7,7 @@ INSTALLED_APPS = [
     "sparrow_cloud.apps.message_service",
     "sparrow_cloud.apps.permission_command",
     "sparrow_cloud.apps.table_api",
+    "sparrow_cloud.apps.schema_command",
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
