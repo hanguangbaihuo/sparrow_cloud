@@ -14,7 +14,7 @@
 - Compatible with low version URL of Django 1.9
 - Optimizing consul_service exception return
 
-## [1.1.2] - 2019-9-19
+## [1.1.2] - 2019-09-19
 ### Changed
 - rest_client requests_client add put 
 
