@@ -49,9 +49,9 @@ setup(
         'coreapi>=2.3.3',
         'PyJWT>=1.7.1',
         'openapi_codec>=1.3.2',
-        'dulwich->=0.19.13',
-        "sparrow-task-sender>=0.0.3",        # 消息发送
-        "sparrow-rabbitmq-consumer>=0.0.8",  # 消息处理
+        'dulwich>=0.19.13',
+        'sparrow-task-sender>=0.0.3',        # 消息发送
+        'sparrow-rabbitmq-consumer>=0.0.8',  # 消息处理
     ],
     python_requires=">=3.5",
     zip_safe=False,
