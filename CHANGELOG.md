@@ -6,7 +6,10 @@
 
 ## [Unreleased]
 
-## [1.1.2] - 2019-09-19
+## [1.2.3] - 2019-10-12
+### Added
+- schema command
+
 ### Changed
 - rest_client requests_client add put 
 
