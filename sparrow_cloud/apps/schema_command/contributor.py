@@ -42,7 +42,8 @@ def get_git_contributors(git_dir_path=None):
                 ostream = ldb.stream(sha)
                 node = ostream.read().decode("utf-8")
                 match = re.findall(author_re, node)
-                names.add(match[0])
+                if match:
+                    names.add(match[0])
         return list(names)
     except Exception as e:
         warnings.warn("get_git_contributors error {0}".format(e))
