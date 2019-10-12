@@ -371,7 +371,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         "app_lable_model":"app_lable.model",
         "filter_condition":{"product_id":"74101"}
     }
-    response = rest_client.get(SERVICE_CONF, api_path='/api/table_api/', json=payload)
+    response = rest_client.get(SERVICE_CONF, api_path='/table/api/', json=payload)
     #  返回的数据结构：{'code': 0, 'message': 'ok', 'data': [{}]}
     
     
