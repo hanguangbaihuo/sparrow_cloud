@@ -410,64 +410,73 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         1、view支持@api_view注解方式，view_class支持GenericApiView，GenericViewSet及其子类
         2、接口描述书写在view函数或者view_class的__doc__上，建议使用markdown格式，展示更美观
     示例:
-        @api_view(('GET',))
-        def get_user(request):
-            """
-            获取用户信息 -> 接口名称
-                -> 空一行分隔
-                请求参数 id, 用户id
-                返回
-                {
-                    "user_id":"1",  # 用户ID
-                    "user_name":"Tom" # 用户名称
-                }
-            """
-        return Response()
-        
-        class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
-            """
-            get: -> class_view 用view_函数的名字加冒号分隔
-                查询用户信息
+  
+```
+>接口描述代码示例
+```python
+from rest_framework.decorators import api_view
+from rest_framework.generics import  RetrieveUpdateDestroyAPIView
+from rest_framework import  generics
+from rest_framework.viewsets import ModelViewSet
+@api_view(('GET',))
+def get_user(request):
+    """
+    获取用户信息 -> 接口名称
+    -> 空一行分隔
+    请求参数
+        id, 用户id
+    返回
+        {
+            "user_id":"1",  # 用户ID
+            "user_name":"Tom" # 用户名称
+        }
+    """
 
-                请求参数 id, 用户id
-                返回
-                    {
-                        "id":"1",  # 用户ID
-                        "user_name":"Tom" # 用户名称
-                    }
-            delete:
-                删除用户
+               
+class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
+    """
+    get: -> class_view 用view_函数的名字加冒号分隔
+        查询用户信息
 
-                路径参数
-                    id 用户id
-                返回
-                    404 用户id不存在
-                    204 删除成功
+        请求参数 id, 用户id
+        返回
+            {
+                "id":"1",  # 用户ID
+                "user_name":"Tom" # 用户名称
+            }
+    delete:
+        删除用户
+
+        路径参数
+            id 用户id
+        返回
+            404 用户id不存在
+            204 删除成功
+    """
+    def put(self, request, *args, **kwargs):
         """
-        def put(self, request, *args, **kwargs):
-            """
-            覆盖修改用户 ->class_view  也可以直接在单个view函数上书写
+        覆盖修改用户 ->class_view  也可以直接在单个view函数上书写
 
-                请求参数
-                {
-                    "id":"1",  # 用户ID
-                    "user_name":"Tom" # 用户名称
-                }
-                返回
-                200 修改成功
-            """
-            return super(UserApiView, self).put(self, request, *args, **kwargs)
-
-
-    class CarViewSet(ModelViewSet):
+            请求参数
+            {
+                "id":"1",  # 用户ID
+                "user_name":"Tom" # 用户名称
+            }
+            返回
+            200 修改成功
         """
-        list: 分页查询车辆
-        retrieve:获取车辆信息
-        update: 覆盖修改车辆
-        partial_update: 部分修改车辆
-        create: 创建车辆
-        destroy: 删除车辆
-        """
+        return super(UserApiView, self).put(self, request, *args, **kwargs)
+
+
+class CarViewSet(ModelViewSet):
+    """
+    list: 分页查询车辆
+    retrieve:获取车辆信息
+    update: 覆盖修改车辆
+    partial_update: 部分修改车辆
+    create: 创建车辆
+    destroy: 删除车辆
+    """
 ```
 
 
