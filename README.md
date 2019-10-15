@@ -412,54 +412,41 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     示例:
         @api_view(('GET',))
         def get_user(request):
-        """
-        获取用户信息 -> 接口名称
-            -> 空一行分隔
-            请求参数
-                id, 用户id
-            返回
-            {
-                "user_id":"1",  # 用户ID
-                "user_name":"Tom" # 用户名称
-            }
-        """
+            """
+            获取用户信息 -> 接口名称
+                -> 空一行分隔
+                请求参数 id, 用户id
+                返回
+                {
+                    "user_id":"1",  # 用户ID
+                    "user_name":"Tom" # 用户名称
+                }
+            """
         return Response()
         
         class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
-        """
-        get: -> 视图函数名称
-            查询用户信息
+            """
+            get: -> class_view 用view_函数的名字加冒号分隔
+                查询用户信息
 
-            请求参数
-                id, 用户id
-            返回
-                {
-                    "id":"1",  # 用户ID
-                    "user_name":"Tom" # 用户名称
-                }
-        delete:
-            删除用户
+                请求参数 id, 用户id
+                返回
+                    {
+                        "id":"1",  # 用户ID
+                        "user_name":"Tom" # 用户名称
+                    }
+            delete:
+                删除用户
 
-            路径参数
-                id 用户id
-            返回
-                404 用户id不存在
-                204 删除成功
-        patch:
-            修改用户
-
-            请求参数
-                {
-                    "user_name":"Tom", # 用户名
-                    "id":1 # 用户id
-                }
-            返回
-                404 用户id不存在
-                204 删除成功
+                路径参数
+                    id 用户id
+                返回
+                    404 用户id不存在
+                    204 删除成功
         """
         def put(self, request, *args, **kwargs):
             """
-            覆盖修改用户 -> 也可以直接在单个视图函数上书写
+            覆盖修改用户 ->class_view  也可以直接在单个view函数上书写
 
                 请求参数
                 {
@@ -481,7 +468,6 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         create: 创建车辆
         destroy: 删除车辆
         """
-
 ```
 
 
