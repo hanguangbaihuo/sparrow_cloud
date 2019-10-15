@@ -404,12 +404,11 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
             "API_PATH": "/api/schema_i/register/",
         }
     
-    调用方式：
+    调用方式:
         python3 manage.py register_api_schema
     使用说明:
         1、view支持@api_view注解方式，view_class支持GenericApiView，GenericViewSet及其子类
         2、接口描述书写在view函数或者view_class的__doc__上，建议使用markdown格式，展示更美观
-    示例:
   
 ```
 >接口描述代码示例
