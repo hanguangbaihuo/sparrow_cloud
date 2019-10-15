@@ -421,22 +421,21 @@ from rest_framework.viewsets import ModelViewSet
 @api_view(('GET',))
 def get_user(request):
     """
-    获取用户信息 -> 接口名称
-    -> 空一行分隔
-    请求参数
-        id, 用户id
-    返回
-        {
-            "user_id":"1",  # 用户ID
-            "user_name":"Tom" # 用户名称
-        }
+    ### 获取用户信息 ####
+
+        请求参数 id, 用户id
+        返回
+            {
+                "user_id":"1",  # 用户ID
+                "user_name":"Tom" # 用户名称
+            }
     """
 
-               
+
 class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
     """
-    get: -> class_view 用view_函数的名字加冒号分隔
-        查询用户信息
+    get:
+        ### 查询用户信息 ###
 
         请求参数 id, 用户id
         返回
@@ -445,7 +444,7 @@ class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
                 "user_name":"Tom" # 用户名称
             }
     delete:
-        删除用户
+        ### 删除用户 ###
 
         路径参数
             id 用户id
@@ -453,17 +452,17 @@ class UserApiView(RetrieveUpdateDestroyAPIView, generics.GenericAPIView):
             404 用户id不存在
             204 删除成功
     """
+
     def put(self, request, *args, **kwargs):
         """
-        覆盖修改用户 ->class_view  也可以直接在单个view函数上书写
+        ### 覆盖修改用户 ###
 
             请求参数
-            {
-                "id":"1",  # 用户ID
+                {
+                 "id":"1",  # 用户ID
                 "user_name":"Tom" # 用户名称
-            }
-            返回
-            200 修改成功
+                }
+            返回 200 修改成功
         """
         return super(UserApiView, self).put(self, request, *args, **kwargs)
 
