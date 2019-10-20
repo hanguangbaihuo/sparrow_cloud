@@ -28,3 +28,13 @@ DATABASES = {
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+LANGUAGE_CODE = "zh-hans"
+
+TIME_ZONE = "Asia/Shanghai"
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = False
