@@ -44,9 +44,8 @@ def config(key):
                 value.pop('cache_time')
                 return value
         except ConnectionError:
-            raise ConnectionError('consul服务无法连接， 请检查配置')
-        if cache_value:
-            cache_value.pop('cache_time')
-            return cache_value
-        value = get_settings_value(name=key, prompt="配置中心和项目 settings 均无此参数")
-        return value
+            if cache_value:
+                cache_value.pop('cache_time')
+                return cache_value
+            value = get_settings_value(name=key, prompt="配置中心和项目 settings 均无此参数")
+            return value
