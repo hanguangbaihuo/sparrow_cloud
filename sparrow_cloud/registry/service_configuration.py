@@ -40,6 +40,7 @@ def config(key):
             value.pop('cache_time')
             return value
     except ConnectionError:
+        cache_value = cache.get(key)
         if cache_value:
             cache_value.pop('cache_time')
             return cache_value
