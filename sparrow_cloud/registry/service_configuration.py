@@ -33,18 +33,19 @@ def config(key):
         if int((current_time - cache_time).seconds) <= 30:
             cache_value.pop('cache_time')
             return cache_value
-        try:
-            consul_client = consul.Consul(host=consul_host, port=consul_port, scheme="http")
-            index, data = consul_client.kv.get(key, index=None)
-            if data:
-                value = json.loads(data.get('Value'))
-                value['cache_time'] = datetime.datetime.now()
-                cache.set(key, value, 7*24*3600)
-                value.pop('cache_time')
+        else:
+            try:
+                consul_client = consul.Consul(host=consul_host, port=consul_port, scheme="http")
+                index, data = consul_client.kv.get(key, index=None)
+                if data:
+                    value = json.loads(data.get('Value'))
+                    value['cache_time'] = datetime.datetime.now()
+                    cache.set(key, value, 7*24*3600)
+                    value.pop('cache_time')
+                    return value
+            except ConnectionError:
+                if cache_value:
+                    cache_value.pop('cache_time')
+                    return cache_value
+                value = get_settings_value(name=key, prompt="配置中心和项目 settings 均无此参数")
                 return value
-        except ConnectionError:
-            if cache_value:
-                cache_value.pop('cache_time')
-                return cache_value
-            value = get_settings_value(name=key, prompt="配置中心和项目 settings 均无此参数")
-            return value
