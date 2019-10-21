@@ -428,5 +428,8 @@ from sparrow_cloud.registry.service_configuration import config
 
 参数说明:
     key: consul配置中心的key
-    ps: 优先级顺序：缓存（30秒内数据）--> consul --> settings
+    ps: 优先级顺序：          consul --> settings
+        consul中优先级顺序
+            consul正常：consul --> redis(30内有效期内)
+            consul异常：如果数据存在 redis， 直接返回          
 ```
