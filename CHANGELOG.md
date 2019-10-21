@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [1.3.3] - 2019-10-21
+### Added
+- service_configuration
+
 ## [1.2.3] - 2019-10-12
 ### Added
 - schema command
