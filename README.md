@@ -18,6 +18,8 @@
 
 [Api Schema Register](#api-schema-register)
 
+[service_configuration](#service_configuration)
+
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
@@ -477,4 +479,26 @@ class CarViewSet(ModelViewSet):
     """
 ```
 
+## service_configuration
 
+> 描述： consul 服务配置中心
+> sparrow_cloud 项目的许多组件对 consul服务发现 有重度依赖, 需配置 consul
+
+```
+# 在 settings里面配置 consul参数
+CONSUL_CLIENT_ADDR = {
+    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
+    "PORT": os.environ.get("CONSUL_PORT", 8500)
+}
+
+使用方法：
+from sparrow_cloud.registry.service_configuration import config
+> value = config(key="foo")
+
+参数说明:
+    key: consul配置中心的key
+    ps: 优先级顺序：          consul --> settings
+        consul中优先级顺序
+            consul正常：consul --> redis(30内有效期内)
+            consul异常：如果数据存在 redis， 直接返回          
+```
