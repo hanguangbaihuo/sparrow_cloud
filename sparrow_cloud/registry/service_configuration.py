@@ -22,12 +22,17 @@ def config(key):
     :return:
     """
     cache_value = cache.get(key)
-    if cache_value:
-        cache_time = cache_value.get('cache_time')
-        current_time = datetime.datetime.now()
-        if int((current_time-cache_time).seconds) <= 30:
-            cache_value.pop('cache_time')
-            return cache_value
+    cache_time = cache_value.get('cache_time')
+    current_time = datetime.datetime.now()
+    if cache_value and int((current_time-cache_time).seconds) <= 30:
+        cache_value.pop('cache_time')
+        return cache_value
+        # if cache_value:
+        # cache_time = cache_value.get('cache_time')
+        # current_time = datetime.datetime.now()
+        # if int((current_time-cache_time).seconds) <= 30:
+        #     cache_value.pop('cache_time')
+        #     return cache_value
     else:
         consul_conf = get_settings_value(name='CONSUL_CLIENT_ADDR', prompt="没有配置这个参数")
         consul_host = consul_conf.get('HOST', None)
