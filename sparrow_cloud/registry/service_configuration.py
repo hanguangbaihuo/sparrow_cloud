@@ -17,11 +17,13 @@ def get_settings_value(name, prompt):
 def config(key):
     """
     返回consul或settings的配置信息
-    优先级顺序：缓存（30秒内数据）--> consul --> settings
+    优先级顺序：consul --> settings
+        consul中优先级顺序
+            consul正常：consul --> redis(30内有效期内)
+            consul异常：如果数据存在 redis， 直接返回
     :param key:
     :return:
     """
-    # import pdb;pdb.set_trace()
     consul_conf = get_settings_value(name='CONSUL_CLIENT_ADDR', prompt="没有配置这个参数")
     consul_host = consul_conf.get('HOST', None)
     consul_port = consul_conf.get('PORT', None)
