@@ -213,7 +213,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 
 ```
   from sparrow_cloud.restclient import rest_client
-  rest_client.post(SERVICE_CONF, api_path, json=api_list)
+  rest_client.post(SERVICE_CONF, api_path, timeout=5, json=api_list)
 ```
     参数说明:
     SERVICE_CONF = {
@@ -222,7 +222,12 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     },
     ENV_NAME: 用来覆盖 consul 的环境变量名
     VALUE: consul服务注册名字
-    ps:
+    timeout: 
+        非必传，默认超时时间5秒
+        传参方式：
+            timeout=5       # 5秒为connect 和 read 的 timeout
+            timeout=(3, 2)  # 分别定制：connect 和 read 的 timeout
+            timeout=None    # Request 永远等待
       剩余参数与 requests.get/post 等方法保持一致
       
 
@@ -232,7 +237,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
 
 ```
   from sparrow_cloud.restclient import requests_client
-  requests_client.post(SERVICE_CONF, api_path, json=api_list)
+  requests_client.post(SERVICE_CONF, api_path, timeout=5, json=api_list)
 ```
     参数说明:
     SERVICE_CONF = {
@@ -241,6 +246,12 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     },
     ENV_NAME: 用来覆盖 consul 的环境变量名
     VALUE: consul服务注册名字
+    timeout: 
+        非必传，默认超时时间5秒
+        传参方式：
+            timeout=5       # 5秒为connect 和 read 的 timeout
+            timeout=(3, 2)  # 分别定制：connect 和 read 的 timeout
+            timeout=None    # Request 永远等待
     ps:
       剩余参数与 requests.get/post 等方法保持一致      
 
