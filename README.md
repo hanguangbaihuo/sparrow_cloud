@@ -269,12 +269,14 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         data = send_task(exchange=exchange, 
                          routing_key=routing_key, 
                          message_code=message_code, 
+                         retry_times=3,
                          *args,
                          **kwargs)
         ps:
            exchange: 交换机
            routing_key: 路由
            message_code: 消息码
+           retry_times: 重试次数，非必填，默认重试次数为3次（每次间隔1秒）
 ```
 
 
@@ -302,7 +304,10 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                         "VALUE": "sparrow-demo",
                 },
                 "API_PATH": "/api/sparrow_task/task/update/",
-            }
+            },
+            "RETRY_TIMES": 3,
+            "INTERVAL_TIME": 3,
+            "HEARTBEAT": 600,
         }
 
         QUEUE_CONF_1 = {
@@ -323,6 +328,9 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                     MESSAGE_BACKEND_CONF
                         BACKEND_SERVICE_CONF # 依赖consul服务的配置
                         API_PATH # api 路径
+                    RETRY_TIMES # 错误重试次数，默认3次
+                    INTERVAL_TIME   # 错误重试间隔，默认3秒
+                    HEARTBEAT   # 消费者与rabbitmq心跳检测间隔，默认600秒
                 QUEUE_CONF_1  # 队列的配置
                     QUEUE  # 队列名称
                     TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，对应的值为执行该消息的任务函数路径字符串）
