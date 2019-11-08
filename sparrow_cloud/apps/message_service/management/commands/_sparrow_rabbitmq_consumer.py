@@ -1,7 +1,7 @@
-from rabbitmq_consumer import RabbitMQConsumer
+from ._controller import RabbitMQConsumer
 from sparrow_cloud.registry.service_discovery import consul_service
 from django.conf import settings
-
+import time
 
 def get_settings_value(name):
     """获取settings中的配置"""
@@ -36,7 +36,10 @@ def rabbitmq_consumer(queue):
                         "VALUE": "sparrow-demo",
                 },
                 "API_PATH": "/api/sparrow_task/task/update/"
-            }
+            },
+            "RETRY_TIMES": 3,
+            "INTERVAL_TIME": 3,
+            "HEARTBEAT": 600,
         }
 
         QUEUE_CONF_1 = {
@@ -56,6 +59,9 @@ def rabbitmq_consumer(queue):
                     MESSAGE_BACKEND_CONF
                         BACKEND_SERVICE_CONF # 依赖consul服务的配置
                         API_PATH # api 路径
+                    RETRY_TIMES # 错误重试次数，默认3次
+                    INTERVAL_TIME   # 错误重试间隔，默认3秒
+                    HEARTBEAT   # 消费者与rabbitmq心跳检测间隔，默认600秒
                 QUEUE_CONF_1  # 队列的配置
                     QUEUE  # 队列名称
                     TARGET_FUNC_MAP  # 队列消费的任务（字典中的键为message code，
@@ -65,26 +71,43 @@ def rabbitmq_consumer(queue):
     """
     consumer_conf = get_settings_value('SPARROW_RABBITMQ_CONSUMER_CONF')
     queue_conf = get_settings_value(queue)
+    retry_times = consumer_conf.get('RETRY_TIMES', 3)
+    interval_time = consumer_conf.get('INTERVAL_TIME', 3)
+    consumer_heartbeat = consumer_conf.get('HEARTBEAT', 600)
     message_backend_path = consumer_conf['MESSAGE_BACKEND_CONF'].get('API_PATH', None)
     backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF'].get('BACKEND_SERVICE_CONF', None)
     broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
     broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
     broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
     virtual_host = consumer_conf['MESSAGE_BROKER_CONF'].get('VIRTUAL_HOST', None)
-    broker_service_addr = consul_service(broker_service_conf)
-    broker_conf = "amqp://{}:{}@{}/{}".format(broker_service_username, broker_service_password,
-                                              broker_service_addr, virtual_host)
-    if message_backend_path:
-        backend_service_addr = consul_service(backend_service_conf)
-        consumer = RabbitMQConsumer(
-            queue=queue_conf.get('QUEUE', None),
-            message_broker=broker_conf,
-            message_backend="http://{}{}".format(backend_service_addr, message_backend_path)
-        )
-    else:
-        consumer = RabbitMQConsumer(
-            queue=queue_conf.get('QUEUE', None),
-            message_broker=broker_conf,
-            message_backend=message_backend_path)
-    consumer.target_func_map = queue_conf.get('TARGET_FUNC_MAP', None)
-    consumer.consume()
+    
+    while True:
+        try:
+            broker_service_addr = consul_service(broker_service_conf)
+            broker_conf = "amqp://{}:{}@{}/{}".format(broker_service_username, broker_service_password,
+                                                    broker_service_addr, virtual_host)
+            if message_backend_path:
+                backend_service_addr = consul_service(backend_service_conf)
+                consumer = RabbitMQConsumer(
+                    queue=queue_conf.get('QUEUE', None),
+                    message_broker=broker_conf,
+                    message_backend="http://{}{}".format(backend_service_addr, message_backend_path),
+                    retry_times=retry_times,
+                    interval_time=interval_time,
+                    heartbeat=consumer_heartbeat
+                )
+            else:
+                consumer = RabbitMQConsumer(
+                    queue=queue_conf.get('QUEUE', None),
+                    message_broker=broker_conf,
+                    message_backend=message_backend_path,
+                    retry_times=retry_times,
+                    interval_time=interval_time,
+                    heartbeat=consumer_heartbeat)
+            consumer.target_func_map = queue_conf.get('TARGET_FUNC_MAP', None)
+            consumer.consume()
+        except KeyboardInterrupt:
+            break
+        except:
+            # 如果遇到exception不退出，过几秒重试一下
+            time.sleep(interval_time)
