@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+## [1.4.5] - 2019-11-08
+### Changed
+
 ## [1.4.4] - 2019-11-08
 ### Added
 - add retry in function send_task 
