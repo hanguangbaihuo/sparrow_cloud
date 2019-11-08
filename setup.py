@@ -8,7 +8,7 @@ import sys
 import shutil
 from setuptools import find_packages, setup
 
-version = "v1.3.3"
+version = "v1.4.4"
 
 def read(f):
     return open(f, 'r', encoding='utf-8').read()
@@ -50,8 +50,7 @@ setup(
         'PyJWT>=1.7.1',
         'openapi_codec>=1.3.2',
         'dulwich>=0.19.13',
-        'sparrow-task-sender>=0.0.3',        # 消息发送
-        'sparrow-rabbitmq-consumer>=0.0.8',  # 消息处理
+        'pika',
     ],
     python_requires=">=3.5",
     zip_safe=False,

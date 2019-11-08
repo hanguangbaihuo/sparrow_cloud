@@ -29,15 +29,15 @@ class RestClientTestCase(unittest.TestCase):
         os.environ["SPARROW_BACKEND_HOST"] = "127.0.0.1:8002"
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
-    @mock.patch('rabbitmq_consumer.RabbitMQConsumer.target_func_map', return_value='')
-    @mock.patch('rabbitmq_consumer.RabbitMQConsumer.consume', return_value='接收任务成功')
-    def test_consumer_command(self, mock_target_func_map, mock_consume):
-        from django.conf import settings
-        self.setup_settings(settings)
-        django.setup()
-        out = StringIO()
-        call_command('rabbitmq_consumer', '--queue', 'QUEUE_CONF', stdout=out)
-        self.assertEqual(out.read(), '')
+    # @mock.patch('rabbitmq_consumer.RabbitMQConsumer.target_func_map', return_value='')
+    # @mock.patch('rabbitmq_consumer.RabbitMQConsumer.consume', return_value='接收任务成功')
+    # def test_consumer_command(self, mock_target_func_map, mock_consume):
+        # from django.conf import settings
+        # self.setup_settings(settings)
+        # django.setup()
+        # out = StringIO()
+        # call_command('rabbitmq_consumer', '--queue', 'QUEUE_CONF', stdout=out)
+        # self.assertEqual(out.read(), '')
 
     def setup_settings(self, settings):
         settings.XX = "1"

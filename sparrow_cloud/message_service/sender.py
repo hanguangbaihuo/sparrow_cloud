@@ -1,5 +1,5 @@
 from django.conf import settings
-from sender_controller import TaskSender
+from .sender_controller import TaskSender
 from sparrow_cloud.registry.service_discovery import consul_service
 from sparrow_cloud.restclient.exception import HTTPException
 
