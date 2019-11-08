@@ -213,10 +213,11 @@ class RabbitMQConsumer(object):
                 requests.post(self._message_backend, data=data)
                 logger.info(
                     ' [*] Update task database info task_id is {0}, status is {1}'.format(task_id, status))
+                return
             except Exception as ex:
                 time.sleep(interval_time)
                 interval_time += 2
                 error_message = ex.__str__()
-        raise Exception("消息执行结果更新失败，消息id{}, 失败原因{},重试次数{}，消息执行状态{}，result={}, traceback={}".format(
+        raise Exception("消息执行结果更新失败，消息id={}, 失败原因={},重试次数={}，消息执行状态={}，result={}, traceback={}".format(
                         task_id, error_message, self._retry_times, status, kwargs.get('result'), kwargs.get('traceback')))
             
