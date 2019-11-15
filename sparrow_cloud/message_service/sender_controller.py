@@ -2,14 +2,15 @@
 import json
 import requests
 import os
+from sparrow_cloud.restclient import requests_client
 
 
 class TaskSender(object):
 
-    def __init__(self, message_backend):
-        if not message_backend:
-            raise Exception("message_backend is not properly configured")
-        self._message_backend = message_backend
+    def __init__(self, message_backend_conf):
+        if not message_backend_conf:
+            raise Exception("message_backend_conf is not properly configured")
+        self._message_backend_conf = message_backend_conf
 
     def base_send_task(self, exchange, routing_key, message_code, args=[], kwargs={}, delay=False, delay_time=0):
         # {
@@ -22,7 +23,6 @@ class TaskSender(object):
         #     "delay": False,
         #     "delay_time": 1
         # }
-        url = self._message_backend
         data = {
             "code": message_code,
             "exchange": exchange,
@@ -35,17 +35,19 @@ class TaskSender(object):
         }
         parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
         if parent_options:
-            parent_options = parent_options.replace("'",'"')
+            # parent_options = parent_options.replace("'",'"')
             data['parent_options'] = json.loads(parent_options)
             # os.environ.pop("SPARROW_TASK_PARENT_OPTIONS")
         # import pdb; pdb.set_trace()
-        result = requests.post(url, json=data)
+        backend_service_conf = self._message_backend_conf.get('SERVICE_CONF', None)
+        api_path = self._message_backend_conf.get('API_PATH', None)
+        result = requests_client.post(backend_service_conf, api_path=api_path, json=data)
         if result.status_code == 200:
             try:
                 res = result.json()
                 task_id = res.get('task_id')
                 return task_id
-            except Exception as ex:
+            except:
                 raise Exception(result.text)
         else:
             raise Exception(result.text)

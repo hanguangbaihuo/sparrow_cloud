@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from pika.exceptions import AMQPConnectionError as BrokerConnectonException
 from datetime import datetime
+from sparrow_cloud.restclient import rest_client
 
 import base64
 import importlib
@@ -30,19 +31,26 @@ console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
 logger = logging.getLogger(__name__)
 
-
+class PythonObjectEncoder(json.JSONEncoder):
+    def default(self, o):
+        if type(o) in (datetime.datetime, decimal.Decimal):
+            return str(o)
+        if isinstance(o, collections.Set):
+            return list(o)
+        else:
+            return super(PythonObjectEncoder, self).default(o)
 class RabbitMQConsumer(object):
     """
     rabitmq消费者
     """
 
-    def __init__(self, queue, message_broker, message_backend=None, 
-                retry_times=3, interval_time=3, heartbeat=600):
+    def __init__(self, queue, message_broker, message_backend_conf=None, 
+                retry_times=3, interval_time=3, heartbeat=300):
         """
         输入参数说明：
         queue:  定义consumer所在队列
         message_broker: rabbitmq连接设置
-        message_backend: 选填的配置，如果设置了message_backend,则在任务执行完成之后会向该设置里的url发送任务执行完成结果
+        message_backend_conf: 选填的配置，如果设置了message_backend_conf,则在任务执行完成之后会向该设置里的url发送任务执行完成结果
         """
         # 检查queue的定义，已经queue是否已经存在在broker中
         
@@ -54,9 +62,9 @@ class RabbitMQConsumer(object):
             raise Exception("queue is not defined")
         self._queue = queue
 
-        if message_backend:
-            logger.info("message result will be updated to {}".format(message_backend))
-        self._message_backend = message_backend
+        if message_backend_conf:
+            logger.info("message result will be updated to {}".format(message_backend_conf))
+        self._message_backend_conf = message_backend_conf
         self._retry_times = retry_times
         self._interval_time = interval_time
         self._heartbeat = heartbeat
@@ -114,7 +122,7 @@ class RabbitMQConsumer(object):
         try:
             # import pdb; pdb.set_trace()
             consumer = method_frame.consumer_tag
-            my_json = base64.b64decode(body).decode('utf8').replace("'", '"')
+            my_json = base64.b64decode(body).decode('utf8')
             json_data = json.loads(my_json)
             task_name = json_data.get('name')
             task_args = json_data.get('args')
@@ -126,9 +134,13 @@ class RabbitMQConsumer(object):
             }
             os.environ["SPARROW_TASK_PARENT_OPTIONS"] = str(parent_options)
             result = self.get_target_func(self.target_func_map[task_name])(*task_args, **task_kwargs)
+            try:
+                json_result = json.dumps(result, cls=PythonObjectEncoder)
+            except:
+                json_result = str(result) if result else ''
             kwargs = {
                 "status": "SUCCESS",
-                "result": str(result) if result else '',
+                "result": json_result,
                 "traceback": "",
             }
         except Exception as ex:
@@ -137,8 +149,13 @@ class RabbitMQConsumer(object):
                 "result": "",
                 "traceback": ex.__str__()
             }
-        if self._message_backend:
-            self.update_task_result(task_id, consumer, **kwargs)
+        try:
+            if self._message_backend_conf:
+                self.update_task_result(task_id, consumer, **kwargs)
+        except Exception as ex:
+            # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
+            # 所以需要忽略错误，不能影响consumer正常消费以及ack消息
+            logger.error(ex.__str__())
         logger.info(
             ' [*] {0} Finished task_id {1}.'.format(datetime.now(), task_id))
 
@@ -210,7 +227,11 @@ class RabbitMQConsumer(object):
                     "result": kwargs.get('result'),
                     "traceback": kwargs.get('traceback'),
                 }
-                requests.post(self._message_backend, data=data)
+                # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
+                # 下次重试的时候需要通过consul重新获取新地址
+                backend_service_conf = self._message_backend_conf.get('BACKEND_SERVICE_CONF', None)
+                api_path = self._message_backend_conf.get('API_PATH', None)
+                response = rest_client.post(backend_service_conf, api_path=api_path, json=data)
                 logger.info(
                     ' [*] Update task database info task_id is {0}, status is {1}'.format(task_id, status))
                 return
