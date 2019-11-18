@@ -36,7 +36,10 @@ class TaskSender(object):
         parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
         if parent_options:
             # parent_options = parent_options.replace("'",'"')
-            data['parent_options'] = json.loads(parent_options)
+            try:
+                data['parent_options'] = json.loads(parent_options)
+            except:
+                pass
             # os.environ.pop("SPARROW_TASK_PARENT_OPTIONS")
         # import pdb; pdb.set_trace()
         backend_service_conf = self._message_backend_conf.get('SERVICE_CONF', None)

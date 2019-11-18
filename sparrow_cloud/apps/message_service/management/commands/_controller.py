@@ -132,7 +132,11 @@ class RabbitMQConsumer(object):
                 "id": task_id,
                 "code": task_name
             }
-            os.environ["SPARROW_TASK_PARENT_OPTIONS"] = str(parent_options)
+            try:
+                os.environ["SPARROW_TASK_PARENT_OPTIONS"] = json.dumps(parent_options, cls=PythonObjectEncoder)
+            except:
+                pass
+            
             result = self.get_target_func(self.target_func_map[task_name])(*task_args, **task_kwargs)
             try:
                 json_result = json.dumps(result, cls=PythonObjectEncoder)
