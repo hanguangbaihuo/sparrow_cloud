@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.4.9] - 2019-11-19
+### Changed
+- rest_client & requests_client optimizer exception alert
+
 ## [1.4.8] - 2019-11-18
 ### Changed
 - fix bug when sending subtask

@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import requests
+import logging
+from django.conf import settings
 from requests.exceptions import ConnectTimeout, ConnectionError
 from sparrow_cloud.registry.service_discovery import consul_service
 from .exception import HTTPException
+
+logger = logging.getLogger(__name__)
+
+
+def get_settings_service_name():
+    """获取settings中的配置"""
+    value = getattr(settings, 'SERVICE_CONF', '')
+    if value == '':
+        return ''
+    service_name = value.get('NAME', '')
+    return service_name
 
 
 def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
@@ -16,6 +29,7 @@ def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
     :return:
     """
     error_message = None
+    service_name = get_settings_service_name()
     for _ in range(int(retry_times)):
         try:
             url = _build_url(service_conf, api_path)
@@ -23,7 +37,8 @@ def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
-    raise Exception("rest_client Error, api_path:{}, message: {}".format(api_path, error_message))
+    raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
+                                                                                           error_message))
 
 
 def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
@@ -36,6 +51,7 @@ def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
     :return:
     """
     error_message = None
+    service_name = get_settings_service_name()
     for _ in range(int(retry_times)):
         try:
             url = _build_url(service_conf, api_path)
@@ -43,7 +59,8 @@ def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
-    raise Exception("rest_client Error, api_path:{}, message: {}".format(api_path, error_message))
+    raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
+                                                                                           error_message))
 
 
 def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
@@ -56,6 +73,7 @@ def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
     :return:
     """
     error_message = None
+    service_name = get_settings_service_name()
     for _ in range(int(retry_times)):
         try:
             url = _build_url(service_conf, api_path)
@@ -63,7 +81,8 @@ def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
-    raise Exception("rest_client Error, api_path:{}, message: {}".format(api_path, error_message))
+    raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
+                                                                                           error_message))
 
 
 def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
@@ -76,6 +95,7 @@ def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
     :return:
     """
     error_message = None
+    service_name = get_settings_service_name()
     for _ in range(int(retry_times)):
         try:
             url = _build_url(service_conf, api_path)
@@ -83,7 +103,8 @@ def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
-    raise Exception("rest_client Error, api_path:{}, message: {}".format(api_path, error_message))
+    raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
+                                                                                           error_message))
 
 
 def _build_url(service_conf, api_path):
