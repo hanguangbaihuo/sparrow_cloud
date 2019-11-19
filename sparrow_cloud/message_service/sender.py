@@ -39,9 +39,7 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
 
     """
     message_conf = get_settings_value("MESSAGE_SENDER_CONF")
-    service_addr = consul_service(message_conf['SERVICE_CONF'])
-    message_backend = "http://{}{}".format(service_addr, message_conf['API_PATH'])
-    task_sender = TaskSender(message_backend)
+    task_sender = TaskSender(message_conf)
     # 发送任务出现异常时的初始重试时间间隔
     interval_time = 1
     error_message = None

@@ -73,9 +73,8 @@ def rabbitmq_consumer(queue):
     queue_conf = get_settings_value(queue)
     retry_times = consumer_conf.get('RETRY_TIMES', 3)
     interval_time = consumer_conf.get('INTERVAL_TIME', 3)
-    consumer_heartbeat = consumer_conf.get('HEARTBEAT', 600)
-    message_backend_path = consumer_conf['MESSAGE_BACKEND_CONF'].get('API_PATH', None)
-    backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF'].get('BACKEND_SERVICE_CONF', None)
+    consumer_heartbeat = consumer_conf.get('HEARTBEAT', 300)
+    backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF']
     broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
     broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
     broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
@@ -86,12 +85,11 @@ def rabbitmq_consumer(queue):
             broker_service_addr = consul_service(broker_service_conf)
             broker_conf = "amqp://{}:{}@{}/{}".format(broker_service_username, broker_service_password,
                                                     broker_service_addr, virtual_host)
-            if message_backend_path:
-                backend_service_addr = consul_service(backend_service_conf)
+            if backend_service_conf:
                 consumer = RabbitMQConsumer(
                     queue=queue_conf.get('QUEUE', None),
                     message_broker=broker_conf,
-                    message_backend="http://{}{}".format(backend_service_addr, message_backend_path),
+                    message_backend_conf=backend_service_conf,
                     retry_times=retry_times,
                     interval_time=interval_time,
                     heartbeat=consumer_heartbeat
@@ -100,7 +98,6 @@ def rabbitmq_consumer(queue):
                 consumer = RabbitMQConsumer(
                     queue=queue_conf.get('QUEUE', None),
                     message_broker=broker_conf,
-                    message_backend=message_backend_path,
                     retry_times=retry_times,
                     interval_time=interval_time,
                     heartbeat=consumer_heartbeat)

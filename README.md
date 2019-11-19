@@ -277,17 +277,29 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
     
     调用方式：
         from sparrow_cloud.message_service.sender import send_task
+        非延时消息
         data = send_task(exchange=exchange, 
                          routing_key=routing_key, 
                          message_code=message_code, 
                          retry_times=3,
                          *args,
                          **kwargs)
+        延时消息
+        data = send_task(exchange=exchange, 
+                        routing_key=routing_key, 
+                        message_code=message_code, 
+                        retry_times=3,
+                        delay=True,
+                        delay_time=200
+                        *args,
+                        **kwargs)
         ps:
            exchange: 交换机
            routing_key: 路由
            message_code: 消息码
            retry_times: 重试次数，非必填，默认重试次数为3次（每次间隔1秒）
+           delay: 是否发送延时消息，默认为False，表示立即发送。如果设为True，则根据delay_time来设定延时时间
+           delay_time: 延时时间，单位为秒
 ```
 
 
