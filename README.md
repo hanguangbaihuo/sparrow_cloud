@@ -533,3 +533,8 @@ from sparrow_cloud.registry.service_configuration import config
             consul正常：consul --> redis(30内有效期内)
             consul异常：如果数据存在 redis， 直接返回          
 ```
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/hanguangbaihuo/sparrow_cloud.svg)](https://starchart.cc/hanguangbaihuo/sparrow_cloud)
+
