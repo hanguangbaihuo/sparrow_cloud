@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.4.10] - 2019-11-22
+### Changed
+- rest_client & requests_client add timeout
+
 ## [1.4.9] - 2019-11-19
 ### Changed
 - rest_client & requests_client optimizer exception alert
