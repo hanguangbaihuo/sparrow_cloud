@@ -19,7 +19,7 @@ def get_settings_service_name():
     return service_name
 
 
-def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def get(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     :param service_conf: 服务配置
     :param api_path: 请求url
@@ -37,11 +37,15 @@ def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
+            logger.error("rest_client error,service_name:{}, api_path:{}, message:{}, retry:{}".format(service_name,
+                                                                                                       api_path,
+                                                                                                       error_message,
+                                                                                                       int(_)+1))
     raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
                                                                                            error_message))
 
 
-def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def post(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     :param service_conf: settings 里面配置的服务注册 key 值
     :param api_path:
@@ -59,11 +63,15 @@ def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
+            logger.error("rest_client error,service_name:{}, api_path:{}, message:{}, retry:{}".format(service_name,
+                                                                                                       api_path,
+                                                                                                       error_message,
+                                                                                                       int(_)+1))
     raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
                                                                                            error_message))
 
 
-def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def put(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     :param service_conf: settings 里面配置的服务注册 key 值
     :param api_path:
@@ -81,11 +89,15 @@ def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
+            logger.error("rest_client error,service_name:{}, api_path:{}, message:{}, retry:{}".format(service_name,
+                                                                                                       api_path,
+                                                                                                       error_message,
+                                                                                                       int(_)+1))
     raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
                                                                                            error_message))
 
 
-def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def delete(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     :param service_conf: settings 里面配置的服务注册 key 值
     :param api_path:
@@ -103,6 +115,10 @@ def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
+            logger.error("rest_client error,service_name:{}, api_path:{}, message:{}, retry:{}".format(service_name,
+                                                                                                       api_path,
+                                                                                                       error_message,
+                                                                                                       int(_)+1))
     raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
                                                                                            error_message))
 
