@@ -1,5 +1,6 @@
 from ._controller import RabbitMQConsumer
 from sparrow_cloud.registry.service_discovery import consul_service
+from sparrow_cloud.apps.message_service.aliyun_amqp import AliyunCredentialsProvider3 as aliyun_provider
 from django.conf import settings
 import time
 
@@ -25,11 +26,22 @@ def rabbitmq_consumer(queue):
             "MESSAGE_BROKER_CONF": {
                 "USER_NAME": "hg_test",
                 "PASSWORD": "jft87JheHe23",
+                "VIRTUAL_HOST": "sparrow_test",
                 "BROKER_SERVICE_CONF": {
                     "ENV_NAME": "SPARROW_BROKER_HOST",
                     "VALUE": "sparrow-demo",
                 },
             },
+            "ALIYUN_RABBITMQ_BROKER": {
+                "HOST": "20882320.mq-amqp.cn-beijing-a.aliyuncs.com",
+                "PORT": "5672",
+                "VIRTUAL_HOST": 'sparrow_test',
+                "ACCESS_KEY": "LTAI4FirPhTQuA5tYfY2JLEv",
+                "ACCESS_SECRET": "xKvX9tWe8wkYmxwkaMiXL1LIe8hdq1",
+                "RESOURCEOWNERID": 20882320,
+                "SECURITY_TOKEN": "",
+            }, 
+            "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
                 "BACKEND_SERVICE_CONF": {
                         "ENV_NAME": "SPARROW_BACKEND_HOST",
@@ -71,24 +83,50 @@ def rabbitmq_consumer(queue):
     """
     consumer_conf = get_settings_value('SPARROW_RABBITMQ_CONSUMER_CONF')
     queue_conf = get_settings_value(queue)
+    rabbitmq_selection = consumer_conf.get('RABBITMQ_SELECTION', "MESSAGE_BROKER_CONF")
     retry_times = consumer_conf.get('RETRY_TIMES', 3)
     interval_time = consumer_conf.get('INTERVAL_TIME', 3)
     consumer_heartbeat = consumer_conf.get('HEARTBEAT', 300)
     backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF']
-    broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
-    broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
-    broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
-    virtual_host = consumer_conf['MESSAGE_BROKER_CONF'].get('VIRTUAL_HOST', None)
+    # broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
+    # broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
+    # broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
+    # virtual_host = consumer_conf['MESSAGE_BROKER_CONF'].get('VIRTUAL_HOST', None)
     
     while True:
         try:
-            broker_service_addr = consul_service(broker_service_conf)
-            broker_conf = "amqp://{}:{}@{}/{}".format(broker_service_username, broker_service_password,
-                                                    broker_service_addr, virtual_host)
+            rabbitmq_conf = consumer_conf[rabbitmq_selection]
+            virtual_host = rabbitmq_conf.get('VIRTUAL_HOST', None)
+            if rabbitmq_selection == "ALIYUN_RABBITMQ_BROKER":
+                # 连接aliyun amqp
+                host = rabbitmq_conf["HOST"]
+                port = rabbitmq_conf["PORT"]
+                accessKey = rabbitmq_conf["ACCESS_KEY"]
+                accessSecret = rabbitmq_conf["ACCESS_SECRET"]
+                resourceOwnerId = rabbitmq_conf["RESOURCEOWNERID"]
+                # security_token = rabbitmq_conf["SECURITY_TOKEN"]
+                provider = aliyun_provider.AliyunCredentialsProvider(accessKey, accessSecret, resourceOwnerId)
+                username = provider.get_username()
+                password = provider.get_password()
+            else:
+                broker_service_conf = rabbitmq_conf.get('BROKER_SERVICE_CONF', None)
+                username = rabbitmq_conf.get('USER_NAME', None)
+                password = rabbitmq_conf.get('PASSWORD', None)
+                broker_service_addr = consul_service(broker_service_conf)
+                host = broker_service_addr.split(':')[0]
+                port = broker_service_addr.split(':')[1]
+
+            message_broker_conf = {
+                "host": host,
+                "port": port,
+                "username": username,
+                "password": password,
+                "virtual_host": virtual_host,
+            }
             if backend_service_conf:
                 consumer = RabbitMQConsumer(
                     queue=queue_conf.get('QUEUE', None),
-                    message_broker=broker_conf,
+                    message_broker_conf=message_broker_conf,
                     message_backend_conf=backend_service_conf,
                     retry_times=retry_times,
                     interval_time=interval_time,
@@ -97,7 +135,7 @@ def rabbitmq_consumer(queue):
             else:
                 consumer = RabbitMQConsumer(
                     queue=queue_conf.get('QUEUE', None),
-                    message_broker=broker_conf,
+                    message_broker_conf=message_broker_conf,
                     retry_times=retry_times,
                     interval_time=interval_time,
                     heartbeat=consumer_heartbeat)
