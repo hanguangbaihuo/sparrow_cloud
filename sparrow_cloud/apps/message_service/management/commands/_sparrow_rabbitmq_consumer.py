@@ -86,7 +86,7 @@ def rabbitmq_consumer(queue):
     rabbitmq_selection = consumer_conf.get('RABBITMQ_SELECTION', "MESSAGE_BROKER_CONF")
     retry_times = consumer_conf.get('RETRY_TIMES', 3)
     interval_time = consumer_conf.get('INTERVAL_TIME', 3)
-    consumer_heartbeat = consumer_conf.get('HEARTBEAT', 300)
+    consumer_heartbeat = consumer_conf.get('HEARTBEAT', 60)
     backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF']
     # broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
     # broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
