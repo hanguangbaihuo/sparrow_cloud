@@ -340,7 +340,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
             },
             "RETRY_TIMES": 3,
             "INTERVAL_TIME": 3,
-            "HEARTBEAT": 600,
+            "HEARTBEAT": 60,
         }
 
         QUEUE_CONF_1 = {
