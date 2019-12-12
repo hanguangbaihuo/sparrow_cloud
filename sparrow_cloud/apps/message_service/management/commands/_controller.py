@@ -45,7 +45,7 @@ class RabbitMQConsumer(object):
     """
 
     def __init__(self, queue, message_broker_conf, message_backend_conf=None, 
-                retry_times=3, interval_time=3, heartbeat=300):
+                retry_times=3, interval_time=3, heartbeat=60):
         """
         输入参数说明：
         queue:  定义consumer所在队列
@@ -121,7 +121,9 @@ class RabbitMQConsumer(object):
         consumer = "unknown"
         try:
             # import pdb; pdb.set_trace()
-            consumer = method_frame.consumer_tag
+            # consumer = method_frame.consumer_tag
+            # consumer放执行消息的队列
+            consumer = self._queue
             my_json = base64.b64decode(body).decode('utf8')
             json_data = json.loads(my_json)
             task_name = json_data.get('name')

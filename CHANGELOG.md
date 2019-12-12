@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.4.13] - 2019-12-12
+### Changed
+- use queue name as rabbitmq consumer name
+
 ## [1.4.12] - 2019-12-10
 ### Changed
 - changed rabbitmq connection default heartbeat
