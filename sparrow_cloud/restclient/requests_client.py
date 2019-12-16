@@ -8,8 +8,9 @@ requests 的封装， 返回的原生数据
 import requests
 import logging
 from django.conf import settings
+from sparrow_cloud.utils.build_url import build_url
+from sparrow_cloud.utils.get_acl_token import get_acl_token
 from requests.exceptions import ConnectTimeout, ConnectionError
-from sparrow_cloud.registry.service_discovery import consul_service
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +35,11 @@ def get(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     error_message = None
     service_name = get_settings_service_name()
+    headers = {'acl_token': get_acl_token(service_name)}
     for _ in range(int(retry_times)):
         try:
-            url = _build_url(service_conf, api_path)
-            res = requests.get(url, timeout=timeout, *args, **kwargs)
+            url = build_url(service_conf, api_path)
+            res = requests.get(url, headers=headers,  timeout=timeout, *args, **kwargs)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
@@ -60,10 +62,11 @@ def post(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     error_message = None
     service_name = get_settings_service_name()
+    headers = {'acl_token': get_acl_token(service_name)}
     for _ in range(int(retry_times)):
         try:
-            url = _build_url(service_conf, api_path)
-            res = requests.post(url, timeout=timeout, *args, **kwargs)
+            url = build_url(service_conf, api_path)
+            res = requests.post(url, headers=headers, timeout=timeout, *args, **kwargs)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
@@ -86,10 +89,11 @@ def put(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     error_message = None
     service_name = get_settings_service_name()
+    headers = {'acl_token': get_acl_token(service_name)}
     for _ in range(int(retry_times)):
         try:
-            url = _build_url(service_conf, api_path)
-            res = requests.put(url, timeout=timeout, *args, **kwargs)
+            url = build_url(service_conf, api_path)
+            res = requests.put(url, headers=headers, timeout=timeout, *args, **kwargs)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
@@ -113,10 +117,11 @@ def delete(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     """
     error_message = None
     service_name = get_settings_service_name()
+    headers = {'acl_token': get_acl_token(service_name)}
     for _ in range(int(retry_times)):
         try:
-            url = _build_url(service_conf, api_path)
-            res = requests.delete(url, timeout=timeout, *args, **kwargs)
+            url = build_url(service_conf, api_path)
+            res = requests.delete(url, headers=headers, timeout=timeout, *args, **kwargs)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
@@ -127,12 +132,3 @@ def delete(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     raise Exception("requests_client error, service_name: {}, api_path:{}, message: {}".format(service_name, api_path,
                                                                                                error_message))
 
-
-def _build_url(service_conf, api_path):
-    """
-    :param service_conf:
-    :param api_path:
-    :return:
-    """
-    servicer_addr = consul_service(service_conf)
-    return "http://{}{}".format(servicer_addr, api_path)
