@@ -19,14 +19,14 @@ class ACLMiddleware(MiddlewareMixin):
         acl_token = request.GET.get('acl_token', None)
         if not acl_token:
             return
-        validated, payload = validation_acl(acl_token)
-        if not remote_user and acl_token and validated:
+        validate, payload = validation_acl(acl_token)
+        if not remote_user and acl_token and validate:
             request.META['REMOTE_USER'] = acl_token
             request.META['payload'] = payload
             return
-        if remote_user and acl_token and validated:
+        if remote_user and acl_token and validate:
             return
-        if remote_user and validated is False:
+        if remote_user and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)
-        if not remote_user and validated is False:
+        if not remote_user and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)
