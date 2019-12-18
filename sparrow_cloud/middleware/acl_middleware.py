@@ -11,7 +11,7 @@ class ACLMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         """
-        ACL VALIDATED
+        ACL VALIDATE
         :param request:
         :return:
         """
@@ -19,6 +19,10 @@ class ACLMiddleware(MiddlewareMixin):
         acl_token = request.GET.get('acl_token', None)
         if not acl_token:
             return
+        data = request.GET
+        data._mutable = True
+        data.pop('acl_token')
+        data._mutable = False
         validate, payload = validation_acl(acl_token)
         if not remote_user and acl_token and validate:
             request.META['REMOTE_USER'] = acl_token
@@ -28,5 +32,5 @@ class ACLMiddleware(MiddlewareMixin):
             return
         if remote_user and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)
-        if not remote_user and validate is False:
+        if not remote_user and acl_token and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)

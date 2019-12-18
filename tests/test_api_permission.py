@@ -45,9 +45,9 @@ def mocked_requests_get(*args, **kwargs):
         def content(self):
             return b''
 
-    if args[0] == 'http://127.0.0.1:8500/api/xx/xxx/xxxx/':
+    if kwargs['url'] == 'http://127.0.0.1:8500/api/xx/xxx/xxxx/':
         return MockResponse({"has_perm": True}, 200)
-    if args[0] == 'http://127.0.0.1:8500/api/xx/xxx/500/':
+    if kwargs['url'] == 'http://127.0.0.1:8500/api/xx/xxx/500/':
         return MockResponse({"has_perm": True}, 500)
     return MockResponse({"has_perm": False}, 404)
 
@@ -58,9 +58,10 @@ class TestPermissionMiddleware(unittest.TestCase):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
         os.environ["SPARROW_TEST_HOST"] = "127.0.0.1:8500"
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.request', side_effect=mocked_requests_get)
     @mock.patch('sparrow_cloud.utils.validation_data.VerificationConfiguration.valid_permission_svc', return_value='')
-    def test_has_permission(self, verify_middleware_location, mocked_requests_get):
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_has_permission(self, acl_token, verify_middleware_location, mocked_requests_get):
         settings.PERMISSION_MIDDLEWARE = {
             # 权限验证服务的配置
             "PERMISSION_SERVICE": {
@@ -76,9 +77,10 @@ class TestPermissionMiddleware(unittest.TestCase):
         from sparrow_cloud.middleware.api_permission import PermissionMiddleware
         self.assertEqual(PermissionMiddleware().process_request(MockRequests()), None)
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.request', side_effect=mocked_requests_get)
     @mock.patch('sparrow_cloud.utils.validation_data.VerificationConfiguration.valid_permission_svc', return_value='')
-    def test_permission_exception_400(self, verify_middleware_location, mocked_requests_get):
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_permission_exception_400(self, acl_token, verify_middleware_location, mocked_requests_get):
         settings.PERMISSION_MIDDLEWARE = {
             # 权限验证服务的配置
             "PERMISSION_SERVICE": {
@@ -95,9 +97,10 @@ class TestPermissionMiddleware(unittest.TestCase):
         self.assertEqual(PermissionMiddleware().process_request(MockRequests()).status_code,
                          JsonResponse({'msg': '400'}, status=400).status_code)
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.request', side_effect=mocked_requests_get)
     @mock.patch('sparrow_cloud.utils.validation_data.VerificationConfiguration.valid_permission_svc', return_value='')
-    def test_permission_exception_500(self, verify_middleware_location, mocked_requests_get):
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_permission_exception_500(self, acl_token, verify_middleware_location, mocked_requests_get):
         settings.PERMISSION_MIDDLEWARE = {
             # 权限验证服务的配置
             "PERMISSION_SERVICE": {
@@ -114,9 +117,10 @@ class TestPermissionMiddleware(unittest.TestCase):
         PermissionMiddleware().process_request(MockRequests())
         self.assertEqual(PermissionMiddleware().process_request(MockRequests1()), None)
 
-    @mock.patch('requests.get', side_effect=mocked_requests_get)
+    @mock.patch('requests.request', side_effect=mocked_requests_get)
     @mock.patch('sparrow_cloud.utils.validation_data.VerificationConfiguration.valid_permission_svc', return_value='')
-    def test_permission_skip_permission_and_filter_path(self, verify_middleware_location, mocked_requests_get):
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_permission_skip_permission_and_filter_path(self, acl_token, verify_middleware_location, mocked_requests_get):
         settings.PERMISSION_MIDDLEWARE = {
             # 权限验证服务的配置
             "PERMISSION_SERVICE": {

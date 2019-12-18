@@ -17,7 +17,7 @@ def get_settings_value(name):
     return value
 
 
-def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3):
+def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3):
     """
     service_conf: 服务配置
     :param service_conf:
@@ -42,7 +42,7 @@ def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3
 
 def get_acl_token(service_name):
     """get service acl token"""
-    settings_acl_token = getattr(settings, 'acl_token', None)
+    settings_acl_token = getattr(settings, 'ACL_TOKEN', None)
     if settings_acl_token and int(time.time()) - int(settings_acl_token['time']) <= int(60 * 10):
         logging.info('sparrow_cloud: get acl_token from settings')
         return settings_acl_token['acl_token']
@@ -54,7 +54,7 @@ def get_acl_token(service_name):
     try:
         response = requests_get(acl_middleware['ACL_SERVICE'], service_name, acl_middleware['API_PATH'])
         acl_token = response.json()['acl_token']
-        settings.acl_token = {'acl_token': acl_token, 'time': time.time()}
+        settings.ACL_TOKEN = {'acl_token': acl_token, 'time': time.time()}
         cache.set('acl_token', {'acl_token': acl_token, 'time': time.time()})
         logging.info('sparrow_cloud: get acl_token from acl_service')
         return acl_token
