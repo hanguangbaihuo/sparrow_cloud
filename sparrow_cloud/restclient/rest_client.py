@@ -50,11 +50,11 @@ def post(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
 
 
 def put(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
-    return request('post', service_conf, api_path, timeout, retry_times, *args, **kwargs)
+    return request('put', service_conf, api_path, timeout, retry_times, *args, **kwargs)
 
 
 def delete(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
-    return request('post', service_conf, api_path, timeout, retry_times, *args, **kwargs)
+    return request('delete', service_conf, api_path, timeout, retry_times, *args, **kwargs)
 
 
 def _handle_response(response):
