@@ -581,21 +581,6 @@ from sparrow_cloud.registry.service_configuration import config
             consul异常：如果数据存在 redis， 直接返回          
 ```
 
-## SERVICE_ACL
-
-> 描述： acl 服务配置
-```
-ACL_MIDDLEWARE = {
-    "ACL_SERVICE": {
-        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
-        "ENV_NAME": "",
-        # VALUE 为服务发现的注册名称
-        "VALUE": "",
-    },
-    "API_PATH": ""
-}
-```
-
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/hanguangbaihuo/sparrow_cloud.svg)](https://starchart.cc/hanguangbaihuo/sparrow_cloud)
