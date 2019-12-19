@@ -29,8 +29,8 @@ def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3
     error_message = None
     for _ in range(int(retry_times)):
         try:
-            url = build_url(service_conf, api_path) + '?service_name={}'.format(service_name)
-            res = requests.get(url, timeout=timeout)
+            url = build_url(service_conf, api_path)
+            res = requests.get(url, params={'service_name': service_name}, timeout=timeout)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
