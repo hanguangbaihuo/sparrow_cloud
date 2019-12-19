@@ -44,19 +44,19 @@ class RabbitMQConsumer(object):
     rabitmq消费者
     """
 
-    def __init__(self, queue, message_broker, message_backend_conf=None, 
-                retry_times=3, interval_time=3, heartbeat=300):
+    def __init__(self, queue, message_broker_conf, message_backend_conf=None, 
+                retry_times=3, interval_time=3, heartbeat=60):
         """
         输入参数说明：
         queue:  定义consumer所在队列
-        message_broker: rabbitmq连接设置
+        message_broker_conf: rabbitmq连接设置
         message_backend_conf: 选填的配置，如果设置了message_backend_conf,则在任务执行完成之后会向该设置里的url发送任务执行完成结果
         """
         # 检查queue的定义，已经queue是否已经存在在broker中
         
-        if not message_broker:
+        if not message_broker_conf:
             raise Exception("message_broker not defined")
-        self._message_broker = message_broker
+        self._message_broker = message_broker_conf
     
         if not queue:
             raise Exception("queue is not defined")
@@ -121,7 +121,9 @@ class RabbitMQConsumer(object):
         consumer = "unknown"
         try:
             # import pdb; pdb.set_trace()
-            consumer = method_frame.consumer_tag
+            # consumer = method_frame.consumer_tag
+            # consumer放执行消息的队列
+            consumer = self._queue
             my_json = base64.b64decode(body).decode('utf8')
             json_data = json.loads(my_json)
             task_name = json_data.get('name')
@@ -180,8 +182,20 @@ class RabbitMQConsumer(object):
         # while True: 
         try:
             # import pdb; pdb.set_trace()
-            parameters = pika.URLParameters("{0}?heartbeat={1}".format(self._message_broker, self._heartbeat))
-            connection = pika.BlockingConnection(parameters)
+            # parameters = pika.URLParameters("{0}?heartbeat={1}".format(self._message_broker, self._heartbeat))
+            host = self._message_broker['host']
+            port = self._message_broker['port']
+            username = self._message_broker['username']
+            password = self._message_broker['password']
+            virtual_host = self._message_broker['virtual_host']
+            credentials = pika.PlainCredentials(username, password, erase_on_connect=True)
+            connection_parameters = pika.ConnectionParameters(host,
+                                                        port,
+                                                        virtual_host,
+                                                        credentials,
+                                                        heartbeat=self._heartbeat)
+
+            connection = pika.BlockingConnection(connection_parameters)
             self._channel = connection.channel()
             logger.info(
                 ' [*] QUEUE({0}) Waiting for messages. To exit press CTRL+C'.format(self._queue))

@@ -358,6 +358,16 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
                     "VALUE": "sparrow-demo",
                 },
             },
+            "ALIYUN_RABBITMQ_BROKER": {
+                "HOST": "20882320.mq-amqp.cn-beijing-a.aliyuncs.com",
+                "PORT": "5672",
+                "VIRTUAL_HOST": 'sparrow_test',
+                "ACCESS_KEY": "LTAI4FirPhTQuA5tYfY2JLEv",
+                "ACCESS_SECRET": "xKvX9tWe8wkYmxwkaMiXL1LIe8hdq1",
+                "RESOURCEOWNERID": 20882320,
+                "SECURITY_TOKEN": "",
+            }, 
+            "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
                 "BACKEND_SERVICE_CONF": {
                         "ENV_NAME": "SPARROW_BACKEND_HOST",
@@ -367,7 +377,7 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
             },
             "RETRY_TIMES": 3,
             "INTERVAL_TIME": 3,
-            "HEARTBEAT": 600,
+            "HEARTBEAT": 60,
         }
 
         QUEUE_CONF_1 = {
