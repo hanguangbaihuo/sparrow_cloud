@@ -51,7 +51,8 @@ setup(
         'openapi_codec>=1.3.2',
         'dulwich>=0.19.13',
         'pika',
-        'django-redis>=4.10.0'
+        'django-redis>=4.10.0',
+        'cryptography>=2.8',
     ],
     python_requires=">=3.5",
     zip_safe=False,

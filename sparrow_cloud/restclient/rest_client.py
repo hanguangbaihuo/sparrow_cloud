@@ -5,7 +5,7 @@ import logging
 from django.conf import settings
 from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_acl_token import get_acl_token
-from requests.exceptions import ConnectTimeout, ConnectionError
+from requests.exceptions import ConnectTimeout, ConnectionError, ReadTimeout
 from .exception import HTTPException
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,7 @@ def get_settings_service_name():
 def request(method, service_conf, api_path, timeout, retry_times, *args, **kwargs):
     error_message = None
     service_name = get_settings_service_name()
+    request_service = service_conf['VALUE']
     acl_token = get_acl_token(service_name)
     params = kwargs.get('params', {})
     params['acl_token'] = acl_token
@@ -32,12 +33,12 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
             url = build_url(service_conf, api_path)
             res = requests.request(method=method, url=url, timeout=timeout, *args, **kwargs)
             return _handle_response(res)
-        except (ConnectionError, ConnectTimeout)as ex:
+        except (ConnectionError, ConnectTimeout, ReadTimeout)as ex:
             error_message = ex.__str__()
-            logger.error("rest_client error,service_name:{}, api_path:{}, message:{}, retry:{}"
-                         .format(service_name, api_path, error_message, int(_) + 1))
-    raise Exception("rest_client error, service_name: {}, api_path:{}, message: {}"
-                    .format(service_name, api_path, error_message))
+            logger.error("rest_client error,service_name:{}, request_service:{}, api_path:{}, message:{}, retry:{}"
+                         .format(service_name, request_service, api_path, error_message, int(_) + 1))
+    raise Exception("rest_client error, service_name: {}, request_service:{}, api_path:{}, message: {}"
+                    .format(service_name, request_service, api_path, error_message))
 
 
 def get(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):

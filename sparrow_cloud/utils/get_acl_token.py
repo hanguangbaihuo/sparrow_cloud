@@ -17,7 +17,7 @@ def get_settings_value(name):
     return value
 
 
-def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3):
+def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3):
     """
     service_conf: 服务配置
     :param service_conf:
@@ -43,11 +43,11 @@ def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3)
 def get_acl_token(service_name):
     """get service acl token"""
     settings_acl_token = getattr(settings, 'ACL_TOKEN', None)
-    if settings_acl_token and int(time.time()) - int(settings_acl_token['time']) <= int(60 * 10):
+    if settings_acl_token and (int(time.time()) - int(settings_acl_token['time'])) <= int(60 * 10):
         logging.info('sparrow_cloud: get acl_token from settings')
         return settings_acl_token['acl_token']
     cache_acl_token = cache.get('acl_token')
-    if cache_acl_token and int(time.time()) - int(cache_acl_token['time']) <= int(60*10):
+    if cache_acl_token and (int(time.time()) - int(cache_acl_token['time'])) <= int(60*10):
         logging.info('sparrow_cloud: get acl_token from cache')
         return cache_acl_token['acl_token']
     acl_middleware = get_settings_value('ACL_MIDDLEWARE')
@@ -59,9 +59,9 @@ def get_acl_token(service_name):
         logging.info('sparrow_cloud: get acl_token from acl_service')
         return acl_token
     except Exception as ex:
-        if cache_acl_token and int(time.time()) - int(cache_acl_token['time']) < int(24*60*60):
+        if cache_acl_token and (int(time.time()) - int(cache_acl_token['time'])) < int(24*60*60):
             return cache_acl_token['acl_token']
-        logger.error('sparrow_cloud error: ACL_Server Exception, no token available in cache, message:{}'
+        logger.error('sparrow_cloud error: ACL_SERVICE Exception, no token available in cache, message:{}'
                      .format(ex.__str__()))
-        raise Exception('sparrow_cloud error: ACL_Server Exception, no token available in cache, message:{}'
+        raise Exception('sparrow_cloud error: ACL_SERVICE Exception, no token available in cache, message:{}'
                         .format(ex.__str__()))

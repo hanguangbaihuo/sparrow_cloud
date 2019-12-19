@@ -30,7 +30,7 @@ class ACLMiddleware(MiddlewareMixin):
             return
         if remote_user and acl_token and validate:
             return
-        if remote_user and validate is False:
+        if remote_user and acl_token and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)
         if not remote_user and acl_token and validate is False:
             return JsonResponse({"message": "ACL验证未通过"}, status=403)
