@@ -81,8 +81,8 @@ ACL_MIDDLEWARE = {
         # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
         "ENV_NAME": "SPARROW_SERVICE_ACL_HOST",
         # VALUE 为服务发现的注册名称
-        "VALUE": os.environ.get("SPARROW_SERVICE_ACL_SVC", "sparrow_service_acl_svc"),
+        "VALUE": os.environ.get("SPARROW_SERVICE_ACL_SVC", "acl_service"),
     },
-    "API_PATH": "/api/v1/service_acl/acl_token/",
+    "API_PATH": "/api/acl_token/",
     "ACL_PUBLIC_KEY": PUBLIC_KEY
 }

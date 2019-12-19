@@ -17,7 +17,7 @@ def get_settings_value(name):
     return value
 
 
-def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3):
+def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3):
     """
     service_conf: 服务配置
     :param service_conf:
@@ -34,16 +34,15 @@ def requests_get(service_conf, service_name, api_path, timeout=10, retry_times=3
             return res
         except (ConnectionError, ConnectTimeout)as ex:
             error_message = ex.__str__()
-            logger.error('requests_client error log:service_name:{}, api_path:{}, message:{}, retry:{}'
-                         .format(service_name, api_path, error_message, int(_)+1))
-    raise Exception('requests_client error, service_name: {}, api_path:{}, message: {}'
-                    .format(service_name, api_path, error_message))
+            logger.error('ACL_SERVICE error, api_path:{}, message: {}, retry:{}'
+                         .format(api_path, error_message, int(_)+1))
+    raise Exception('ACL_SERVICE error, api_path:{}, message: {}'.format(api_path, error_message))
 
 
 def get_acl_token(service_name):
     """get service acl token"""
     settings_acl_token = getattr(settings, 'ACL_TOKEN', None)
-    if settings_acl_token and (int(time.time()) - int(settings_acl_token['time'])) <= int(60 * 10):
+    if settings_acl_token and (int(time.time()) - int(settings_acl_token['time'])) <= int(60*10):
         logging.info('sparrow_cloud: get acl_token from settings')
         return settings_acl_token['acl_token']
     cache_acl_token = cache.get('acl_token')
