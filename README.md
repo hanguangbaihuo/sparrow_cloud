@@ -139,17 +139,7 @@ ACL_MIDDLEWARE = {
     "ACL_PUBLIC_KEY": """PUBLIC KEY"""
 }
 
-# redis cache
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get("DJANGO_CACHE_HOST", "redis://host:port"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PASSWORD": os.environ.get("DJANGO_CACHE_PASSWORD", "password"),
-        }
-    }
-}
+# ACL 访问控制需要用到django—cache， 请在settings中配置
 ```
 
 ## UserIDAuthentication
