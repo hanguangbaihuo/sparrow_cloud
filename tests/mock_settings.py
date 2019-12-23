@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-SECRET_KEY = "ss"
+SECRET_KEY = "sssssssllllllllllllll"
 
 INSTALLED_APPS = [
     "sparrow_cloud.apps.message_service",

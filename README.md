@@ -140,6 +140,8 @@ ACL_MIDDLEWARE = {
 }
 
 # ACL 访问控制需要用到django—cache， 请在settings中配置
+# 使用acl的时候，如果需要传user_id, 放到请求header的remote_user字段
+
 ```
 
 ## UserIDAuthentication
