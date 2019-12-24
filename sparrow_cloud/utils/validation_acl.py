@@ -10,7 +10,7 @@ def get_acl_public_key():
     acl_middleware_value = getattr(settings, 'ACL_MIDDLEWARE', None)
     if acl_middleware_value:
         acl_private_key = acl_middleware_value.get('ACL_PUBLIC_KEY', None)
-        if acl_private_key is None and acl_private_key == '':
+        if acl_private_key is None or acl_private_key == '':
             logging.error('sparrow_cloud error: ACL_PUBLIC_KEY not configured in ACL_MIDDLEWARE')
             raise Exception("sparrow_cloud error: ACL_PUBLIC_KEY not configured in ACL_MIDDLEWARE")
         return acl_private_key
