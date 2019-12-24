@@ -58,4 +58,3 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
             error_message = ex.__str__()
     raise Exception("消息发送失败，失败原因{},重试次数{}，消息内容message_code={},消息参数{}{}".format(
                     error_message, retry_times, message_code, args, kwargs))
-            

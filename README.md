@@ -23,6 +23,8 @@
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
+[ACL Middleware](#aclmiddleware)
+
 [Request Method Middleware](#method_middleware)
 
 [Permission Verify Middleware](#permission_middleware)
@@ -113,6 +115,33 @@ MIDDLEWARE = (
 JWT_MIDDLEWARE = {
     "JWT_SECRET": "", # JWT_SECRET, 必填
 }
+```
+
+## ACLMiddleware
+
+> 描述：ACL 访问控制
+> 配置 ACLMiddleware 中间件需要的参数
+
+```
+注册中间件
+MIDDLEWARE = (
+    'sparrow_cloud.middleware.acl_middleware.ACLMiddleware',  # 放在jwt中间件的下层
+
+将以下参数添加到settings.py
+ACL_MIDDLEWARE = {
+    "ACL_SERVICE": {
+        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
+        "ENV_NAME": "ACL_SERVICE_HOST",
+        # VALUE 为服务发现的注册名称
+        "VALUE": os.environ.get("ACL_SERVICE", "acl_service"),
+    },
+    "API_PATH": "/api/acl_token/",
+    "ACL_PUBLIC_KEY": """PUBLIC KEY"""
+}
+
+# ACL 访问控制需要用到django—cache， 请在settings中配置
+# 使用acl的时候，如果需要传user_id, 放到请求header的REMOTE_USER字段
+
 ```
 
 ## UserIDAuthentication

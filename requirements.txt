@@ -9,7 +9,7 @@ djangorestframework==3.10.3
 idna==2.8
 importlib-metadata==0.19
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.10.3
 MarkupSafe==1.1.1
 more-itertools==7.2.0
 packaging==19.1
@@ -23,8 +23,6 @@ python-consul==1.1.0
 pytz==2019.2
 requests==2.22.0
 six==1.12.0
-sparrow-rabbitmq-consumer==0.0.9
-sparrow-task-sender==0.0.3
 sqlparse==0.3.0
 uritemplate==3.0.0
 urllib3==1.25.3
@@ -33,3 +31,4 @@ zipp==0.6.0
 pytest-cov==2.7.1
 openapi_codec==1.3.2
 dulwich==0.19.13
+cryptography==2.8

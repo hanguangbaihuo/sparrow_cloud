@@ -110,3 +110,11 @@ class GetSettingsValue(object):
         """获取中间件服务的值"""
         value = self.__get_value(middleware_class, name)
         return value
+
+
+def get_settings_value(name):
+    """get settings conf"""
+    value = getattr(settings, name, None)
+    if value is None:
+        raise NotImplementedError("sparrow_cloud error：settings not find:{}".format(name))
+    return value

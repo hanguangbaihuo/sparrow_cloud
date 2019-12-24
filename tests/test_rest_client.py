@@ -15,7 +15,7 @@ def mocked_requests(*args, **kwargs):
 
         def json(self):
             return self.json_data
-    if args[0].endswith('/api/xxx/'):
+    if kwargs['url'].endswith('/api/xxx/'):
         return MockResponse(json_data={"key1": "value1"}, content={'key2': 'value2'},  status_code=200)
     return MockResponse(json_data=None, content=None,  status_code=400)
 
@@ -26,7 +26,7 @@ def mocked_requests_empty_data(*args, **kwargs):
             self.status_code = status_code
             self.content = content
 
-    if args[0].endswith('/api/xxx/'):
+    if kwargs['url'].endswith('/api/xxx/'):
         return MockResponse(content=None, status_code=200)
     return MockResponse(content=None, status_code=400)
 
@@ -37,7 +37,7 @@ def mocked_requests_not_empty_data(*args, **kwargs):
             self.status_code = status_code
             self.content = content
 
-    if args[0].endswith('/api/xxx/'):
+    if kwargs['url'].endswith('/api/xxx/'):
         return MockResponse(content={'key2': 'value2'}, status_code=200)
     return MockResponse(content=None, status_code=400)
 
@@ -63,8 +63,9 @@ class RestClientTestCase(unittest.TestCase):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.post', side_effect=mocked_requests)
-    def test_post(self, mock_post, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_post(self, acl_token, mock_post, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
@@ -79,8 +80,9 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.put', side_effect=mocked_requests)
-    def test_put(self, mock_put, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_put(self, acl_token, mock_put, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
@@ -95,8 +97,9 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.get', side_effect=mocked_requests)
-    def test_get(self, mock_get, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_get(self, acl_token, mock_get, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
@@ -111,8 +114,9 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.delete', side_effect=mocked_requests)
-    def test_delete(self, mock_delete, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_delete(self, acl_token, mock_delete, mock_service):
         api_path = "/api/xxx/"
         data = {
             "key": "value",
@@ -127,8 +131,9 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.get', side_effect=mocked_requests_empty_data)
-    def test_empty_data(self, mock_get, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests_empty_data)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_empty_data(self, acl_token, mock_get, mock_service):
         api_path = "/api/xxx/"
         from django.conf import settings
         settings.CONSUL_CLIENT_ADDR = {
@@ -140,8 +145,9 @@ class RestClientTestCase(unittest.TestCase):
         self.assertEqual(res, '')
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.get', side_effect=mocked_requests_not_empty_data)
-    def test_empty_data(self, mock_get, mock_service):
+    @mock.patch('requests.request', side_effect=mocked_requests_not_empty_data)
+    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
+    def test_empty_data(self, acl_token, mock_get, mock_service):
         api_path = "/api/xxx/"
         from django.conf import settings
         settings.CONSUL_CLIENT_ADDR = {
