@@ -23,8 +23,6 @@ python-consul==1.1.0
 pytz==2019.2
 requests==2.22.0
 six==1.12.0
-sparrow-rabbitmq-consumer==0.0.9
-sparrow-task-sender==0.0.3
 sqlparse==0.3.0
 uritemplate==3.0.0
 urllib3==1.25.3
