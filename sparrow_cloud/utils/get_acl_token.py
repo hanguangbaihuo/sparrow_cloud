@@ -35,7 +35,7 @@ def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3)
 
 def get_acl_token(service_name):
     """get service acl token"""
-    acl_token_key = get_hash_key("ACL_TOKEN")
+    acl_token_key = get_hash_key()
     settings_acl_token = getattr(settings, acl_token_key, None)
     if settings_acl_token and (int(time.time()) - int(settings_acl_token['time'])) <= int(60*10):
         logging.info('sparrow_cloud: get acl_token from settings, within ten minutes')
