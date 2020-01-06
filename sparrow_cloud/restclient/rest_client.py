@@ -5,6 +5,7 @@ import logging
 from django.conf import settings
 from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_acl_token import get_acl_token
+from sparrow_cloud.registry.service_discovery import consul_address
 from requests.exceptions import ConnectTimeout, ConnectionError, ReadTimeout
 from .exception import HTTPException
 
@@ -28,12 +29,19 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
     params = kwargs.get('params', {})
     params['acl_token'] = acl_token
     kwargs['params'] = params
+    address_list = consul_address(service_conf)
+    exclude_addr = []
+    _address = None
     for _ in range(int(retry_times)):
+        if len(address_list) > 1:
+            [address_list.remove(_) for _ in exclude_addr if _ in address_list]
         try:
-            url = build_url(service_conf, api_path)
+            url, address = build_url(address_list, api_path)
+            _address = address
             res = requests.request(method=method, url=url, timeout=timeout, *args, **kwargs)
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout, ReadTimeout)as ex:
+            exclude_addr.append(_address)
             error_message = ex.__str__()
             logger.error("rest_client error,service_name:{}, request_service:{}, api_path:{}, message:{}, retry:{}"
                          .format(service_name, request_service, api_path, error_message, int(_) + 1))
