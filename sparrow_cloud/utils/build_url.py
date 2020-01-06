@@ -1,12 +1,15 @@
-from sparrow_cloud.registry.service_discovery import consul_service
+from sparrow_cloud.registry.service_discovery import load_balance_address
 
 
-def build_url(service_conf, api_path):
+def build_url(address_list, api_path):
     """
     build_url
-    :param service_conf:  service conf
+    :param address_list:  service conf
     :param api_path: api path
     :return:
     """
-    servicer_addr = consul_service(service_conf)
-    return "http://{}{}".format(servicer_addr, api_path)
+    address = load_balance_address(address_list)
+    host = address['ServiceAddress']
+    port = address['ServicePort']
+    domain = "{host}:{port}".format(host=host, port=port)
+    return "http://{}{}".format(domain, api_path), address

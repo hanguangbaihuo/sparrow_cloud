@@ -5,10 +5,11 @@ requests 的封装， 返回的原生数据
 """
 import requests
 import logging
+from django.conf import settings
 from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_acl_token import get_acl_token
-from django.conf import settings
 from requests.exceptions import ConnectTimeout, ConnectionError, ReadTimeout
+from sparrow_cloud.registry.service_discovery import consul_address
 
 logger = logging.getLogger(__name__)
 
@@ -30,12 +31,19 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
     params = kwargs.get('params', {})
     params['acl_token'] = acl_token
     kwargs['params'] = params
+    address_list = consul_address(service_conf)
+    exclude_addr = []
+    _address = None
     for _ in range(int(retry_times)):
+        if len(address_list) > 1:
+            [address_list.remove(_) for _ in exclude_addr if _ in address_list]
         try:
-            url = build_url(service_conf, api_path)
+            url, address = build_url(address_list, api_path)
+            _address = address
             res = requests.request(method=method, url=url, timeout=timeout, *args, **kwargs)
             return res
         except (ConnectionError, ConnectTimeout, ReadTimeout)as ex:
+            exclude_addr.append(_address)
             error_message = ex.__str__()
             logger.error("requests_client error,service_name:{}, request_service:{}, api_path:{}, message:{}, retry:{}"
                          .format(service_name, request_service, api_path, error_message, int(_) + 1))
@@ -43,17 +51,17 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
                     .format(service_name, request_service, api_path, error_message))
 
 
-def get(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def get(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     return request('get', service_conf, api_path, timeout, retry_times, *args, **kwargs)
 
 
-def post(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def post(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     return request('post', service_conf, api_path, timeout, retry_times, *args, **kwargs)
 
 
-def put(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def put(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     return request('put', service_conf, api_path, timeout, retry_times, *args, **kwargs)
 
 
-def delete(service_conf, api_path, timeout=5, retry_times=3, *args, **kwargs):
+def delete(service_conf, api_path, timeout=10, retry_times=3, *args, **kwargs):
     return request('delete', service_conf, api_path, timeout, retry_times, *args, **kwargs)

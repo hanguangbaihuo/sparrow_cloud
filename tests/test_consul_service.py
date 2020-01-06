@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 from django.conf import settings
+from sparrow_cloud.utils.get_hash_key import get_hash_key
 from sparrow_cloud.registry.service_discovery import consul_service
 import os
 
@@ -41,9 +42,9 @@ class ConsulServiceTest(unittest.TestCase):
             "PORT": 8500
         }
         settings.SERVICE_CONF = SERVICE_CONF
-        addr = consul_service(SERVICE_CONF)
         expect_result_list = ['{}:{}'.format(
-            ii["ServiceAddress"], ii['ServicePort']) for ii in CONSUL_RETURN_DATA[1]]
+            _["ServiceAddress"], _['ServicePort']) for _ in CONSUL_RETURN_DATA[1]]
+        addr = consul_service(SERVICE_CONF)
         self.assertEqual(addr in expect_result_list, True)
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
