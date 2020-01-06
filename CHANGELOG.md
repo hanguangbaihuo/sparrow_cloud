@@ -11,7 +11,7 @@
 
 ## [1.5.0] - 2019-12-24
 ### Added
-- JWT_MIDDLEWARE
+- ACL_MIDDLEWARE
 
 ## [1.4.13] - 2019-12-12
 ### Changed
