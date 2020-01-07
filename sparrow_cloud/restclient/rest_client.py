@@ -33,7 +33,7 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
     exclude_addr = []
     _address = None
     for _ in range(int(retry_times)):
-        if len(address_list) > 1:
+        if len(address_list) > 1 and isinstance(address_list, list):
             [address_list.remove(_) for _ in exclude_addr if _ in address_list]
         try:
             url, address = build_url(address_list, api_path)

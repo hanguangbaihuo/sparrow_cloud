@@ -25,23 +25,29 @@ def _build_env_host_name(NAME):
 
 def consul_address(service_conf):
     """return: consul address list"""
-    consul_conf = get_settings_value('CONSUL_CLIENT_ADDR')
-    consul_host = consul_conf.get('HOST', None)
-    consul_port = consul_conf.get('PORT', None)
-    service_register_name = service_conf['VALUE']
-    if service_register_name:
-        if (consul_host and consul_port) is None:
-            raise NotImplementedError("CONSUL_CLIENT_ADDR:consul_host={},consul_port={},必须同时配置")
-        consul_client = consul.Consul(host=consul_host, port=consul_port, scheme="http")
-        try:
-            consul_address_list = consul_client.catalog.service(service_register_name)[1]
-        except ConnectionError:
-            raise ConnectionError('consul服务无法连接， 请检查配置')
-        except ValueError:
-            raise ImproperlyConfigured('consul中不存在：{}， 请检查服务名称是否正确'.format(service_conf['VALUE']))
-        return consul_address_list
+    name = service_conf['ENV_NAME']
+    env_service_host = os.environ.get(name, "")
+    if env_service_host:
+        # 获取对应的环境变量, 如果环境变量存在, 返回对应的环境变量
+        return env_service_host
     else:
-        raise ImproperlyConfigured('请检查配置：SERVICE_CONF，ENV_NAME和VALUE必须配置一个。')
+        consul_conf = get_settings_value('CONSUL_CLIENT_ADDR')
+        consul_host = consul_conf.get('HOST', None)
+        consul_port = consul_conf.get('PORT', None)
+        service_register_name = service_conf['VALUE']
+        if service_register_name:
+            if (consul_host and consul_port) is None:
+                raise NotImplementedError("CONSUL_CLIENT_ADDR:consul_host={},consul_port={},必须同时配置")
+            consul_client = consul.Consul(host=consul_host, port=consul_port, scheme="http")
+            try:
+                consul_address_list = consul_client.catalog.service(service_register_name)[1]
+            except ConnectionError:
+                raise ConnectionError('consul服务无法连接， 请检查配置')
+            except ValueError:
+                raise ImproperlyConfigured('consul中不存在：{}， 请检查服务名称是否正确'.format(service_conf['VALUE']))
+            return consul_address_list
+        else:
+            raise ImproperlyConfigured('请检查配置：SERVICE_CONF，ENV_NAME和VALUE必须配置一个。')
 
 
 def load_balance_address(address_list):
