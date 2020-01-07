@@ -26,7 +26,7 @@ def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3)
     exclude_addr = []
     _address = None
     for _ in range(int(retry_times)):
-        if len(address_list) > 1:
+        if len(address_list) > 1 and isinstance(address_list, list):
             [address_list.remove(_) for _ in exclude_addr if _ in address_list]
         try:
             url, address = build_url(address_list, api_path)
