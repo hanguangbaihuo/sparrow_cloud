@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.6.0] - 2020-1-07
+### Added
+- add service_log
+
 ## [1.5.1] - 2020-1-06
 ### Changed
 - request_client and rest_client to optimize load balancing
