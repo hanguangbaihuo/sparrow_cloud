@@ -86,3 +86,7 @@ ACL_MIDDLEWARE = {
     "API_PATH": "/api/acl_token/",
     "ACL_PUBLIC_KEY": PUBLIC_KEY
 }
+
+SERVICE_CONF = {
+    "NAME": "sparrow_cloud",
+}

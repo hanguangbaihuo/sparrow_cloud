@@ -20,6 +20,8 @@
 
 [service_configuration](#service_configuration)
 
+[service_log](#service_log)
+
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
@@ -571,6 +573,57 @@ from sparrow_cloud.registry.service_configuration import config
         consul中优先级顺序
             consul正常：consul --> redis(30内有效期内)
             consul异常：如果数据存在 redis， 直接返回          
+```
+
+## service_log
+
+> 描述： consul 服务配置中心
+> sparrow_cloud 项目的许多组件对 consul服务发现 有重度依赖, 需配置 consul
+
+```
+# 在 settings里面配置 consul参数
+CONSUL_CLIENT_ADDR = {
+    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
+    "PORT": os.environ.get("CONSUL_PORT", 8500)
+}
+
+# 在 settings里面配置 service_log 的日志
+SPARROW_SERVICE_LOG_CONF = {
+    "SERVICE_LOG": {
+            "ENV_NAME": "SERVICE_LOG_HOST",
+            "VALUE": os.environ.get("SERVICE_LOG", "service-log-svc"),
+        },
+        "PATH": "/log/",
+    }
+    
+# 在 settings里面配置本服务配置
+SERVICE_CONF = {
+    "NAME": "",  # 本服务的名称
+}
+
+使用方法：
+from sparrow_cloud.service_log.sender import send_log
+> data = {
+...     "object_id": "test_object_id",
+...     "object_name": "test_object_name",
+...     "user_id": "888888889",
+...     "user_name": "tiger",
+...     "user_phone": "18700000401",
+...     "action": "跑路啦",
+...     "message": "enenenenenenenenene"
+... }
+# result : True False
+> result = send_log(data)
+
+
+参数说明(参数根据自己的业务场景传入即可):
+    action: 服务自定义类型, string        （字段长度限制: 50）
+    object_name: 对象名字, 可以是表名      （字段长度限制: 50）
+    object_id: 对象ID, 业务逻辑自己传入    （字段长度限制: 20）
+    user_id: 用户id, 操作用户             （字段长度限制: 64）
+    user_name: 用户名称                  （字段长度限制: 50）
+    user_phone: 用户手机号                （字段长度限制: 11）
+    message: 消息                       （字段长度限制: 1000）
 ```
 
 ## Stargazers over time
