@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.cache import cache
 from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_hash_key import get_hash_key
+from sparrow_cloud.registry.service_discovery import consul_address
 from requests.exceptions import ConnectTimeout, ConnectionError
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
@@ -21,12 +22,19 @@ def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3)
     :return:
     """
     error_message = None
+    address_list = consul_address(service_conf)
+    exclude_addr = []
+    _address = None
     for _ in range(int(retry_times)):
+        if len(address_list) > 1:
+            [address_list.remove(_) for _ in exclude_addr if _ in address_list]
         try:
-            url = build_url(service_conf, api_path)
+            url, address = build_url(address_list, api_path)
+            _address = address
             res = requests.get(url, params={'service_name': service_name}, timeout=timeout)
             return res
         except (ConnectionError, ConnectTimeout)as ex:
+            exclude_addr.append(_address)
             error_message = ex.__str__()
             logger.error('ACL_SERVICE error, api_path:{}, message: {}, retry:{}'
                          .format(api_path, error_message, int(_)+1))
