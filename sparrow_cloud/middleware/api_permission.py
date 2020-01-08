@@ -60,9 +60,7 @@ class PermissionMiddleware(MiddlewareMixin):
         """ 验证权限， 目前使用的是http的方式验证，后面可能要改成rpc的方式"""
         if all([path, method, user_id]):
             service_conf = GetSettingsValue().get_middleware_value('PERMISSION_MIDDLEWARE', 'PERMISSION_SERVICE')
-            # service_conf = settings.PERMISSION_MIDDLEWARE["PERMISSION_SERVICE"]
             api_path = self.SETTINGS_VALUE.get_middleware_value('PERMISSION_MIDDLEWARE', 'API_PATH')
-            # api_path = settings.PERMISSION_MIDDLEWARE['API_PATH']
             payload = {
                 "method": method,
                 "path": path,

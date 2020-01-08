@@ -8,6 +8,8 @@
 ## [1.6.0] - 2020-1-07
 ### Added
 - add service_log
+### Changed
+- ACL client can skip
 
 ## [1.5.1] - 2020-1-06
 ### Changed
