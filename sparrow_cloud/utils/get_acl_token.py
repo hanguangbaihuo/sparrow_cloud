@@ -43,6 +43,9 @@ def requests_get(service_conf, service_name, api_path, timeout=5, retry_times=3)
 
 def get_acl_token(service_name):
     """get service acl token"""
+    acl_middleware = getattr(settings, 'ACL_MIDDLEWARE', None)
+    if acl_middleware is None:
+        return None
     acl_token_key = get_hash_key()
     settings_acl_token = getattr(settings, acl_token_key, None)
     if settings_acl_token and (int(time.time()) - int(settings_acl_token['time'])) <= int(60*10):
@@ -52,7 +55,6 @@ def get_acl_token(service_name):
     if cache_acl_token and (int(time.time()) - int(cache_acl_token['time'])) <= int(60*10):
         logging.info('sparrow_cloud: get acl_token from cache, within ten minutes')
         return cache_acl_token['acl_token']
-    acl_middleware = get_settings_value('ACL_MIDDLEWARE')
     try:
         response = requests_get(acl_middleware['ACL_SERVICE'], service_name, acl_middleware['API_PATH'])
         acl_token = response.json()['acl_token']

@@ -130,5 +130,22 @@ class RestClientTestCase(unittest.TestCase):
         res = requests_client.delete(SERVICE_CONF, api_path, data=data)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value=None)
+    def test_not_acl(self, acl_token, mock_post, mock_service):
+        api_path = "/api/xxx/"
+        data = {
+            "key": "value",
+        }
+        from django.conf import settings
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": "127.0.0.1",
+            "PORT": 8500
+        }
+        settings.SERVICE_CONF = SERVICE_CONF
+        res = requests_client.post(SERVICE_CONF, api_path, data=data)
+        self.assertEqual(res.json(), {'key1': 'value1'})
+
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]

@@ -28,9 +28,10 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
     service_name = get_settings_service_name()
     request_service = service_conf['VALUE']
     acl_token = get_acl_token(service_name)
-    params = kwargs.get('params', {})
-    params['acl_token'] = acl_token
-    kwargs['params'] = params
+    if acl_token is not None:
+        params = kwargs.get('params', {})
+        params['acl_token'] = acl_token
+        kwargs['params'] = params
     address_list = consul_address(service_conf)
     exclude_addr = []
     _address = None

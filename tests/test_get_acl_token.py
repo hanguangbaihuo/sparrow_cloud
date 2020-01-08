@@ -22,4 +22,8 @@ class TestGetACLToken(unittest.TestCase):
         cache.set(acl_token_key, {'acl_token': 'ACL_TOKEN1010101010', 'time': time.time()})
         self.assertEqual(get_acl_token('acl_test'), 'ACL_TOKEN1010101010')
 
+    def test_settings_not_acl_conf(self):
+        settings.ACL_MIDDLEWARE = None
+        self.assertEqual(get_acl_token('acl_test'), None)
+
 
