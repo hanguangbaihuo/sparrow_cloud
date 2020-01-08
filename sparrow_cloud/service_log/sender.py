@@ -7,17 +7,11 @@ logger = logging.getLogger(__name__)
 
 def send_log(data):
     """
-    SPARROW_SERVICE_LOG_CONF = {
-    "SERVICE_LOG": {
-            "ENV_NAME": "SPARROW_SERVICE_LOG",
-            "VALUE": os.environ.get("SPARROW_SERVICE_LOG", "sparrow-service-log-svc"),
-        },
-        "PATH": "/service_log/log/",
-    }
-
     :param data: dict
     :return:True, False
     """
+    if not isinstance(data, dict):
+        raise TypeError("参数类型错误：except=%s, get=%s" % ("dict", type(data)))
     service_conf = get_settings_value("SERVICE_CONF")
     service_log_conf = get_settings_value("SPARROW_SERVICE_LOG_CONF")
     data["service_name"] = service_conf["NAME"]

@@ -97,3 +97,23 @@ class ServiceLogCase(unittest.TestCase):
         }
         res = send_log(data)
         self.assertEqual(res, False)
+
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
+    @mock.patch('requests.request', side_effect=mocked_requests1)
+    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
+    def test_send_log_key_error(self, token, mock_post, consul):
+        from django.conf import settings
+        settings.SPARROW_SERVICE_LOG_CONF = {
+            "SERVICE_LOG": {
+                "ENV_NAME": "SPARROW_SERVICE_LOG",
+                "VALUE": os.environ.get("SPARROW_SERVICE_LOG", "sparrow-service-log-svc"),
+            },
+            "PATH": "/service_log/log/",
+        }
+        settings.SERVICE_CONF = {
+            "NAME": "sparrow_cloud",
+        }
+        try:
+            send_log("key_error")
+        except Exception as ex:
+            self.assertEqual(type(ex), TypeError)
