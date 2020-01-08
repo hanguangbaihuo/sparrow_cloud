@@ -58,9 +58,10 @@ def mocked_requests_get(*args, **kwargs):
         
         def content(self):
             return b''
-    if kwargs['url'] == 'http://127.0.0.1:8500' and kwargs["params"]["path"] == "/api/xx/xxx/xxxx/":
+
+    if kwargs['url'] == 'http://127.0.0.1:8500/api/xx/xxx/xxxx/':
         return MockResponse({"has_perm": True}, 200)
-    if kwargs['url'] == 'http://127.0.0.1:8500' and kwargs["params"]["path"] == "/api/xx/xxx/500/":
+    if kwargs['url'] == 'http://127.0.0.1:8500/api/xx/xxx/500/':
         return MockResponse({"has_perm": False}, 500)
     return MockResponse({"has_perm": False}, 400)
 
