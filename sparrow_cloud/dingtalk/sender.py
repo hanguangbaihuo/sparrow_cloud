@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 def send_message(msg, code_list):
     """钉钉群发消息机器人 client """
     if not isinstance(msg, str) and not isinstance(code_list, list):
-        raise TypeError("参数类型错误：msg:string, code_list:list")
+        raise TypeError("参数类型错误：msg type not string or code_list type not list")
     data = {
         "msg": msg,
         "group_code_list": code_list
