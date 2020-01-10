@@ -7,7 +7,6 @@ from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_hash_key import get_hash_key
 from sparrow_cloud.registry.service_discovery import consul_address
 from requests.exceptions import ConnectTimeout, ConnectionError
-from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 logger = logging.getLogger(__name__)
 

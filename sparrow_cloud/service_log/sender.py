@@ -20,5 +20,5 @@ def send_log(data):
         logging.info("sparrow_cloud: service log sent successfully, message:{}".format(response))
         return True
     except HTTPException as ex:
-        logging.info("sparrow_cloud: Service log sending failed, message:{}".format(ex.__str__()))
+        logging.error("sparrow_cloud: Service log sending failed, message:{}".format(ex.__str__()))
         return False
