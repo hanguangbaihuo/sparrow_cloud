@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from rest_framework.authentication import get_authorization_header
-from sparrow_cloud.utils.decode_jwt import DecodeJwt
+from sparrow_cloud.utils.decode_jwt import decode_jwt
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 import logging
 
@@ -12,9 +12,6 @@ class JWTMiddleware(MiddlewareMixin):
     def process_request(self, request):
         '''
         HTTP_AUTHORIZATION': 'Token eyJhbGciOiJIU.eyJpc3MiOiWTy.z0HODSJhWtFzX'
-        try to create user Model from UserModel
-            if suc : return user
-            if falied: return None
         '''
         auth = get_authorization_header(request).split()
         # 如果没有token, 返回空
@@ -24,7 +21,7 @@ class JWTMiddleware(MiddlewareMixin):
             return 
         try:
             token = auth[1]
-            payload = DecodeJwt().decode_jwt(token)
+            payload = decode_jwt(token)
             payload["token"] = token
             user_id = payload["uid"]
             request.META['REMOTE_USER'] = user_id

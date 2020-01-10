@@ -1,20 +1,35 @@
 import jwt
+from sparrow_cloud.utils.get_settings_value import get_settings_value
 
-from sparrow_cloud.utils.get_settings_value import GetSettingsValue
+
+def get_jwt_secret():
+    jwt_conf = get_settings_value("JWT_MIDDLEWARE")
+    return jwt_conf["JWT_SECRET"]
 
 
-class DecodeJwt(object):
-    """decode_jwt"""
+def decode_jwt(token):
+    secret = get_jwt_secret()
+    try:
+        payload = jwt.decode(token, secret, algorithms='HS256')
+    except Exception as ex:
+        raise ex
+    return payload
 
-    def __init__(self, ):
-        self.settings_value = GetSettingsValue()
-        self.secret = self.settings_value.get_middleware_value(
-            'JWT_MIDDLEWARE', 'JWT_SECRET')
-
-    def decode_jwt(self, token):
-        secret = self.secret
-        try:
-            payload = jwt.decode(token, secret, algorithms='HS256')
-        except Exception as ex:
-            raise ex
-        return payload
+#
+#
+#
+# class DecodeJwt(object):
+#     """decode_jwt"""
+#
+#     def __init__(self, ):
+#         self.settings_value = GetSettingsValue()
+#         self.secret = self.settings_value.get_middleware_value(
+#             'JWT_MIDDLEWARE', 'JWT_SECRET')
+#
+#     def decode_jwt(self, token):
+#         secret = self.secret
+#         try:
+#             payload = jwt.decode(token, secret, algorithms='HS256')
+#         except Exception as ex:
+#             raise ex
+#         return payload
