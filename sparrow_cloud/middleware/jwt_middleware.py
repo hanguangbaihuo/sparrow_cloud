@@ -25,6 +25,7 @@ class JWTMiddleware(MiddlewareMixin):
         try:
             token = auth[1]
             payload = DecodeJwt().decode_jwt(token)
+            payload["token"] = token
             user_id = payload["uid"]
             request.META['REMOTE_USER'] = user_id
             request.META['payload'] = payload
