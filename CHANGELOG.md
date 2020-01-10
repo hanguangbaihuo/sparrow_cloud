@@ -5,7 +5,7 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [1.6.0] - 2020-1-07
+## [1.6.0] - 2020-1-08
 ### Added
 - add service_log
 ### Changed
