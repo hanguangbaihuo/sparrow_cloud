@@ -22,6 +22,8 @@
 
 [service_log](#service_log)
 
+[ding_talk](#ding_talk)
+
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
@@ -601,7 +603,7 @@ SERVICE_CONF = {
     "NAME": "",  # 本服务的名称
 }
 
-使用方法：
+使用：
 from sparrow_cloud.service_log.sender import send_log
 > data = {
 ...     "object_id": "test_object_id",
@@ -624,6 +626,25 @@ from sparrow_cloud.service_log.sender import send_log
     user_name: 用户名称                  （字段长度限制: 50）
     user_phone: 用户手机号                （字段长度限制: 11）
     message: 消息                       （字段长度限制: 1000）
+```
+
+## DING_TALK
+> ding_talk client SDK (将短信发送到钉钉群中)
+```
+settings 配置
+SPARROW_DING_TALK_CONF = {
+    "SERVICE_DING_TALK": {
+        "ENV_NAME": "DINGTALK_ROBOT_HOST",
+        "VALUE": "",
+    },
+    "PATH": "/api/.../"
+}
+
+# 使用:
+>>> from sparrow_cloud.dingtalk.sender import send_message
+>>> send_message(msg="test", code_list=["test", "test1"])
+# 成功返回： {'code': 0, 'message': 'success'}
+# 错误返回： HTTPException
 ```
 
 ## Stargazers over time
