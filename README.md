@@ -19,7 +19,8 @@
 * Request Method Middleware : 兼容不支持 put/delete 请求
 * Permission Verify Middleware : 权限中间件, server 端未开源
 
-* RestFramework Class ###
+
+### rest_framework 中间件 ###
 * UserID Authentication: 验证 user
 
 
