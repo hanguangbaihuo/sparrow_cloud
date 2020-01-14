@@ -1,6 +1,6 @@
 ## sparrow cloud组件 ##
 
-#### Django SDK :
+### Django SDK :
 ##### Service Discovery : 根据传入的服务名称，从consul服务中返回服务的address
 ##### Cache Service : sparrow_cloud v1.7.0 以及之后的版本不在提供支持
 ##### API Permission Register : 注册Django服务的所有api到权限服务， server端未开源
@@ -14,13 +14,13 @@
 ##### service_log : Log日志， 服务端未开源
 ##### ding_talk : 发送消息到钉钉群，服务端未开源
 
-#### Django Middleware :
+### Django Middleware :
 ##### JWT Middleware : 解析 JWT Token 
 ##### ACL Middleware : 访问控制, server端未开源
 ##### Request Method Middleware : 兼容不支持 put/delete 请求
 ##### Permission Verify Middleware : 权限中间件, server 端未开源
 
-#### RestFramework Class :
+### RestFramework Class :
 ##### UserID Authentication: 验证 user
 
 [Service Discovery](#service_registry)
