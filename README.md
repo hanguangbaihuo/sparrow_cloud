@@ -1,28 +1,5 @@
 ## sparrow cloud组件 ##
 
-### Django SDK :
-##### Service Discovery : 根据传入的服务名称，从consul服务中返回服务的address
-##### Cache Service : sparrow_cloud v1.7.0 以及之后的版本不在提供支持
-##### API Permission Register : 注册Django服务的所有api到权限服务， server端未开源
-##### RestClient : 封装了request包和服务发现，正确请求返回解析后json数据， 错误请求返回HTTPException
-##### RequestsClient : 封装了request包和服务发现， 返回原生的request结果
-##### Message_Client : 将任务发送到rabbitmq, server端未开源
-##### Rabbitmq_Consumer : rabbitmq消息消费端，server端未开源
-##### Table_API : 接收查询条件返回 django model 序列化后的数据
-##### Api Schema Register : django subcommand, 主动注册API 描述到文档服务， server端未开源
-##### service_configuration : consul 服务配置中心SDK, 从consul配置中心获取value
-##### service_log : Log日志， 服务端未开源
-##### ding_talk : 发送消息到钉钉群，服务端未开源
-
-### Django Middleware :
-##### JWT Middleware : 解析 JWT Token 
-##### ACL Middleware : 访问控制, server端未开源
-##### Request Method Middleware : 兼容不支持 put/delete 请求
-##### Permission Verify Middleware : 权限中间件, server 端未开源
-
-### RestFramework Class :
-##### UserID Authentication: 验证 user
-
 [Service Discovery](#service_registry)
 
 [Cache Service](#cache_manager)
@@ -59,6 +36,30 @@
 
 ## rest_framework中间件 ##
 [UserID Authentication](#useridauthentication)
+
+
+### Django SDK :
+##### Service Discovery : 根据传入的服务名称，从consul服务中返回服务的address
+##### Cache Service : sparrow_cloud v1.7.0 以及之后的版本不在提供支持
+##### API Permission Register : 注册Django服务的所有api到权限服务， server端未开源
+##### RestClient : 封装了request包和服务发现，正确请求返回解析后json数据， 错误请求返回HTTPException
+##### RequestsClient : 封装了request包和服务发现， 返回原生的request结果
+##### Message_Client : 将任务发送到rabbitmq, server端未开源
+##### Rabbitmq_Consumer : rabbitmq消息消费端，server端未开源
+##### Table_API : 接收查询条件返回 django model 序列化后的数据
+##### Api Schema Register : django subcommand, 主动注册API 描述到文档服务， server端未开源
+##### service_configuration : consul 服务配置中心SDK, 从consul配置中心获取value
+##### service_log : Log日志， 服务端未开源
+##### ding_talk : 发送消息到钉钉群，服务端未开源
+
+### Django Middleware :
+##### JWT Middleware : 解析 JWT Token 
+##### ACL Middleware : 访问控制, server端未开源
+##### Request Method Middleware : 兼容不支持 put/delete 请求
+##### Permission Verify Middleware : 权限中间件, server 端未开源
+
+### RestFramework Class :
+##### UserID Authentication: 验证 user
 
 
 ## installation ##
