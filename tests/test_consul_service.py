@@ -1,9 +1,8 @@
+import os
 import unittest
 from unittest import mock
-from django.conf import settings
-from sparrow_cloud.utils.get_hash_key import get_hash_key
 from sparrow_cloud.registry.service_discovery import consul_service
-import os
+from django.core.exceptions import ImproperlyConfigured
 
 # 与 SPARROW_SERVICE_REGISTER_NAME 对应的 _HOST
 SPARROW_SERVICE_REGISTER_NAME_HOST = "162.23.7.247:8001"
@@ -18,10 +17,15 @@ SERVICE_CONF = {
 CONSUL_RETURN_DATA = (
     "name", 
     [
-        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001,},
-        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001,},
-        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001,},
+        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001},
+        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001},
+        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001},
     ]
+)
+
+CONSUL_RETURN_DATA1 = (
+    "name",
+    []
 )
 
 
@@ -34,7 +38,7 @@ class ConsulServiceTest(unittest.TestCase):
     def test_consul_parameter_variable(self, mock_consul_service):
         """
         测试未设置环境变量
-        """   
+        """
         from django.conf import settings
         os.environ["PERMISSION_REGISTER_NAME_HOST"] = ""
         settings.CONSUL_CLIENT_ADDR = {
@@ -62,6 +66,23 @@ class ConsulServiceTest(unittest.TestCase):
         settings.SERVICE_CONF = SERVICE_CONF
         addr = consul_service(SERVICE_CONF)
         self.assertEqual(addr, '127.0.0.1:8001')
+
+    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA1)
+    def test_consul_service_empty_list(self, mock_consul_service):
+        """
+        测试未设置环境变量
+        """
+        from django.conf import settings
+        os.environ["PERMISSION_REGISTER_NAME_HOST"] = ""
+        settings.CONSUL_CLIENT_ADDR = {
+            "HOST": "127.0.0.1",
+            "PORT": 8500
+        }
+        settings.SERVICE_CONF = SERVICE_CONF
+        try:
+            consul_service(SERVICE_CONF)
+        except ImproperlyConfigured as ex:
+            self.assertEqual(type(ex), ImproperlyConfigured)
 
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
