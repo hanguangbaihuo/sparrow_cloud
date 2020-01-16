@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.7.1] - 2020-1-16
+### Changed
+- service_discovery: Compatible with services not registered to consumer
+
 ## [1.7.0] - 2020-1-10
 ### Added
 - add ding_talk client
