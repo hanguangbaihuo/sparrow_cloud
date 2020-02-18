@@ -668,9 +668,16 @@ SPARROW_DING_TALK_CONF = {
 
 # 使用:
 >>> from sparrow_cloud.dingtalk.sender import send_message
->>> send_message(msg="test", code_list=["test", "test1"])
+>>> send_message(msg="test", code_list=["test", "test1"], channel="dingtalk", message_type="text")
 # 成功返回： {'code': 0, 'message': 'success'}
 # 错误返回： HTTPException
+
+# 参数说明：
+    msg:消息内容
+    code_list: 消息群code
+    channel: 消息发送的渠道("wechat", "dingtalk"), 默认 dingtalk
+    message_type:微信支持("text", "markdown")消息类型, 默认 text, 钉钉只支持text类型
+
 ```
 
 ## Stargazers over time

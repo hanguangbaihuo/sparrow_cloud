@@ -59,7 +59,7 @@ class TestSendMessage(unittest.TestCase):
             },
             "PATH": "/send/message/",
         }
-        res = send_message("test", ["123"])
+        res = send_message("test", ["123"], "wechat", "text")
         self.assertEqual(res.get("data"), {"code": 0, "message": "success"})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=XX)
@@ -72,8 +72,8 @@ class TestSendMessage(unittest.TestCase):
             },
             "PATH": "/send/message/",
         }
-        self.assertEqual(send_message("test", ["123"]).status_code, 400)
-        self.assertEqual(send_message("test", ["123"]).detail, XX.detail)
+        self.assertEqual(send_message("test", ["123"], "wechat", "text").status_code, 400)
+        self.assertEqual(send_message("test", ["123"], "wechat", "text").detail, XX.detail)
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=XX)
     def test_send_message_typeerror(self, request):

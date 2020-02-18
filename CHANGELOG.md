@@ -5,6 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.7.2] - 2020-1-18
+### Changed
+- dingtalk: Support wechat message, text and markdown message types
+
+
 ## [1.7.1] - 2020-1-16
 ### Changed
 - service_discovery: Compatible with services not registered to consumer
