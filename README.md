@@ -655,7 +655,7 @@ from sparrow_cloud.service_log.sender import send_log
 ```
 
 ## DING_TALK
-> ding_talk client SDK (将短信发送到钉钉群中)
+> ding_talk client SDK (将消息发送到钉钉群或微信群)
 ```
 settings 配置
 SPARROW_DING_TALK_CONF = {
