@@ -5,7 +5,7 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [1.7.2] - 2020-1-18
+## [1.7.2] - 2020-1-19
 ### Changed
 - dingtalk: Support wechat message, text and markdown message types
 
