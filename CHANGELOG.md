@@ -5,7 +5,12 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [1.7.2] - 2020-1-19
+## [1.7.3] - 2020-2-24
+### Changed
+- Modify JWTMiddleware payload ['token '] type to str
+
+
+## [1.7.2] - 2020-2-19
 ### Changed
 - dingtalk: Support wechat message, text and markdown message types
 
