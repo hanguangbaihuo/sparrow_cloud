@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 MESSAGE_LINE = """
 ##### <font color=\"info\"> 服务名称: {service_name}</font> #####
-> 进程异常错误:<font color=\"warning\">{exception_info}</font>
+> 进程异常message:<font color=\"warning\">{exception_info}</font>
 """
 
 
