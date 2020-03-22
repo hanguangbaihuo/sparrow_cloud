@@ -30,4 +30,4 @@ class ExceptionMiddleware(MiddlewareMixin):
                 logger.info("sparrow_cloud log, service process_exception info : {}".format(msg))
                 send_message(msg=msg, code_list=[code], channel="wechat", message_type="markdown")
             except Exception as ex:
-                logger.error("sparrow_cloud 发送服务错误信息失败，原因: {}".format(ex))
+                logger.error("sparrow_cloud 发送服务异常信息通知失败，原因: {}".format(ex))
