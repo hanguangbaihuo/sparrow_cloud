@@ -2,10 +2,7 @@ import logging
 import traceback
 from django.conf import settings
 from sparrow_cloud.dingtalk.sender import send_message
-try:
-    from django.utils.deprecation import MiddlewareMixin
-except:
-    MiddlewareMixin = object
+from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 
 logger = logging.getLogger(__name__)
 
