@@ -18,7 +18,7 @@
 * ACL Middleware : 访问控制, server端未开源
 * Request Method Middleware : 兼容不支持 put/delete 请求
 * Permission Verify Middleware : 权限中间件, server 端未开源
-
+* ExceptionMiddleware : 异常通知
 
 ### rest_framework 中间件 ###
 * UserID Authentication: 验证 user
@@ -58,6 +58,8 @@
 [Request Method Middleware](#method_middleware)
 
 [Permission Verify Middleware](#permission_middleware)
+
+[ExceptionMiddleware](#exceptionmiddleware)
 
 
 ## rest_framework中间件 ##
@@ -678,6 +680,17 @@ SPARROW_DING_TALK_CONF = {
     channel: 消息发送的渠道("wechat", "dingtalk"), 默认 dingtalk
     message_type:微信支持("text", "markdown")消息类型, 默认 text, 钉钉只支持text类型
 
+```
+
+## ExceptionMiddleware
+> 中间件 (捕获程序异常，并发送消息到企业微信)
+```
+# 使用方式
+MIDDLEWARE = [                 
+    "sparrow_cloud.middleware.exception.ExceptionMiddleware"  
+]
+
+# 依赖配置: 通知服务，服务端未开放
 ```
 
 ## Stargazers over time
