@@ -31,6 +31,7 @@ console.setFormatter(formatter)
 logging.getLogger('').addHandler(console)
 logger = logging.getLogger(__name__)
 
+
 class PythonObjectEncoder(json.JSONEncoder):
     def default(self, o):
         if type(o) in (datetime.datetime, decimal.Decimal):
@@ -39,6 +40,8 @@ class PythonObjectEncoder(json.JSONEncoder):
             return list(o)
         else:
             return super(PythonObjectEncoder, self).default(o)
+
+
 class RabbitMQConsumer(object):
     """
     rabitmq消费者

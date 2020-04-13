@@ -374,30 +374,30 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         SPARROW_RABBITMQ_CONSUMER_CONF = {
 
             "MESSAGE_BROKER_CONF": {
-                "USER_NAME": "test",
-                "PASSWORD": "jfdskafsake",
-                "VIRTUAL_HOST": "sparrow_test",
+                "USER_NAME": "",
+                "PASSWORD": "",
+                "VIRTUAL_HOST": "",
                 "BROKER_SERVICE_CONF": {
-                    "ENV_NAME": "SPARROW_BROKER_HOST",
-                    "VALUE": "sparrow-demo",
+                    "ENV_NAME": "",
+                    "VALUE": "",
                 },
             },
             "ALIYUN_RABBITMQ_BROKER": {
-                "HOST": "20882320.mq-amqp.cn-beijing-a.aliyuncs.com",
-                "PORT": "5672",
-                "VIRTUAL_HOST": 'sparrow_test',
-                "ACCESS_KEY": "LTAI4FirPhTQuA5tYfY2JLEv",
-                "ACCESS_SECRET": "xKvX9tWe8wkYmxwkaMiXL1LIe8hdq1",
-                "RESOURCEOWNERID": 20882320,
+                "HOST": "",
+                "PORT": "",
+                "VIRTUAL_HOST": '',
+                "ACCESS_KEY": "",
+                "ACCESS_SECRET": "",
+                "RESOURCEOWNERID": ,
                 "SECURITY_TOKEN": "",
             }, 
             "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
                 "BACKEND_SERVICE_CONF": {
-                        "ENV_NAME": "SPARROW_BACKEND_HOST",
-                        "VALUE": "sparrow-demo",
+                        "ENV_NAME": "",
+                        "VALUE": "",
                 },
-                "API_PATH": "/api/sparrow_task/task/update/",
+                "API_PATH": "",
             },
             "RETRY_TIMES": 3,
             "INTERVAL_TIME": 3,
@@ -405,9 +405,9 @@ PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件�
         }
 
         QUEUE_CONF_1 = {
-            "QUEUE": "ORDER_PAY_SUC_ALL",
+            "QUEUE": "",
             "TARGET_FUNC_MAP": {
-                "ORDER_PAY_SUC_ONLINE": "message_service.task.task1",
+                "ORDER_PAY_SUC_ONLINE": "path",
             },
         }
 
