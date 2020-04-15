@@ -23,8 +23,8 @@ def rabbitmq_consumer(queue):
         SPARROW_RABBITMQ_CONSUMER_CONF = {
 
             "MESSAGE_BROKER_CONF": {
-                "USER_NAME": "hg_test",
-                "PASSWORD": "jft87JheHe23",
+                "USER_NAME": "",
+                "PASSWORD": "",
                 "BROKER_SERVICE_CONF": {
                     "ENV_NAME": "SPARROW_BROKER_HOST",
                     "VALUE": "sparrow-demo",
