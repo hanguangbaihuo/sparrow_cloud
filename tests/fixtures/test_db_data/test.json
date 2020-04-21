@@ -1,0 +1,10 @@
+[
+    {
+        "pk": "1",
+        "model": "sparrow_cloud.apps.table_api.testtable",
+        "fields": {
+            "brand_num": "1231",
+            "name": "test_table1"
+        }
+    }
+]
