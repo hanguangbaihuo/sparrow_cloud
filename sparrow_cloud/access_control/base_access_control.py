@@ -1,0 +1,4 @@
+
+
+class BaseAccessControl(object):
+    pass
