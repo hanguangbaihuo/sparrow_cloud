@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = ''
+    help = '注册访问控制code'
 
     def handle(self, *args, **options):
         """
