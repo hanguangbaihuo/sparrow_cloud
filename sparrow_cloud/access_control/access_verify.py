@@ -35,5 +35,5 @@ def access_verify(user_id, app_name, resource_code):
             if ex.status_code == 400 or ex.status_code == 403:
                 logger.info("sparrow_cloud log : access verify failed. user:{}, message:{}".format(user_id, ex.detail))
                 return False
-            raise ex
+            return True
     return False
