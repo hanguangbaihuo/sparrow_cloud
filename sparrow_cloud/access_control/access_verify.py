@@ -31,11 +31,9 @@ def access_verify(user_id, app_name, resource_code):
             response = rest_client.get(service_conf, api_path=api_path, timeout=0.5, params=params)
             if response['has_perm']:
                 return True
-            else:
-                logger.info("sparrow_cloud log : access verify failed. user:{}".format(user_id))
-                return False
         except HTTPException as ex:
-            if ex.status_code == 400:
+            if ex.status_code == 400 and ex.status_code == 403:
+                logger.info("sparrow_cloud log : access verify failed. user:{}, message:{}".format(user_id, ex.detail))
                 return False
             raise ex
     return False
