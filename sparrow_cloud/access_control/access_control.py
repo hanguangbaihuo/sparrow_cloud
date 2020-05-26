@@ -1,9 +1,11 @@
+import json
 import logging
 
 from functools import wraps
 
 from rest_framework.exceptions import PermissionDenied
 
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 
 from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls
@@ -11,6 +13,8 @@ from sparrow_cloud.access_control.access_verify import access_verify
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 logger = logging.getLogger(__name__)
+
+DETAIL = {"detail": "You do not have permission to perform this action."}
 
 
 def access_control_fbv(resource=None):
@@ -41,11 +45,11 @@ def access_control_cbv_dispatch(resource=None):
             def wrap(request, *args, **kwargs):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
-                    raise PermissionDenied()
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
-                    raise PermissionDenied()
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 return function(request, *args, **kwargs)
             return wrap
         view.dispatch = method_decorator(func)(view.dispatch)
