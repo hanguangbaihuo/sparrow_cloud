@@ -7,8 +7,8 @@ from rest_framework.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.http.response import HttpResponseForbidden
 
-from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls_attribute
-from sparrow_cloud.access_control.access_verify import access_verify
+from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls
+from .access_verify import access_verify
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,8 @@ def access_control_fbv(resource=None):
         def wrap(request, *args, **kwargs):
             user_id = request.user.id
             app_name = get_settings_value("SERVICE_CONF").get("NAME")
+            resource_code = getattr(get_resource_cls(resource), resource)
             try:
-                resource_code = get_resource_cls_attribute(resource).get("resource")
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                     raise PermissionDenied
             except Exception as ex:
@@ -40,10 +40,10 @@ def access_control_cbv_dispatch(resource=None):
     def decorator(view):
         def func(function):
             def wrap(request, *args, **kwargs):
-                user_id = request.user.id
+                user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
-                resource_code = get_resource_cls_attribute(resource).get("resource")
+                resource_code = getattr(get_resource_cls(resource), resource)
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -69,10 +69,11 @@ def access_control_cbv_method(resource):
     def decorator(view):
         def func(function):
             def wrap(request, *args, **kwargs):
-                user_id = request.user.id
+                user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
-                resource_code = get_resource_cls_attribute(resource.get(request.method)).get("resource")
+                re = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
+                resource_code = getattr(get_resource_cls(), re)
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -99,3 +100,4 @@ def access_control_cbv_method(resource):
             view.head = method_decorator(func)(view.head)
         return view
     return decorator
+

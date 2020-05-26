@@ -15,13 +15,7 @@ def access_verify(user_id, app_name, resource_code):
                 "VALUE": os.environ.get("PERMISSION_SERVICE_SVC", "sparrow-permission-svc"),
             },
             "API_PATH": "/api/ac_i/verify/",
-            "ACCESS_CONTROL_CLASS": "your.access_control_class.path"
-            "SECRET": ""
             }
-    :param user_id:
-    :param app_name:
-    :param resource_code:
-    :return:
     """
     if all([user_id, app_name, resource_code]):
         service_conf = get_settings_value("ACCESS_CONTROL").get("ACCESS_CONTROL_SERVICE")
