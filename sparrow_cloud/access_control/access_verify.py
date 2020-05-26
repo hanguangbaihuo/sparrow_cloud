@@ -32,7 +32,7 @@ def access_verify(user_id, app_name, resource_code):
             if response['has_perm']:
                 return True
         except HTTPException as ex:
-            if ex.status_code == 400 and ex.status_code == 403:
+            if ex.status_code == 400 or ex.status_code == 403:
                 logger.info("sparrow_cloud log : access verify failed. user:{}, message:{}".format(user_id, ex.detail))
                 return False
             raise ex
