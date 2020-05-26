@@ -5,7 +5,6 @@ from functools import wraps
 from rest_framework.exceptions import PermissionDenied
 
 from django.utils.decorators import method_decorator
-from django.http.response import HttpResponseForbidden
 
 from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls
 from sparrow_cloud.access_control.access_verify import access_verify
@@ -42,11 +41,11 @@ def access_control_cbv_dispatch(resource=None):
             def wrap(request, *args, **kwargs):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
-                    return HttpResponseForbidden("You do not have permission to perform this action.")
+                    raise PermissionDenied
                 resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
-                    return HttpResponseForbidden("You do not have permission to perform this action.")
+                    raise PermissionDenied
                 return function(request, *args, **kwargs)
             return wrap
         view.dispatch = method_decorator(func)(view.dispatch)
@@ -66,12 +65,12 @@ def access_control_cbv_method(resource):
             def wrap(request, *args, **kwargs):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
-                    return HttpResponseForbidden("You do not have permission to perform this action.")
+                    raise PermissionDenied
                 re = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
                 resource_code = getattr(get_resource_cls(), re).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
-                    return HttpResponseForbidden("You do not have permission to perform this action.")
+                    raise PermissionDenied
                 return function(request, *args, **kwargs)
             return wrap
         method_list = [_.lower() for _ in resource.keys()]
