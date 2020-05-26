@@ -26,7 +26,7 @@ class Command(BaseCommand):
             attribute_name_list = [_ for _ in dir(access_control_cls) if _.startswith('permission_')]
             data = [getattr(access_control_cls, _) for _ in attribute_name_list]
             payload = {
-                "app": app_name,
+                "app_name": app_name,
                 "secret": secret,
                 "data": data
             }

@@ -25,14 +25,13 @@ def access_control_fbv(resource=None):
             if user_id is None:
                 raise PermissionDenied
             app_name = get_settings_value("SERVICE_CONF").get("NAME")
-            resource_code = getattr(get_resource_cls(resource), resource).get("resource")
+            resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
             try:
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                     raise PermissionDenied
             except Exception as ex:
                 logging.error("sparrow_cloud access_control_fbv error log : {}".format(ex.__str__()))
                 return func(request, *args, **kwargs)
-            return func(request, *args, **kwargs)
         return wrap
     return decorator
 
@@ -47,7 +46,7 @@ def access_control_cbv_dispatch(resource=None):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
-                resource_code = getattr(get_resource_cls(resource), resource).get("resource")
+                resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -55,8 +54,6 @@ def access_control_cbv_dispatch(resource=None):
                 except Exception as ex:
                     logging.error("access_control_cbv_method error: {}".format(ex.__str__()))
                     return function(request, *args, **kwargs)
-                return function(request, *args, **kwargs)
-
             return wrap
         view.dispatch = method_decorator(func)(view.dispatch)
         return view
@@ -77,7 +74,7 @@ def access_control_cbv_method(resource):
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
                 re = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
-                resource_code = getattr(get_resource_cls(), re).get("resource")
+                resource_code = getattr(get_resource_cls(), re).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -85,7 +82,6 @@ def access_control_cbv_method(resource):
                 except Exception as ex:
                     logging.error("access_control_cbv_method error: {}".format(ex.__str__()))
                     return function(request, *args, **kwargs)
-                return function(request, *args, **kwargs)
             return wrap
         method_list = [_.lower() for _ in resource.keys()]
         if "get" in method_list:
