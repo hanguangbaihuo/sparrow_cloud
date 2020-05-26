@@ -7,19 +7,21 @@ logger = logging.getLogger(__name__)
 
 def access_verify(user_id, app_name, resource_code):
     """
-    # 权限中间件配置
-        ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_PERMISSION_HOST",
-                # VALUE 为服务发现的注册名称
-                "VALUE": os.environ.get("PERMISSION_SERVICE_SVC", "sparrow-permission-svc"),
-            },
-            "API_PATH": "/api/ac_i/verify/",
-            }
+    ACCESS_CONTROL = {
+        "ACCESS_CONTROL_SERVICE": {
+            "ENV_NAME": "HOST",
+            "VALUE": os.environ.get("", ""),
+        },
+        "VERIFY_API_PATH": "verify_api_path",
+        "REGISTER_API_PATH": "register_api_path",
+        "ACCESS_CONTROL_CLASS": "your.PromotionAccessControl.path",
+        "SECRET": "secret"
+    }
+
     """
     if all([user_id, app_name, resource_code]):
         service_conf = get_settings_value("ACCESS_CONTROL").get("ACCESS_CONTROL_SERVICE")
-        api_path = get_settings_value("ACCESS_CONTROL").get("API_PATH")
+        api_path = get_settings_value("ACCESS_CONTROL").get("VERIFY_API_PATH")
         params = {
             "user_id": user_id,
             "app_name": app_name,

@@ -8,20 +8,24 @@ from django.utils.decorators import method_decorator
 from django.http.response import HttpResponseForbidden
 
 from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls
-from .access_verify import access_verify
+from sparrow_cloud.access_control.access_verify import access_verify
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 logger = logging.getLogger(__name__)
 
 
 def access_control_fbv(resource=None):
-    """FBV"""
+    """FBV
+        resource:PromotionAccessControl.promotoin_admin
+    """
     def decorator(func):
         @wraps(func)
         def wrap(request, *args, **kwargs):
-            user_id = request.user.id
+            user_id = request.META["REMOTE_USER"]
+            if user_id is None:
+                raise PermissionDenied
             app_name = get_settings_value("SERVICE_CONF").get("NAME")
-            resource_code = getattr(get_resource_cls(resource), resource)
+            resource_code = getattr(get_resource_cls(resource), resource).get("resource")
             try:
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                     raise PermissionDenied
@@ -43,7 +47,7 @@ def access_control_cbv_dispatch(resource=None):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
-                resource_code = getattr(get_resource_cls(resource), resource)
+                resource_code = getattr(get_resource_cls(resource), resource).get("resource")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -73,7 +77,7 @@ def access_control_cbv_method(resource):
                 if user_id is None:
                     return HttpResponseForbidden("You do not have permission to perform this action.")
                 re = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
-                resource_code = getattr(get_resource_cls(), re)
+                resource_code = getattr(get_resource_cls(), re).get("resource")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 try:
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
@@ -100,4 +104,3 @@ def access_control_cbv_method(resource):
             view.head = method_decorator(func)(view.head)
         return view
     return decorator
-
