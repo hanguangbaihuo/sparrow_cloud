@@ -19,7 +19,7 @@ DETAIL = {"detail": "You do not have permission to perform this action."}
 
 def access_control_fbv(resource=None):
     """FBV
-        resource:PromotionAccessControl.promotoin_admin
+        resource: "example_admin"
     """
     def decorator(func):
         @wraps(func)
@@ -38,7 +38,7 @@ def access_control_fbv(resource=None):
 
 def access_control_cbv_dispatch(resource=None):
     """all
-        resource:PromotionAccessControl.promotoin_admin
+        resource: "example_admin"
     """
     def decorator(view):
         def func(function):
@@ -60,8 +60,8 @@ def access_control_cbv_dispatch(resource=None):
 def access_control_cbv_method(resource):
     """method
         resource: {
-                "get": "reource1",
-                "post": "resource2"
+                "get": "example1_admin",
+                "post": "example1_admin1"
               }
     """
     def decorator(view):
