@@ -10,3 +10,8 @@ class PermissionValidError(BaseException):
 class AuthenticationValidError(BaseException):
     """自定义异常"""
     pass
+
+
+class ResourceValidError(BaseException):
+    """自定义异常"""
+    pass
