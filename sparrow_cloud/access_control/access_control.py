@@ -28,7 +28,7 @@ def access_control_fbv(resource=None):
             if user_id is None:
                 raise PermissionDenied()
             app_name = get_settings_value("SERVICE_CONF").get("NAME")
-            resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
+            resource_code = getattr(get_resource_cls(), resource).get("resource_code")
             if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                 raise PermissionDenied()
             return func(request, *args, **kwargs)
@@ -46,7 +46,7 @@ def access_control_cbv_dispatch(resource=None):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
-                resource_code = getattr(get_resource_cls(resource), resource).get("resource_code")
+                resource_code = getattr(get_resource_cls(), resource).get("resource_code")
                 app_name = get_settings_value("SERVICE_CONF").get("NAME")
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                     return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)

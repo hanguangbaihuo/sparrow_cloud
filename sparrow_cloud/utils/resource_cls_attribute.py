@@ -4,7 +4,7 @@ from sparrow_cloud.utils.common_exceptions import ResourceValidError
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 
-def get_resource_cls(resource=None):
+def get_resource_cls():
     """
     get resource class
     """

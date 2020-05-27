@@ -7,17 +7,7 @@ logger = logging.getLogger(__name__)
 
 def access_verify(user_id, app_name, resource_code):
     """
-    ACCESS_CONTROL = {
-        "ACCESS_CONTROL_SERVICE": {
-            "ENV_NAME": "HOST",
-            "VALUE": os.environ.get("", ""),
-        },
-        "VERIFY_API_PATH": "verify_api_path",
-        "REGISTER_API_PATH": "register_api_path",
-        "ACCESS_CONTROL_CLASS": "your.PromotionAccessControl.path",
-        "SECRET": "secret"
-    }
-
+    access control verify
     """
     if all([user_id, app_name, resource_code]):
         service_conf = get_settings_value("ACCESS_CONTROL").get("ACCESS_CONTROL_SERVICE")
