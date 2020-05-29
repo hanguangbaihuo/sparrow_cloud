@@ -22,7 +22,7 @@ class Command(BaseCommand):
         service_conf = get_settings_value("ACCESS_CONTROL").get("ACCESS_CONTROL_SERVICE", None)
         access_control_class_path = get_settings_value("ACCESS_CONTROL").get("ACCESS_CONTROL_CLASS", None)
         if all([access_control_class_path, app_name, secret, service_conf]):
-            access_control_cls = get_resource_cls(access_control_class_path)
+            access_control_cls = get_resource_cls()
             attribute_name_list = [_ for _ in dir(access_control_cls) if _.startswith('permission_')]
             data = [getattr(access_control_cls, _) for _ in attribute_name_list]
             payload = {

@@ -12,12 +12,13 @@
 * service_configuration : consul 服务配置中心SDK, 从consul配置中心获取value
 * service_log : Log日志， 服务端未开源
 * ding_talk : 发送消息到钉钉群，服务端未开源
+* access_control verify : 访问控制验证，服务端未开源
+* access_control register: 访问控制注册，服务端未开源
 
 ### Django Middleware ###
 * JWT Middleware : 解析 JWT Token 
 * ACL Middleware : 访问控制, server端未开源
 * Request Method Middleware : 兼容不支持 put/delete 请求
-* Permission Verify Middleware : 权限中间件, server 端未开源
 * ExceptionMiddleware : 异常通知
 
 ### rest_framework 中间件 ###
@@ -50,14 +51,16 @@
 
 [ding_talk](#ding_talk)
 
+[access_control_verify](#access_control_verify)
+
+[access_control_register](#access_control_register)
+
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
 [ACL Middleware](#aclmiddleware)
 
 [Request Method Middleware](#method_middleware)
-
-[Permission Verify Middleware](#permission_middleware)
 
 [ExceptionMiddleware](#exceptionmiddleware)
 
@@ -239,33 +242,6 @@ REST_FRAMEWORK = {
   MIDDLEWARE_CLASSES = (
       'sparrow_cloud.middleware.methodconvert.MethodConvertMiddleware',  #兼容阿里请求方式中间件
   )
-```
-
-## PERMISSION_MIDDLEWARE
-> 权限中间件
-> 配置PERMISSION_MIDDLEWARE需要的参数
-
-```
-# 将以下参数添加到settings.py
-PERMISSION_MIDDLEWARE = {
-    "PERMISSION_SERVICE": {
-        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
-        "ENV_NAME": "",
-        # VALUE 为服务发现的注册名称
-        "VALUE": "",
-    },
-    "API_PATH": "",
-    "FILTER_PATH": [''],  # 使用权限验证中间件， 如有不需要验证的URL， 可添加到列表中
-    # 是否启用权限中间件， SKIP_PERMISSION:True, 则跳过中间件，如果不配置SKIP_PERMISSION，或者SKIP_PERMISSION:False，则不跳过中间件
-    "SKIP_PERMISSION": False
-}
-
-注册中间件
-MIDDLEWARE = [
-    'sparrow_cloud.middleware.api_permission.PermissionMiddleware',
-]
-
-PS: 如果未配置 CONSUL_CLIENT_ADDR, 需要配置该参数, 权限中间件依赖 consul
 ```
 
 ## restclient
@@ -691,6 +667,77 @@ MIDDLEWARE = [
 ]
 
 # 依赖配置: 通知服务，服务端未开放
+```
+
+## ACCESS_CONTROL_VERIFY
+> access_control_verify decorators (访问控制验证)
+```
+settings 配置
+# 访问控制client端配置
+ACCESS_CONTROL = {
+    "ACCESS_CONTROL_SERVICE": {
+        "ENV_NAME": "",
+        # VALUE 为服务发现的注册名称
+        "VALUE": "",
+    },
+    "VERIFY_API_PATH": "",
+    "REGISTER_API_PATH": "",
+    "ACCESS_CONTROL_CLASS": "",
+    "SECRET": ""
+}
+
+# 函数视图使用方式示例
+from sparrow_cloud.access_control.decorators import access_control_fbv
+
+@api_view(('POST', 'GET', 'PUT', 'DELETE'))
+@access_control_fbv("permission_example1")  # 位置放到最下层
+def test(request, *args, **kwargs):
+    return Response({"message": "ok"}, status=status.HTTP_200_OK)
+
+
+# 类视图使用方式(全部方法都验证)
+from sparrow_cloud.access_control.decorators import access_control_cbv_dispatch
+
+@access_control_cbv_dispatch("permission_example1")
+class ProductOperationList(generics.ListCreateAPIView):
+    """请求方法：GET/POST"""
+    pass
+    
+# 类视图使用方式(根据method验证)
+from sparrow_cloud.access_control.decorators import access_control_cbv_method
+
+RESOURCE = {
+  "post": "permission_example1", 
+  "get": "permission_example2"
+}
+
+@access_control_cbv_method(RESOURCE)
+class ProductOperationList(generics.ListCreateAPIView):
+    """请求方法：GET/POST"""
+    pass
+    
+```
+
+## access_control_register
+> access_control_verify commands (访问控制注册)
+```
+settings 配置
+# 访问控制client端配置
+ACCESS_CONTROL = {
+    "ACCESS_CONTROL_SERVICE": {
+        "ENV_NAME": "",
+        # VALUE 为服务发现的注册名称
+        "VALUE": "",
+    },
+    "VERIFY_API_PATH": "",
+    "REGISTER_API_PATH": "",
+    "ACCESS_CONTROL_CLASS": "",
+    "SECRET": ""
+}
+
+# 使用方式
+./manage.py register_access_control
+    
 ```
 
 ## Stargazers over time

@@ -5,6 +5,13 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.9.0] - 2020-5-29
+### Added
+- add AccessControl verify
+- add AccessControl register
+### Remove
+- permission_middleware
+
 ## [1.8.0] - 2020-3-22
 ### Added
 - add ExceptionMiddleware
@@ -12,7 +19,6 @@
 ## [1.7.3] - 2020-2-24
 ### Changed
 - Modify JWTMiddleware payload ['token '] type to str
-
 
 ## [1.7.2] - 2020-2-19
 ### Changed
