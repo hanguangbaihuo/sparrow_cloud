@@ -5,7 +5,7 @@ from rest_framework.exceptions import PermissionDenied
 from django.conf.urls import url
 from django.http import HttpResponse
 from django.test import RequestFactory
-from sparrow_cloud.access_control.decorators import access_control_fbv, access_control_cbv_dispatch, access_control_cbv_method
+from sparrow_cloud.access_control.decorators import access_control_fbv, access_control_cbv_all, access_control_cbv_method
 import os
 
 

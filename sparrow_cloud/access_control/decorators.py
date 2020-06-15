@@ -8,7 +8,6 @@ from rest_framework.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 
-from sparrow_cloud.utils.resource_cls_attribute import get_resource_cls
 from sparrow_cloud.access_control.access_verify import access_verify
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
@@ -35,7 +34,7 @@ def access_control_fbv(resource=None):
     return decorator
 
 
-def access_control_cbv_dispatch(resource=None):
+def access_control_cbv_all(resource=None):
     """all
         resource: "example_admin"
     """
@@ -45,11 +44,9 @@ def access_control_cbv_dispatch(resource=None):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
-                resource_code = resource.get(request.method.lower())
-                if resource_code:
-                    app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
-                    if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
-                        return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
+                app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
+                if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource):
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 return function(request, *args, **kwargs)
             return wrap
         view.dispatch = method_decorator(func)(view.dispatch)

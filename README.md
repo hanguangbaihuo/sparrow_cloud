@@ -700,9 +700,9 @@ def test(request, *args, **kwargs):
 
 
 # 类视图使用方式(全部方法都验证)
-from sparrow_cloud.access_control.decorators import access_control_cbv_dispatch
+from sparrow_cloud.access_control.decorators import access_control_cbv_all
 
-@access_control_cbv_dispatch("permission_example1")
+@access_control_cbv_all("permission_example1")
 class ProductOperationList(generics.ListCreateAPIView):
     """请求方法：GET/POST"""
     pass
