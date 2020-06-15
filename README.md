@@ -13,7 +13,6 @@
 * service_log : Log日志， 服务端未开源
 * ding_talk : 发送消息到钉钉群，服务端未开源
 * access_control verify : 访问控制验证，服务端未开源
-* access_control register: 访问控制注册，服务端未开源
 
 ### Django Middleware ###
 * JWT Middleware : 解析 JWT Token 
@@ -681,9 +680,9 @@ ACCESS_CONTROL = {
         "VALUE": "",
     },
     "VERIFY_API_PATH": "",
-    "REGISTER_API_PATH": "",
     "ACCESS_CONTROL_CLASS": "",
-    "SECRET": ""
+    "SECRET": "",
+    "APP_NAME": ""
 }
 
 # 函数视图使用方式示例
@@ -715,28 +714,6 @@ RESOURCE = {
 class ProductOperationList(generics.ListCreateAPIView):
     """请求方法：GET/POST"""
     pass
-    
-```
-
-## access_control_register
-> access_control_verify commands (访问控制注册)
-```
-settings 配置
-# 访问控制client端配置
-ACCESS_CONTROL = {
-    "ACCESS_CONTROL_SERVICE": {
-        "ENV_NAME": "",
-        # VALUE 为服务发现的注册名称
-        "VALUE": "",
-    },
-    "VERIFY_API_PATH": "",
-    "REGISTER_API_PATH": "",
-    "ACCESS_CONTROL_CLASS": "",
-    "SECRET": ""
-}
-
-# 使用方式
-./manage.py register_access_control
     
 ```
 

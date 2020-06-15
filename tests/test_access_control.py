@@ -1,7 +1,6 @@
 import unittest
 from unittest import mock
 import django
-from django.views.generic import ListView, DetailView
 from rest_framework.exceptions import PermissionDenied
 from django.conf.urls import url
 from django.http import HttpResponse
@@ -99,9 +98,9 @@ class RestClientTestCase(unittest.TestCase):
                 "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "sparrow_access_control"),
             },
             "VERIFY_API_PATH": "/verify/",
-            "REGISTER_API_PATH": "/register/",
             "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
-            "SECRET": "fdsafgxckrewkrjfvlxosdg"
+            "SECRET": "fdsafgxckrewkrjfvlxosdg",
+            "APP_NAME": "test_app"
         }
         settings.SERVICE_CONF = {
             "NAME": "test"
