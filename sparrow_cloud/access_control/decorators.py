@@ -66,15 +66,14 @@ def access_control_cbv_method(resource):
             def wrap(request, *args, **kwargs):
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
-                    raise PermissionDenied()
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 resource_code = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
                 if resource_code:
                     app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
-                        raise PermissionDenied()
+                        return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 return function(request, *args, **kwargs)
             return wrap
-        method_list = [_.lower() for _ in resource.keys()]
         view.dispatch = method_decorator(func)(view.dispatch)
         return view
     return decorator
