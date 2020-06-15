@@ -5,7 +5,15 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [1.9.0] - 2020-6-15
+## [1.9.3] - 2020-6-15
+### Changed
+- fix bug
+
+## [1.9.2] - 2020-6-15
+### Changed
+- change AccessControl verify
+
+## [1.9.1] - 2020-6-15
 ### Changed
 - change AccessControl verify
 ### Remove

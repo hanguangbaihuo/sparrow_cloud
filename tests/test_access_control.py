@@ -66,7 +66,7 @@ class RestClientTestCase(unittest.TestCase):
             return HttpResponse("ok")
         rf1 = RequestFactory(REMOTE_USER='sssssssss')
         request = rf1.get('/verify/')
-        decorator = access_control_fbv(resource="permission_example1")(detail1)(request)
+        decorator = access_control_fbv(resource="example1_admin")(detail1)(request)
         self.assertEqual(decorator.status_code, 200)
 
     @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
@@ -78,7 +78,7 @@ class RestClientTestCase(unittest.TestCase):
         rf1 = RequestFactory(REMOTE_USER='xxx')
         request = rf1.get('/verify/')
         try:
-            access_control_fbv(resource="permission_example1")(detail1)(request)
+            access_control_fbv(resource="example1_admin")(detail1)(request)
         except Exception as ex:
             self.assertEqual(type(ex), type(PermissionDenied()))
 
@@ -98,7 +98,7 @@ class RestClientTestCase(unittest.TestCase):
                 "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "sparrow_access_control"),
             },
             "VERIFY_API_PATH": "/verify/",
-            "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
+            # "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
             "SECRET": "fdsafgxckrewkrjfvlxosdg",
         }
         settings.SERVICE_CONF = {
