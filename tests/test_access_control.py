@@ -100,7 +100,6 @@ class RestClientTestCase(unittest.TestCase):
             "VERIFY_API_PATH": "/verify/",
             "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
             "SECRET": "fdsafgxckrewkrjfvlxosdg",
-            "APP_NAME": "test_app"
         }
         settings.SERVICE_CONF = {
             "NAME": "test"
