@@ -75,24 +75,6 @@ def access_control_cbv_method(resource):
                 return function(request, *args, **kwargs)
             return wrap
         method_list = [_.lower() for _ in resource.keys()]
-        try:
-            if "get" in method_list:
-                view.get = method_decorator(func)(view.get)
-            if "post" in method_list:
-                view.post = method_decorator(func)(view.post)
-            if "put" in method_list:
-                view.put = method_decorator(func)(view.put)
-            if "delete" in method_list:
-                view.delete = method_decorator(func)(view.delete)
-            if "destroy" in method_list:
-                view.delete = method_decorator(func)(view.delete)
-            if "patch" in method_list:
-                view.patch = method_decorator(func)(view.patch)
-            if "option" in method_list:
-                view.option = method_decorator(func)(view.option)
-            if "head" in method_list:
-                view.head = method_decorator(func)(view.head)
-            return view
-        except Exception:
-            return view
+        view.dispatch = method_decorator(func)(view.dispatch)
+        return view
     return decorator
