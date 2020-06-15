@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [1.9.5] - 2020-6-15
+### Changed
+- fix bug AccessControl
+
 ## [1.9.4] - 2020-6-15
 ### Changed
 - change name
