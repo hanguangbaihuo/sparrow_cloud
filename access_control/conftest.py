@@ -108,6 +108,8 @@ def pytest_configure(config):
             "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "xxxxx"),
         },
         "VERIFY_API_PATH": "/verify/",
+        # True：跳过， false：不跳过
+        "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
     }
     settings.CONSUL_CLIENT_ADDR = {
         "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),

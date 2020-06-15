@@ -75,7 +75,7 @@
 ## 测试运行 ##
 
     运行所有测试:
-        py.test
+        py.test tests && py.test access_control
     运行单个测试:
         py.test tests/test_rest_client.py
 
@@ -676,6 +676,7 @@ settings 配置
 # 服务配置
 SERVICE_CONF = {
     "NAME": "",  # value为本服务的注册名称
+    "SECRET": "",
 }
 
 # 访问控制client端配置
@@ -686,8 +687,8 @@ ACCESS_CONTROL = {
         "VALUE": "",
     },
     "VERIFY_API_PATH": "",
-    "ACCESS_CONTROL_CLASS": "",
-    "SECRET": "",
+    # True：跳过， false：不跳过
+    "SKIP_ACCESS_CONTROL": False
 }
 
 # 函数视图使用方式示例
