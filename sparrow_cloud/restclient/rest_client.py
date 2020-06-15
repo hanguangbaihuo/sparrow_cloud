@@ -2,12 +2,15 @@
 
 import requests
 import logging
+import opentracing
 from django.conf import settings
+from opentracing.propagation import Format
 from sparrow_cloud.utils.build_url import build_url
 from sparrow_cloud.utils.get_acl_token import get_acl_token
 from sparrow_cloud.registry.service_discovery import consul_address
 from requests.exceptions import ConnectTimeout, ConnectionError, ReadTimeout
 from .exception import HTTPException
+
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +25,16 @@ def get_settings_service_name():
 
 
 def request(method, service_conf, api_path, timeout, retry_times, *args, **kwargs):
+    headers = kwargs.get('headers', {})
+    # tracing
+    tracer = opentracing.global_tracer()
+    if tracer:
+        span = tracer.active_span
+        if span:
+            carrier = {}
+            tracer.inject(span, Format.HTTP_HEADERS, carrier)
+            headers.update(carrier)
+    # find service
     error_message = None
     service_name = get_settings_service_name()
     request_service = service_conf['VALUE']
@@ -39,7 +52,8 @@ def request(method, service_conf, api_path, timeout, retry_times, *args, **kwarg
         try:
             url, address = build_url(address_list, api_path)
             _address = address
-            res = requests.request(method=method, url=url, timeout=timeout, *args, **kwargs)
+            res = requests.request(
+                method=method, url=url, timeout=timeout, headers=headers, *args, **kwargs)
             return _handle_response(res)
         except (ConnectionError, ConnectTimeout, ReadTimeout)as ex:
             exclude_addr.append(_address)
