@@ -5,7 +5,13 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [1.9.0] - 2020-5-29
+## [1.9.0] - 2020-6-15
+### Changed
+- change AccessControl verify
+### Remove
+- delete 1.9.0 version
+
+## [1.9.0] - 2020-6-15
 ### Added
 - add AccessControl verify
 - add AccessControl register

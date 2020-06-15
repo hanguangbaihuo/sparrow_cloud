@@ -672,6 +672,12 @@ MIDDLEWARE = [
 > access_control_verify decorators (访问控制验证)
 ```
 settings 配置
+
+# 服务配置
+SERVICE_CONF = {
+    "NAME": "",  # value为本服务的注册名称
+}
+
 # 访问控制client端配置
 ACCESS_CONTROL = {
     "ACCESS_CONTROL_SERVICE": {
@@ -682,7 +688,6 @@ ACCESS_CONTROL = {
     "VERIFY_API_PATH": "",
     "ACCESS_CONTROL_CLASS": "",
     "SECRET": "",
-    "APP_NAME": ""
 }
 
 # 函数视图使用方式示例
