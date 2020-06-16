@@ -100,7 +100,7 @@ def pytest_configure(config):
 
     settings.SERVICE_CONF = {
         "NAME": "test_service",
-        "secret": "xxxxx"
+        "SECRET": "xxxxx"
     }
     settings.ACCESS_CONTROL = {
         "ACCESS_CONTROL_SERVICE": {
