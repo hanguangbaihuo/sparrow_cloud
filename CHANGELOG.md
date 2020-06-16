@@ -8,6 +8,7 @@
 ## [1.9.5] - 2020-6-15
 ### Changed
 - fix bug AccessControl
+- skip access_control
 
 ## [1.9.4] - 2020-6-15
 ### Changed
