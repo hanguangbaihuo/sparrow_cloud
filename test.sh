@@ -2,4 +2,4 @@
 
 
 docker run sparrow_cloud:unittest /bin/bash -c \
-    'pytest'
+    'py.test tests && py.test access_control'
