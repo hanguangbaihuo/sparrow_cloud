@@ -3,8 +3,6 @@ import logging
 
 from functools import wraps
 
-from rest_framework.exceptions import PermissionDenied
-
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 
@@ -13,7 +11,7 @@ from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 logger = logging.getLogger(__name__)
 
-DETAIL = {"detail": "You do not have permission to perform this action."}
+DETAIL = {"message": "You do not have permission to perform this action."}
 
 
 def access_control_fbv(resource=None):
@@ -27,10 +25,10 @@ def access_control_fbv(resource=None):
             if skip_access_control is False or skip_access_control == 'False':
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
-                    raise PermissionDenied()
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource):
-                    raise PermissionDenied()
+                    return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                 return func(request, *args, **kwargs)
             return func(request, *args, **kwargs)
         return wrap
