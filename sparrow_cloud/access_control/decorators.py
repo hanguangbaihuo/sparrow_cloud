@@ -71,11 +71,11 @@ def access_control_cbv_method(resource):
                 skip_access_control = get_settings_value("ACCESS_CONTROL").get("SKIP_ACCESS_CONTROL", False)
                 if skip_access_control is False or skip_access_control == 'False':
                     user_id = request.META["REMOTE_USER"]
-                    if user_id is None:
-                        return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
+                    app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
                     resource_code = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
                     if resource_code:
-                        app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
+                        if user_id is None:
+                            return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                         if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource_code):
                             return HttpResponse(json.dumps(DETAIL), content_type='application/json; charset=utf-8', status=403)
                     return function(request, *args, **kwargs)
