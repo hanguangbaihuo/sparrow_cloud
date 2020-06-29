@@ -103,9 +103,7 @@ def pytest_configure(config):
         "SECRET": "xxxxx"
     }
     settings.ACCESS_CONTROL = {
-        "ACCESS_CONTROL_SERVICE": {
-            "SERVICE_ADDRESS": "xxxxx:8011"
-        },
+        "ACCESS_CONTROL_SERVICE": "xxxxx:8011",
         "VERIFY_API_PATH": "/verify/",
         # True：跳过， false：不跳过
         "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)

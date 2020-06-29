@@ -16,7 +16,7 @@ def send_log(data):
     service_log_conf = get_settings_value("SPARROW_SERVICE_LOG_CONF")
     data["service_name"] = service_conf["NAME"]
     try:
-        response = post(service_log_conf["SERVICE_LOG"]["SERVICE_ADDRESS"], service_log_conf["PATH"], data=data)
+        response = post(service_log_conf["SERVICE_LOG"], service_log_conf["PATH"], data=data)
         logging.info("sparrow_cloud: service log sent successfully, message:{}".format(response))
         return True
     except HTTPException as ex:

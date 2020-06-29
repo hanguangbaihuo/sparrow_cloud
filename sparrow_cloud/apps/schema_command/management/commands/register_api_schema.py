@@ -42,7 +42,7 @@ def register(schema):
     api_path = sparrow_permission_register_conf['API_PATH']
     permission_service_conf = sparrow_permission_register_conf["SCHEMA_SERVICE"]
     try:
-        r = rest_client.post(permission_service_conf["SERVICE_ADDRESS"], api_path, json=schema)
+        r = rest_client.post(permission_service_conf, api_path, json=schema)
         print("schema 注册成功 resp body={}".format(r))
     except HTTPException as ex:
         print("schema 注册失败. message={} ".format(ex.detail))

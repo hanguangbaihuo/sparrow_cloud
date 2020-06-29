@@ -30,9 +30,7 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
         settings配置：
 
         MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": {
-                "SERVICE_ADDRESS": "xxxxx-svc:8000",
-            },
+            "SERVICE_CONF": "xxxxx-svc:8000",
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
 

@@ -37,9 +37,7 @@ class ServiceLogCase(unittest.TestCase):
     def test_send_log(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
-            "SERVICE_LOG": {
-                 "SERVICE_ADDRESS": "sparrow-log-svc:8001",
-            },
+            "SERVICE_LOG": "sparrow-log-svc:8001",
             "PATH": "/service_log/log/",
         }
         settings.SERVICE_CONF = {
@@ -62,9 +60,7 @@ class ServiceLogCase(unittest.TestCase):
     def test_send_log_1(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
-            "SERVICE_LOG": {
-                "SERVICE_ADDRESS": "sparrow-log-svc:8001",
-            },
+            "SERVICE_LOG": "sparrow-log-svc:8001",
             "PATH": "/service_log/log/",
         }
         settings.SERVICE_CONF = {
@@ -86,9 +82,7 @@ class ServiceLogCase(unittest.TestCase):
     def test_send_log_key_error(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
-            "SERVICE_LOG": {
-                "SERVICE_ADDRESS": "sparrow-log-svc:8001",
-            },
+            "SERVICE_LOG": "sparrow-log-svc:8001",
             "PATH": "/service_log/log/",
         }
         settings.SERVICE_CONF = {

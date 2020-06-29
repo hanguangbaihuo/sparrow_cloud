@@ -17,9 +17,7 @@ logger = logging.getLogger(__name__)
 settings 配置:
 
 SPARROW_PERMISSION_REGISTER_CONF = {
-    "PERMISSION_SERVICE": {
-        "SERVICE_ADDRESS": "test-svc:8000" 
-    }
+    "PERMISSION_SERVICE": "test-svc:8000"
     "API_PATH": "/api/permission_i/register/"
 }
 '''
@@ -47,7 +45,7 @@ def register(api_list):
     api_path = sparrow_permission_register_conf['API_PATH']
     permission_service_conf = sparrow_permission_register_conf["PERMISSION_SERVICE"]
     try:
-        rest_client.post(permission_service_conf["SERVICE_ADDRESS"], api_path, json=api_list)
+        rest_client.post(permission_service_conf, api_path, json=api_list)
         print("api 注册成功")
     except HTTPException as ex:
         print("api 注册失败. message={}, service_name={}".format(ex.detail, "SPARROW_PERMISSION_REGISTER_NAME"))

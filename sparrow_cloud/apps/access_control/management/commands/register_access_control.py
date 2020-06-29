@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 "data": data
             }
             try:
-                rest_client.post(service_conf["SERVICE_ADDRESS"], api_path=api_path, json=payload)
+                rest_client.post(service_conf, api_path=api_path, json=payload)
                 print("resource register success!!!")
             except Exception as ex:
                 print("resource register failed, message:{}".format(ex.__str__()))

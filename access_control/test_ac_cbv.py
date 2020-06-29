@@ -112,9 +112,7 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "SERVICE_ADDRESS": "xxxxx:8001"
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
@@ -148,9 +146,7 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
 
     def tearDown(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "SERVICE_ADDRESS": "xxxxx:8001"
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
@@ -338,9 +334,7 @@ class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "SERVICE_ADDRESS": "xxxxx:8001"
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
@@ -465,9 +459,7 @@ class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
 
     def tearDown(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "SERVICE_ADDRESS": "xxxxx:8001"
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)

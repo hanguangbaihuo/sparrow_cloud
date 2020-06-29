@@ -10,9 +10,7 @@ class TestMessage(unittest.TestCase):
     def setUp(self):
         os.environ["SPARROW_TASK_TEST_SVC_HOST"] = "127.0.0.1:8001"
         settings.MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": {
-                "SERVICE_ADDRESS": "sparrow-task-test-svc:8001"
-            },
+            "SERVICE_CONF": "sparrow-task-test-svc:8001",
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
 

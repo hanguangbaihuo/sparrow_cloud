@@ -52,9 +52,7 @@ class RestClientTestCase(unittest.TestCase):
         settings.ROOT_URLCONF = __name__
 
         settings.SPARROW_SCHEMA_REGISTER_CONF = {
-            "SCHEMA_SERVICE": {
-                "SERVICE_ADDRESS": "xxxxx-svc:8001"
-            },
+            "SCHEMA_SERVICE": "xxxxx-svc:8001",
             "API_PATH": "/api/schema_i/register/"
         }
         settings.SERVICE_CONF = {

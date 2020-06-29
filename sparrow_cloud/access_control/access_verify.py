@@ -18,7 +18,7 @@ def access_verify(user_id, app_name, resource_code):
             "resource_code": resource_code
         }
         try:
-            response = rest_client.get(service_conf["SERVICE_ADDRESS"], api_path=api_path, timeout=0.5, params=params)
+            response = rest_client.get(service_conf, api_path=api_path, timeout=0.5, params=params)
             if response['has_perm']:
                 return True
         except HTTPException as ex:

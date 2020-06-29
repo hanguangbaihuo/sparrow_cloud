@@ -43,14 +43,10 @@ class RestClientTestCase(unittest.TestCase):
                 "USER_NAME": "test_name",
                 "PASSWORD": "test_password",
                 "VIRTUAL_HOST": "test_virtual",
-                "BROKER_SERVICE_CONF": {
-                    "SERVICE_ADDRESS": "sparrow-test:8001",
-                },
+                "BROKER_SERVICE_CONF": "sparrow-test:8001",
             },
             "MESSAGE_BACKEND_CONF": {
-                "BACKEND_SERVICE_CONF": {
-                    "SERVICE_ADDRESS":"sparrow-test:8001",
-                },
+                "BACKEND_SERVICE_CONF": "sparrow-test:8001",
                 "API_PATH": "/api/sparrow_test/task/test_update/"
             }
         }

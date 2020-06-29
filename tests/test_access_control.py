@@ -75,9 +75,7 @@ class RestClientTestCase(unittest.TestCase):
         settings.SECRET_KEY = "ss"
         settings.ROOT_URLCONF = __name__
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "SERVICE_ADDRESS": "sparrow_access_control:8001"
-            },
+            "ACCESS_CONTROL_SERVICE": "sparrow_access_control:8001",
             "VERIFY_API_PATH": "/verify/",
             # "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
             "SECRET": "fdsafgxckrewkrjfvlxosdg",

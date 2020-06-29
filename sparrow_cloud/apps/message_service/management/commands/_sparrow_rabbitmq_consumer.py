@@ -27,9 +27,7 @@ def rabbitmq_consumer(queue):
                 "USER_NAME": "",
                 "PASSWORD": "",
                 "VIRTUAL_HOST": "",
-                "BROKER_SERVICE_CONF": {
-                    "SERVICE_ADDRESS": "sparrow-demo:8000",
-                },
+                "BROKER_SERVICE_CONF": "sparrow-demo:8000",
             },
             "ALIYUN_RABBITMQ_BROKER": {
                 "HOST": "",
@@ -42,9 +40,7 @@ def rabbitmq_consumer(queue):
             }, 
             "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
-                "BACKEND_SERVICE_CONF": {
-                        "SERVICE_ADDRESS": "sparrow-demo:8000",
-                },
+                "BACKEND_SERVICE_CONF": "sparrow-demo:8000",
                 "API_PATH": ""
             },
             "RETRY_TIMES": 3,
@@ -107,11 +103,11 @@ def rabbitmq_consumer(queue):
                 username = provider.get_username()
                 password = provider.get_password()
             else:
-                broker_service_conf = rabbitmq_conf.get('BROKER_SERVICE_CONF', None)
+                # broker_service_conf = rabbitmq_conf.get('BROKER_SERVICE_CONF', None)
+                broker_service_addr = rabbitmq_conf.get('BROKER_SERVICE_CONF', None)
                 username = rabbitmq_conf.get('USER_NAME', None)
                 password = rabbitmq_conf.get('PASSWORD', None)
                 # broker_service_addr = consul_service(broker_service_conf)
-                broker_service_addr = broker_service_conf["SERVICE_ADDRESS"]
                 host = broker_service_addr.split(':')[0]
                 port = broker_service_addr.split(':')[1]
 

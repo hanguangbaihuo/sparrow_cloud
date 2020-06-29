@@ -154,9 +154,7 @@ REST_FRAMEWORK = {
         }
         
         # 注册服务的配置
-        SPARROW_PERMISSION_REGISTER_CONF = {
-            "SERVICE_ADDRESS" : "test-svc:8000"
-        }
+        SPARROW_PERMISSION_REGISTER_CONF = "test-svc:8000"
 
     调用方式：
         python3 manage.py register_api_permission  -d 2
@@ -186,10 +184,7 @@ REST_FRAMEWORK = {
   rest_client.post(SERVICE_CONF, api_path, timeout=10, json=api_list)
 ```
     参数说明:
-    SERVICE_CONF = {
-        "SERVICE_ADDRESS" : "test-svc:8000"
-    },
-    SERVICE_ADDRESS: 服务地址（host:port）
+    SERVICE_CONF = "test-svc:8000"
     timeout: 
         非必传，默认超时时间5秒
         传参方式：
@@ -208,10 +203,7 @@ REST_FRAMEWORK = {
   requests_client.post(SERVICE_CONF, api_path, timeout=10, json=api_list)
 ```
     参数说明:
-    SERVICE_CONF = {
-        "SERVICE_ADDRESS" : "test-svc:8000"
-    },
-    SERVICE_ADDRESS: 服务地址（host:port）
+    SERVICE_CONF = "test-svc:8000"
     timeout: 
         非必传，默认超时时间5秒
         传参方式：
@@ -230,14 +222,12 @@ REST_FRAMEWORK = {
 ```
     settings配置
         MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": {
-                "SERVICE_ADDRESS": "xxxxx-svc:8000",
-            },
+            "SERVICE_CONF":  "xxxxx-svc:8000",
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
         ps: 
             MESSAGE_SENDER_CONF  # 配置
-                SERVICE_ADDRESS  # message_client 服务地址
+                SERVICE_CONF  # message_client 服务地址
                 API_PATH  # message_client 发送消息地址
     
     调用方式：
@@ -281,9 +271,7 @@ REST_FRAMEWORK = {
                 "USER_NAME": "",
                 "PASSWORD": "",
                 "VIRTUAL_HOST": "",
-                "BROKER_SERVICE_CONF": {
-                    "SERVICE_ADDRESS": "sparrow-demo:8000"
-                },
+                "BROKER_SERVICE_CONF": "sparrow-demo:8000",
             },
             "ALIYUN_RABBITMQ_BROKER": {
                 "HOST": "",
@@ -296,9 +284,7 @@ REST_FRAMEWORK = {
             }, 
             "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
-                "BACKEND_SERVICE_CONF": {
-                        "SERVICE_ADDRESS": "sparrow-demo:8000"
-                },
+                "BACKEND_SERVICE_CONF": "sparrow-demo:8000",
                 "API_PATH": "",
             },
             "RETRY_TIMES": 3,
@@ -401,9 +387,7 @@ REST_FRAMEWORK = {
         
         # 文档服务的配置
         SPARROW_SCHEMA_REGISTER_CONF = {
-            "SCHEMA_SERVICE": {
-                "SERVICE_ADDRESS":"sparrow-demo:8000"
-            },
+            "SCHEMA_SERVICE": "sparrow-demo:8000",
             "API_PATH": "/api/schema_i/register/",
         }
     
@@ -494,10 +478,8 @@ CONSUL_CLIENT_ADDR = {
 
 # 在 settings里面配置 service_log 的日志
 SPARROW_SERVICE_LOG_CONF = {
-    "SERVICE_LOG": {
-            "SERVICE_ADDRESS":"sparrow-demo:8000"
-        },
-        "PATH": "/log/",
+    "SERVICE_LOG": "sparrow-demo:8000",
+    "PATH": "/log/",
     }
     
 # 在 settings里面配置本服务配置
@@ -535,9 +517,7 @@ from sparrow_cloud.service_log.sender import send_log
 ```
 settings 配置
 SPARROW_DING_TALK_CONF = {
-    "SERVICE_DING_TALK": {
-        "SERVICE_ADDRESS":"sparrow-demo:8000"
-    },
+    "SERVICE_DING_TALK": "sparrow-demo:8000",
     "PATH": "/api/.../"
 }
 
@@ -579,9 +559,7 @@ SERVICE_CONF = {
 
 # 访问控制client端配置
 ACCESS_CONTROL = {
-    "ACCESS_CONTROL_SERVICE": {
-        "SERVICE_ADDRESS":"sparrow-demo:8000"
-    },
+    "ACCESS_CONTROL_SERVICE": "sparrow-demo:8000",
     "VERIFY_API_PATH": "",
     # True：跳过， false：不跳过
     "SKIP_ACCESS_CONTROL": False

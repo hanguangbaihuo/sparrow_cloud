@@ -53,9 +53,7 @@ class RestClientTestCase(unittest.TestCase):
         settings.ROOT_URLCONF = __name__
 
         settings.SPARROW_PERMISSION_REGISTER_CONF = {
-            "PERMISSION_SERVICE": {
-                "SERVICE_ADDRESS": "test-svc:8000"
-            },
+            "PERMISSION_SERVICE": "test-svc:8000",
             "API_PATH": "/api/permission_i/register/"
         }
         settings.SERVICE_CONF = {

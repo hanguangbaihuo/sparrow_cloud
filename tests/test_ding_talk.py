@@ -53,9 +53,7 @@ class TestSendMessage(unittest.TestCase):
     def test_send_message(self, request):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": {
-                "SERVICE_ADDRESS": "ding-talk:8001",
-            },
+            "SERVICE_DING_TALK": "ding-talk:8001",
             "PATH": "/send/message/",
         }
         res = send_message("test", ["123"], "wechat", "text")
@@ -65,9 +63,7 @@ class TestSendMessage(unittest.TestCase):
     def test_send_message_400(self, request):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": {
-                "SERVICE_ADDRESS": "ding-talk:8001",
-            },
+            "SERVICE_DING_TALK": "ding-talk:8001",
             "PATH": "/send/message/",
         }
         self.assertEqual(send_message("test", ["123"], "wechat", "text").status_code, 400)
@@ -77,9 +73,7 @@ class TestSendMessage(unittest.TestCase):
     def test_send_message_typeerror(self, request):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": {
-                "SERVICE_ADDRESS": "ding-talk:8001",
-            },
+            "SERVICE_DING_TALK": "ding-talk:8001",
             "PATH": "/send/message/",
         }
         try:
