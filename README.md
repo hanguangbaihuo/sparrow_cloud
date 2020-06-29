@@ -2,7 +2,6 @@
 ### Django SDK
 * Service Discovery : 根据传入的服务名称，从consul服务中返回服务的address
 * Cache Service : sparrow_cloud v1.7.0 以及之后的版本不在提供支持
-* API Permission Register : 注册Django服务的所有api到权限服务， server端未开源
 * RestClient : 封装了request包和服务发现，正确请求返回解析后json数据， 错误请求返回HTTPException
 * RequestsClient : 封装了request包和服务发现， 返回原生的request结果
 * Message_Client : 将任务发送到rabbitmq, server端未开源
@@ -25,8 +24,6 @@
 ## sparrow cloud组件 ##
 
 [Cache Service](#cache_manager)
-
-[API Permission Register](#api-permission-register)
 
 [RestClient](#restclient)
 
@@ -136,30 +133,6 @@ REST_FRAMEWORK = {
 }
 ```
 
-## API Permission Register
-
-> 描述： 主动注册API到权限服务
-> 配置 permission_command 需要的参数
-
-```
-    settings 配置:
-        # 注册服务到 settings 下的 INSTALLED_APPS中
-        INSTALLED_APPS = [
-            "sparrow_cloud.apps.permission_command",
-        ]
-    
-        # 本服务配置
-        SERVICE_CONF = {
-            "NAME": "",  # 本服务的名称
-        }
-        
-        # 注册服务的配置
-        SPARROW_PERMISSION_REGISTER_CONF = "test-svc:8000"
-
-    调用方式：
-        python3 manage.py register_api_permission  -d 2
-
-```
 ## METHOD_MIDDLEWARE
 > 兼容阿里不支持 put/delete 请求
 > 配置METHOD_MIDDLEWARE需要的参数

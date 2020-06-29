@@ -21,6 +21,7 @@
 ### Remove
 - service_configuration
 - ACL Middleware
+- API Permission Register
 
 
 ## [1.9.7] - 2020-6-18
