@@ -19,9 +19,9 @@ def get_settings_service_name():
     return service_name
 
 
-def request(method, service_address, api_path, timeout, *args, **kwargs):
+def request(method, service_address, api_path, timeout, protocol="http", *args, **kwargs):
     service_name = get_settings_service_name()
-    request_url = build_url(service_address, api_path)
+    request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
     try:
         res = requests.request(method=method, url=request_url, timeout=timeout, *args, **kwargs)
         return _handle_response(res)
