@@ -44,7 +44,7 @@ class TaskSender(object):
         # import pdb; pdb.set_trace()
         backend_service_conf = self._message_backend_conf.get('SERVICE_CONF', None)
         api_path = self._message_backend_conf.get('API_PATH', None)
-        result = requests_client.post(backend_service_conf, api_path=api_path, json=data)
+        result = requests_client.post(backend_service_conf["SERVICE_ADDRESS"], api_path=api_path, json=data)
         if result.status_code == 200:
             try:
                 res = result.json()

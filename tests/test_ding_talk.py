@@ -5,12 +5,12 @@ from sparrow_cloud.restclient.exception import HTTPException
 from django.test import RequestFactory
 from sparrow_cloud.dingtalk.sender import send_message
 
-CONSUL_RETURN_DATA = (
-    "name",
-    [
-        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001}
-    ]
-)
+# CONSUL_RETURN_DATA = (
+#     "name",
+#     [
+#         {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001}
+#     ]
+# )
 
 MOCK_RESPONSE = {"data": {"code": 0, "message": "success"}}
 
@@ -54,8 +54,7 @@ class TestSendMessage(unittest.TestCase):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
             "SERVICE_DING_TALK": {
-                "ENV_NAME": "SERVICE_DING_TALK_HOST",
-                "VALUE": os.environ.get("SERVICE_DING_TALK", "ding-talk"),
+                "SERVICE_ADDRESS": "ding-talk:8001",
             },
             "PATH": "/send/message/",
         }
@@ -67,8 +66,7 @@ class TestSendMessage(unittest.TestCase):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
             "SERVICE_DING_TALK": {
-                "ENV_NAME": "SERVICE_DING_TALK_HOST",
-                "VALUE": os.environ.get("SERVICE_DING_TALK", "ding-talk"),
+                "SERVICE_ADDRESS": "ding-talk:8001",
             },
             "PATH": "/send/message/",
         }
@@ -80,8 +78,7 @@ class TestSendMessage(unittest.TestCase):
         from django.conf import settings
         settings.SPARROW_DING_TALK_CONF = {
             "SERVICE_DING_TALK": {
-                "ENV_NAME": "SERVICE_DING_TALK_HOST",
-                "VALUE": os.environ.get("SERVICE_DING_TALK", "ding-talk"),
+                "SERVICE_ADDRESS": "ding-talk:8001",
             },
             "PATH": "/send/message/",
         }

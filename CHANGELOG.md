@@ -5,12 +5,30 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.0] - 2020-6-29
+### Changed
+- Middleware configuration
+- rest client configuration
+- requests client configuration
+- message_client configuration
+- rabbitmq_consumer configuration
+- table_api configuration
+- API SCHEMA REGISTER configuration
+- service_log configuration
+- DING_TALK configuration
+- ACCESS_CONTROL_VERIFY configuration
+
+### Remove
+- service_configuration
+- ACL Middleware
+
+
 ## [1.9.7] - 2020-6-18
 ### Changed
 - change cbv Undecorated method does not go through user verification
 
 ## [1.9.6] - 2020-6-17
-### Changedq
+### Changed
 - change fbv/cbv response.content
 
 ## [1.9.5] - 2020-6-15

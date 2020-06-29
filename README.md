@@ -9,14 +9,12 @@
 * Rabbitmq_Consumer : rabbitmq消息消费端，server端未开源
 * Table_API : 接收查询条件返回 django model 序列化后的数据
 * Api Schema Register : django subcommand, 主动注册API 描述到文档服务， server端未开源
-* service_configuration : consul 服务配置中心SDK, 从consul配置中心获取value
 * service_log : Log日志， 服务端未开源
 * ding_talk : 发送消息到钉钉群，服务端未开源
 * access_control verify : 访问控制验证，服务端未开源
 
 ### Django Middleware ###
 * JWT Middleware : 解析 JWT Token 
-* ACL Middleware : 访问控制, server端未开源
 * Request Method Middleware : 兼容不支持 put/delete 请求
 * ExceptionMiddleware : 异常通知
 
@@ -25,8 +23,6 @@
 
 
 ## sparrow cloud组件 ##
-
-[Service Discovery](#service_registry)
 
 [Cache Service](#cache_manager)
 
@@ -57,8 +53,6 @@
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
 
-[ACL Middleware](#aclmiddleware)
-
 [Request Method Middleware](#method_middleware)
 
 [ExceptionMiddleware](#exceptionmiddleware)
@@ -79,36 +73,6 @@
     运行单个测试:
         py.test tests/test_rest_client.py
 
-## service_registry
-
-> 描述： consul服务发现
-> sparrow_cloud 项目的许多组件对 consul服务发现 有重度依赖, 需配置 consul
-
-```
-# 在 settings里面配置 consul参数
-CONSUL_CLIENT_ADDR = {
-    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
-    "PORT": os.environ.get("CONSUL_PORT", 8500)
-}
-
-使用方法：
-from sparrow_cloud.registry.service_discovery import consul_service
-> consul_service(SERVICE_CONF)
-> "127.0.0.1:8001"
-
-参数说明:
-  SERVICE_CONF = {
-        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-        "VALUE": "sprrow-permission-svc"
-    },
-    ENV_NAME: 用来覆盖 consul 的环境变量名
-    VALUE: consul服务注册名字
-如果有环境变量 PERMISSION_REGISTER_NAME_HOST 存在, 则覆盖 consul
-
-consul_service: 返回地址的方法:
-  1 如果有 SERVICE_SETTINGS_KEY_NAME_HOST (参数名字_HOST)环境变量存在, 则直接返回该环境变量的值作为地址.
-  2 如果没有, 则使用 consul 服务发现中心返回地址
-```
 
 ## cache_manager
 
@@ -151,32 +115,6 @@ JWT_MIDDLEWARE = {
 }
 ```
 
-## ACLMiddleware
-
-> 描述：ACL 访问控制
-> 配置 ACLMiddleware 中间件需要的参数
-
-```
-注册中间件
-MIDDLEWARE = (
-    'sparrow_cloud.middleware.acl_middleware.ACLMiddleware',  # 放在jwt中间件的下层
-
-将以下参数添加到settings.py
-ACL_MIDDLEWARE = {
-    "ACL_SERVICE": {
-        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
-        "ENV_NAME": "ACL_SERVICE_HOST",
-        # VALUE 为服务发现的注册名称
-        "VALUE": os.environ.get("ACL_SERVICE", "acl_service"),
-    },
-    "API_PATH": "/api/acl_token/",
-    "ACL_PUBLIC_KEY": """PUBLIC KEY"""
-}
-
-# ACL 访问控制需要用到django—cache， 请在settings中配置
-# 使用acl的时候，如果需要传user_id, 放到请求header的REMOTE_USER字段
-
-```
 
 ## UserIDAuthentication
 > 描述： user_id 解析
@@ -217,11 +155,7 @@ REST_FRAMEWORK = {
         
         # 注册服务的配置
         SPARROW_PERMISSION_REGISTER_CONF = {
-            "PERMISSION_SERVICE": {
-                "ENV_NAME": "PERMISSION_SERVICE_HOST",
-                "VALUE": "xxxxx-svc",
-            },
-            "API_PATH": "/api/permission_i/register/",
+            "SERVICE_ADDRESS" : "test-svc:8000"
         }
 
     调用方式：
@@ -253,11 +187,9 @@ REST_FRAMEWORK = {
 ```
     参数说明:
     SERVICE_CONF = {
-        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-        "VALUE": "sprrow-permission-svc",
+        "SERVICE_ADDRESS" : "test-svc:8000"
     },
-    ENV_NAME: 用来覆盖 consul 的环境变量名
-    VALUE: consul服务注册名字
+    SERVICE_ADDRESS: 服务地址（host:port）
     timeout: 
         非必传，默认超时时间5秒
         传参方式：
@@ -277,11 +209,9 @@ REST_FRAMEWORK = {
 ```
     参数说明:
     SERVICE_CONF = {
-        "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-        "VALUE": "sprrow-permission-svc",
+        "SERVICE_ADDRESS" : "test-svc:8000"
     },
-    ENV_NAME: 用来覆盖 consul 的环境变量名
-    VALUE: consul服务注册名字
+    SERVICE_ADDRESS: 服务地址（host:port）
     timeout: 
         非必传，默认超时时间5秒
         传参方式：
@@ -301,14 +231,13 @@ REST_FRAMEWORK = {
     settings配置
         MESSAGE_SENDER_CONF = {
             "SERVICE_CONF": {
-                "ENV_NAME": "MESSAGE_REGISTER_NAME_HOST",
-                "VALUE": "sparrow-task-test-svc",
+                "SERVICE_ADDRESS": "xxxxx-svc:8000",
             },
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
         ps: 
             MESSAGE_SENDER_CONF  # 配置
-                SERVICE_CONF  # message_client依赖consul
+                SERVICE_ADDRESS  # message_client 服务地址
                 API_PATH  # message_client 发送消息地址
     
     调用方式：
@@ -353,8 +282,7 @@ REST_FRAMEWORK = {
                 "PASSWORD": "",
                 "VIRTUAL_HOST": "",
                 "BROKER_SERVICE_CONF": {
-                    "ENV_NAME": "",
-                    "VALUE": "",
+                    "SERVICE_ADDRESS": "sparrow-demo:8000"
                 },
             },
             "ALIYUN_RABBITMQ_BROKER": {
@@ -369,8 +297,7 @@ REST_FRAMEWORK = {
             "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
                 "BACKEND_SERVICE_CONF": {
-                        "ENV_NAME": "",
-                        "VALUE": "",
+                        "SERVICE_ADDRESS": "sparrow-demo:8000"
                 },
                 "API_PATH": "",
             },
@@ -393,9 +320,9 @@ REST_FRAMEWORK = {
                         USER_NAME # 用户名
                         PASSWORD # 密码
                         VIRTUAL_HOST # 虚拟主机
-                        BROKER_SERVICE_CONF  # 依赖consul服务的配置
+                        BROKER_SERVICE_CONF  # 服务地址配置
                     MESSAGE_BACKEND_CONF
-                        BACKEND_SERVICE_CONF # 依赖consul服务的配置
+                        BACKEND_SERVICE_CONF # 服务地址配置
                         API_PATH # api 路径
                     RETRY_TIMES # 错误重试次数，默认3次
                     INTERVAL_TIME   # 错误重试间隔，默认3秒
@@ -442,10 +369,7 @@ REST_FRAMEWORK = {
 
  # client端调用 
     from sparrow_cloud.restclient import rest_client
-    SERVICE_CONF = {
-             "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-             "VALUE": "sprrow-permission-svc"
-         }
+    SERVICE_CONF = "sparrow-demo:8000"
     payload = {
         "app_lable_model":"app_lable.model",
         "filter_condition":{"product_id":"74101"}
@@ -472,13 +396,13 @@ REST_FRAMEWORK = {
         # 本服务配置
         SERVICE_CONF = {
             "NAME": "",  # 本服务的名称
+            "SECRET": ""
         }
         
         # 文档服务的配置
         SPARROW_SCHEMA_REGISTER_CONF = {
             "SCHEMA_SERVICE": {
-                "ENV_NAME": "SCHEMA_SERVICE_HOST",
-                "VALUE": "sparrow-schema-svc",
+                "SERVICE_ADDRESS":"sparrow-demo:8000"
             },
             "API_PATH": "/api/schema_i/register/",
         }
@@ -556,30 +480,6 @@ class CarViewSet(ModelViewSet):
     """
 ```
 
-## service_configuration
-
-> 描述： consul 服务配置中心
-> sparrow_cloud 项目的许多组件对 consul服务发现 有重度依赖, 需配置 consul
-
-```
-# 在 settings里面配置 consul参数
-CONSUL_CLIENT_ADDR = {
-    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
-    "PORT": os.environ.get("CONSUL_PORT", 8500)
-}
-
-使用方法：
-from sparrow_cloud.registry.service_configuration import config
-> value = config(key="foo")
-
-参数说明:
-    key: consul配置中心的key
-    ps: 优先级顺序：          consul --> settings
-        consul中优先级顺序
-            consul正常：consul --> redis(30内有效期内)
-            consul异常：如果数据存在 redis， 直接返回          
-```
-
 ## service_log
 
 > 描述： consul 服务配置中心
@@ -595,8 +495,7 @@ CONSUL_CLIENT_ADDR = {
 # 在 settings里面配置 service_log 的日志
 SPARROW_SERVICE_LOG_CONF = {
     "SERVICE_LOG": {
-            "ENV_NAME": "SERVICE_LOG_HOST",
-            "VALUE": os.environ.get("SERVICE_LOG", "service-log-svc"),
+            "SERVICE_ADDRESS":"sparrow-demo:8000"
         },
         "PATH": "/log/",
     }
@@ -637,8 +536,7 @@ from sparrow_cloud.service_log.sender import send_log
 settings 配置
 SPARROW_DING_TALK_CONF = {
     "SERVICE_DING_TALK": {
-        "ENV_NAME": "DINGTALK_ROBOT_HOST",
-        "VALUE": "",
+        "SERVICE_ADDRESS":"sparrow-demo:8000"
     },
     "PATH": "/api/.../"
 }
@@ -682,9 +580,7 @@ SERVICE_CONF = {
 # 访问控制client端配置
 ACCESS_CONTROL = {
     "ACCESS_CONTROL_SERVICE": {
-        "ENV_NAME": "",
-        # VALUE 为服务发现的注册名称
-        "VALUE": "",
+        "SERVICE_ADDRESS":"sparrow-demo:8000"
     },
     "VERIFY_API_PATH": "",
     # True：跳过， false：不跳过

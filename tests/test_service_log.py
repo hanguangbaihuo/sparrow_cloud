@@ -4,16 +4,6 @@ from sparrow_cloud.service_log.sender import send_log
 import os
 
 
-CONSUL_RETURN_DATA = (
-    "name",
-    [
-        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001},
-        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001},
-        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001},
-    ]
-)
-
-
 def mocked_requests(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code, content):
@@ -43,15 +33,12 @@ class ServiceLogCase(unittest.TestCase):
     def setUp(self):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_send_log(self, token, mock_post, consul):
+    def test_send_log(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
             "SERVICE_LOG": {
-                "ENV_NAME": "SPARROW_SERVICE_LOG",
-                "VALUE": os.environ.get("SPARROW_SERVICE_LOG", "sparrow-service-log-svc"),
+                 "SERVICE_ADDRESS": "sparrow-log-svc:8001",
             },
             "PATH": "/service_log/log/",
         }
@@ -71,15 +58,12 @@ class ServiceLogCase(unittest.TestCase):
         res = send_log(data)
         self.assertEqual(res, True)
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests1)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_send_log(self, token, mock_post, consul):
+    def test_send_log_1(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
             "SERVICE_LOG": {
-                "ENV_NAME": "SPARROW_SERVICE_LOG",
-                "VALUE": os.environ.get("SPARROW_SERVICE_LOG", "sparrow-service-log-svc"),
+                "SERVICE_ADDRESS": "sparrow-log-svc:8001",
             },
             "PATH": "/service_log/log/",
         }
@@ -98,15 +82,12 @@ class ServiceLogCase(unittest.TestCase):
         res = send_log(data)
         self.assertEqual(res, False)
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests1)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_send_log_key_error(self, token, mock_post, consul):
+    def test_send_log_key_error(self, mock_post):
         from django.conf import settings
         settings.SPARROW_SERVICE_LOG_CONF = {
             "SERVICE_LOG": {
-                "ENV_NAME": "SPARROW_SERVICE_LOG",
-                "VALUE": os.environ.get("SPARROW_SERVICE_LOG", "sparrow-service-log-svc"),
+                "SERVICE_ADDRESS": "sparrow-log-svc:8001",
             },
             "PATH": "/service_log/log/",
         }

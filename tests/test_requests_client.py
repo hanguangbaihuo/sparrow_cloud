@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-import unittest
-from unittest import mock
-from sparrow_cloud.restclient import requests_client
 import os
+import unittest
+import django
+
+from unittest import mock
+from django.conf import settings
+from sparrow_cloud.restclient import requests_client
 
 
 # This method will be used by the mock to replace requests.post
@@ -42,110 +45,52 @@ def mocked_requests_not_empty_data(*args, **kwargs):
     return MockResponse(content=None, status_code=400)
 
 
-CONSUL_RETURN_DATA = (
-    "name",
-    [
-        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001},
-        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001},
-        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001},
-    ]
-)
+SERVICE_ADDRESS = "sparrow-test-svc:8000"
 
-SERVICE_CONF = {
-    "ENV_NAME": "PERMISSION_REGISTER_NAME_HOST",
-    "VALUE": "sprrow-permission-svc"
-    }
+API_PATH = "/api/xxx/"
+DATA = {"key": "value"}
 
 
 class RestClientTestCase(unittest.TestCase):
 
     def setUp(self):
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
-
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
-    @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_post(self, acl_token, mock_post, mock_service):
-        api_path = "/api/xxx/"
-        data = {
-            "key": "value",
-        }
         from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = requests_client.post(SERVICE_CONF, api_path, data=data)
+        self.setup_settings(settings)
+        django.setup()
+
+    @mock.patch('requests.request', side_effect=mocked_requests)
+    def test_post(self, mock_post):
+        service_address = settings.SERVICE_ADDRESS
+        res = requests_client.post(service_address, API_PATH, data=DATA)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_put(self, acl_token, mock_put, mock_service):
-        api_path = "/api/xxx/"
-        data = {
-            "key": "value",
-        }
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = requests_client.put(SERVICE_CONF, api_path, data=data)
+    def test_put(self, mock_put):
+        service_address = settings.SERVICE_ADDRESS
+        res = requests_client.put(service_address, API_PATH, data=DATA)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_get(self, acl_token, mock_get, mock_service):
-        api_path = "/api/xxx/"
-        data = {
-            "key": "value",
-        }
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = requests_client.get(SERVICE_CONF, api_path, data=data)
+    def test_get(self, mock_get):
+        service_address = settings.SERVICE_ADDRESS
+        res = requests_client.get(service_address, API_PATH, data=DATA)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value='123')
-    def test_delete(self, acl_token, mock_delete, mock_service):
-        api_path = "/api/xxx/"
-        data = {
-            "key": "value",
-        }
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = requests_client.delete(SERVICE_CONF, api_path, data=data)
+    def test_delete(self, mock_delete):
+        service_address = settings.SERVICE_ADDRESS
+        res = requests_client.delete(service_address, API_PATH, data=DATA)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.requests_client.get_acl_token', return_value=None)
-    def test_not_acl(self, acl_token, mock_post, mock_service):
-        api_path = "/api/xxx/"
-        data = {
-            "key": "value",
-        }
-        from django.conf import settings
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": "127.0.0.1",
-            "PORT": 8500
-        }
-        settings.SERVICE_CONF = SERVICE_CONF
-        res = requests_client.post(SERVICE_CONF, api_path, data=data)
+    def test_not_acl(self, mock_post):
+        service_address = settings.SERVICE_ADDRESS
+        res = requests_client.post(service_address, API_PATH, data=DATA)
         self.assertEqual(res.json(), {'key1': 'value1'})
 
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
+
+    def setup_settings(self, settings):
+        settings.SERVICE_ADDRESS = SERVICE_ADDRESS

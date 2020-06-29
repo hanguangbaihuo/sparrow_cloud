@@ -252,7 +252,7 @@ class RabbitMQConsumer(object):
                 # 下次重试的时候需要通过consul重新获取新地址
                 backend_service_conf = self._message_backend_conf.get('BACKEND_SERVICE_CONF', None)
                 api_path = self._message_backend_conf.get('API_PATH', None)
-                response = rest_client.post(backend_service_conf, api_path=api_path, json=data)
+                response = rest_client.post(backend_service_conf["SERVICE_ADDRESS"], api_path=api_path, json=data)
                 logger.info(
                     ' [*] Update task database info task_id is {0}, status is {1}'.format(task_id, status))
                 return

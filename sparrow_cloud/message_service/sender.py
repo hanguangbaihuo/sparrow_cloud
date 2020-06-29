@@ -1,6 +1,6 @@
 from django.conf import settings
 from .sender_controller import TaskSender
-from sparrow_cloud.registry.service_discovery import consul_service
+# from sparrow_cloud.registry.service_discovery import consul_service
 from sparrow_cloud.restclient.exception import HTTPException
 
 from functools import lru_cache
@@ -31,8 +31,7 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
 
         MESSAGE_SENDER_CONF = {
             "SERVICE_CONF": {
-                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
-                "VALUE": "xxxxx-svc",
+                "SERVICE_ADDRESS": "xxxxx-svc:8000",
             },
             "API_PATH": "/api/sparrow_task/producer/send/",
         }

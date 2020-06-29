@@ -1,5 +1,5 @@
 from ._controller import RabbitMQConsumer
-from sparrow_cloud.registry.service_discovery import consul_service
+# from sparrow_cloud.registry.service_discovery import consul_service
 from sparrow_cloud.apps.message_service.aliyun_amqp import AliyunCredentialsProvider3 as aliyun_provider
 from django.conf import settings
 import time
@@ -28,8 +28,7 @@ def rabbitmq_consumer(queue):
                 "PASSWORD": "",
                 "VIRTUAL_HOST": "",
                 "BROKER_SERVICE_CONF": {
-                    "ENV_NAME": "",
-                    "VALUE": "",
+                    "SERVICE_ADDRESS": "sparrow-demo:8000",
                 },
             },
             "ALIYUN_RABBITMQ_BROKER": {
@@ -44,8 +43,7 @@ def rabbitmq_consumer(queue):
             "RABBITMQ_SELECTION": "MESSAGE_BROKER_CONF",
             "MESSAGE_BACKEND_CONF": {
                 "BACKEND_SERVICE_CONF": {
-                        "ENV_NAME": "",
-                        "VALUE": "",
+                        "SERVICE_ADDRESS": "sparrow-demo:8000",
                 },
                 "API_PATH": ""
             },
@@ -112,7 +110,8 @@ def rabbitmq_consumer(queue):
                 broker_service_conf = rabbitmq_conf.get('BROKER_SERVICE_CONF', None)
                 username = rabbitmq_conf.get('USER_NAME', None)
                 password = rabbitmq_conf.get('PASSWORD', None)
-                broker_service_addr = consul_service(broker_service_conf)
+                # broker_service_addr = consul_service(broker_service_conf)
+                broker_service_addr = broker_service_conf["SERVICE_ADDRESS"]
                 host = broker_service_addr.split(':')[0]
                 port = broker_service_addr.split(':')[1]
 

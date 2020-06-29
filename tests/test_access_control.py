@@ -11,16 +11,6 @@ import os
 
 urlpatterns = []
 
-CONSUL_RETURN_DATA = (
-    "name",
-    [
-        {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001},
-        {'ServiceAddress': '142.27.4.252', 'ServicePort': 8001},
-        {'ServiceAddress': '122.21.8.131', 'ServicePort': 8001},
-    ]
-)
-
-
 # This method will be used by the mock to replace requests.post
 def mocked_requests(*args, **kwargs):
     class MockResponse:
@@ -58,10 +48,8 @@ class RestClientTestCase(unittest.TestCase):
                     ]
                 )
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
-    def test_access_control_fbv_200(self, mock_get_acl_token, mock_request, mock_consul):
+    def test_access_control_fbv_200(self, mock_request):
         def detail1(request):
             return HttpResponse("ok")
         rf1 = RequestFactory(REMOTE_USER='sssssssss')
@@ -69,10 +57,8 @@ class RestClientTestCase(unittest.TestCase):
         decorator = access_control_fbv(resource="example1_admin")(detail1)(request)
         self.assertEqual(decorator.status_code, 200)
 
-    @mock.patch('consul.Consul.Catalog.service', return_value=CONSUL_RETURN_DATA)
     @mock.patch('requests.request', side_effect=mocked_requests)
-    @mock.patch('sparrow_cloud.restclient.rest_client.get_acl_token', return_value='123')
-    def test_access_control_fbv_403(self, mock_get_acl_token, mock_request, mock_consul):
+    def test_access_control_fbv_403(self, mock_request):
         def detail1(request):
             return HttpResponse("ok")
         rf1 = RequestFactory(REMOTE_USER='xxx')
@@ -88,14 +74,9 @@ class RestClientTestCase(unittest.TestCase):
     def setup_settings(self, settings):
         settings.SECRET_KEY = "ss"
         settings.ROOT_URLCONF = __name__
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
-            "PORT": os.environ.get("CONSUL_PORT", 8500)
-        }
         settings.ACCESS_CONTROL = {
             "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_ACCESS_CONTROL",
-                "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "sparrow_access_control"),
+                "SERVICE_ADDRESS": "sparrow_access_control:8001"
             },
             "VERIFY_API_PATH": "/verify/",
             # "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
