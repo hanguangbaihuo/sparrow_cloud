@@ -28,11 +28,10 @@ def request(method, service_address, api_path, timeout, protocol="http", *args, 
         res = requests.request(method=method, url=request_url, timeout=timeout, *args, **kwargs)
         return res
     except Exception as ex:
-        error_message = "request_client error, service_name:{}, request_service_address:{},  message:{}" \
-            .format(service_name, request_url, ex.__str__())
+        error_message = "rest_client error, service_name:{}, protocol:{}, method:{}, " \
+                        "request_service_address:{}, api_path:{}, message:{}" \
+            .format(service_name, protocol, method, service_address, api_path, ex.__str__())
         logger.error(error_message)
-        logging.info("requests_client is called, service_name:{}, protocol:{}, method:{}, request_service_address:{}, "
-                     "api_path:{}".format(service_name, protocol, method, service_address, api_path))
         raise Exception(error_message)
 
 

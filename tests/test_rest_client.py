@@ -125,8 +125,8 @@ class RestClientTestCase(unittest.TestCase):
             rest_client.post(service_address, API_PATH, data=DATA)
         except Exception as ex:
             message = ex.__str__()
-            self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, '
-                                      'request_service_address:http://sparrow-test-svc:8000/api/xxx/,  message:')
+            self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, protocol:http, method:post, '
+                                      'request_service_address:sparrow-test-svc:8000, api_path:/api/xxx/, message:')
 
     @mock.patch('requests.request', side_effect=mocked_requests_connection_error)
     def test_put_err(self, mock_put):
@@ -135,8 +135,8 @@ class RestClientTestCase(unittest.TestCase):
             rest_client.put(service_address, API_PATH, data=DATA)
         except Exception as ex:
             message = ex.__str__()
-            self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, '
-                                      'request_service_address:http://sparrow-test-svc:8000/api/xxx/,  message:')
+            self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, protocol:http, method:put, '
+                                      'request_service_address:sparrow-test-svc:8000, api_path:/api/xxx/, message:')
 
     def setup_settings(self, settings):
         settings.SERVICE_ADDRESS = SERVICE_ADDRESS
