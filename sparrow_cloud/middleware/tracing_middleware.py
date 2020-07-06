@@ -8,6 +8,7 @@ from opentracing.propagation import Format
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 import logging
 import opentracing
+import six
 
 
 logger = logging.getLogger(__name__)
@@ -48,10 +49,19 @@ class TracingMiddleware(MiddlewareMixin):
         If it returns None, Django will continue processing this request,
         executing any other process_view() middleware and, then, the appropriate view. 
         '''
+        # strip headers for trace info
+        headers = {}
+        for k, v in six.iteritems(request.META):
+            k = k.lower().replace('_', '-')
+            if k.startswith('http-'):
+                k = k[5:]
+            headers[k] = v
+        logger.debug('=================== headers :  {}'.format(headers))
         tracer = opentracing.global_tracer()
+        logger.debug('=================== tracer :  {}'.format(tracer))
         span_ctx = tracer.extract(
             Format.HTTP_HEADERS,
-            dict(request.headers)
+            headers
         )
         rpc_tag = {
             tags.COMPONENT: 'django',
@@ -67,10 +77,10 @@ class TracingMiddleware(MiddlewareMixin):
         )
         span = scope.span
         # import pdb; pdb.set_trace()
-        logger.debug('=================== span id:  {}'.format(span.span_id))
-        logger.debug('=================== span trace id:  {}'.format(span.trace_id))
-        logger.debug('=================== span parent id:  {}'.format(span.parent_id))
-        logger.debug('=================== span tags:  {}'.format(span.tags))
+        # logger.debug('=================== span id:  {}'.format(span.span_id))
+        # logger.debug('=================== span trace id:  {}'.format(span.trace_id))
+        # logger.debug('=================== span parent id:  {}'.format(span.parent_id))
+        # logger.debug('=================== span tags:  {}'.format(span.tags))
         
     
     # def process_request(self, request, response):
