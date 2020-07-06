@@ -23,7 +23,7 @@ def get_settings_service_name():
 
 
 def request(method, service_address, api_path, timeout, protocol="http", *args, **kwargs):
-    headers = kwargs.get('headers', {})
+    headers = kwargs.pop('headers', {})
     # tracing
     tracer = opentracing.global_tracer()
     if tracer:
