@@ -61,6 +61,7 @@
 
 [ExceptionMiddleware](#exceptionmiddleware)
 
+[TracingMiddleware](#tracingmiddleware)
 
 ## rest_framework中间件 ##
 [UserID Authentication](#useridauthentication)
@@ -152,6 +153,16 @@ REST_FRAMEWORK = {
   # 注册 METHOD_MIDDLEWARE
   MIDDLEWARE_CLASSES = (
       'sparrow_cloud.middleware.methodconvert.MethodConvertMiddleware',  #兼容阿里请求方式中间件
+  )
+```
+
+## TracingMiddleware
+> 兼容阿里不支持 put/delete 请求
+> 配置METHOD_MIDDLEWARE需要的参数
+
+```
+  MIDDLEWARE_CLASSES = (
+      'sparrow_cloud.middleware.TracingMiddleware',  # 追踪链
   )
 ```
 
