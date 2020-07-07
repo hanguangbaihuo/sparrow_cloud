@@ -5,6 +5,21 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.4] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.3] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.3] - 2020-7-7
+### Added
+- SDK:get_user_token 
+- SDK:get_app_token
+
 ## [2.0.0] - 2020-6-29
 ### Changed
 - Middleware configuration

@@ -5,7 +5,7 @@ from sparrow_cloud.authorization.token import *
 
 
 MOCK_RESPONSE = {
-    "expires_at": 7200,
+    "expires_in": 7200,
     "token": "eyJhbGciOiJIUzI1.eyJ1aWQiOcCJ9.cayn"
 }
 
