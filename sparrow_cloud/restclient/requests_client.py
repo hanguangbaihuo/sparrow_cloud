@@ -8,7 +8,6 @@ import logging
 import opentracing
 from django.conf import settings
 from sparrow_cloud.utils.build_url import build_url
-from requests.exceptions import ConnectTimeout, ConnectionError, ReadTimeout
 
 logger = logging.getLogger(__name__)
 
