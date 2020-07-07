@@ -5,6 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.7] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
 ## [2.0.6] - 2020-7-7
 ### Changed
 - change dingtalk
