@@ -30,8 +30,8 @@ def get_user_token(user_id):
         data = {
             "uid": user_id
         }
-        user_token = rest_client.post(service_address=registry_app_conf["SERVICE_ADDRESS"], api_path=registry_app_conf["PATH"], data=data)
-        cache.set(user_token_key, {'user_token': user_token}, timeout=user_token["expires_at"]-120)
+        user_token = rest_client.post(service_address=registry_app_conf["SERVICE_ADDRESS"], api_path=registry_app_conf["PATH"], timeout=0.5, data=data)
+        cache.set(user_token_key, {'user_token': user_token}, timeout=user_token["expires_in"]-120)
         return user_token
     except Exception as ex:
         raise Exception('get_user_token error, no token available in cache and registry_app_error, '
@@ -57,9 +57,13 @@ def get_app_token():
         if cache_app_token:
             return cache_app_token["app_token"]
     try:
+        data = {
+            "name": service_conf["NAME"],
+            "secret": service_conf["SECRET"]
+        }
         app_token = rest_client.post(service_address=registry_app_conf["SERVICE_ADDRESS"],
-                                     api_path=registry_app_conf["PATH"], data=service_conf)
-        cache.set(app_token_key, {'app_token': app_token}, timeout=app_token["expires_at"]-120)
+                                     api_path=registry_app_conf["PATH"], timeout=0.5, data=data)
+        cache.set(app_token_key, {'app_token': app_token}, timeout=app_token["expires_in"]-120)
         return app_token
     except Exception as ex:
         raise Exception('get_app_token error, no token available in cache and registry_app_error, '
