@@ -11,6 +11,9 @@
 * service_log : Log日志， 服务端未开源
 * ding_talk : 发送消息到钉钉群，服务端未开源
 * access_control verify : 访问控制验证，服务端未开源
+* get_user_token : 获取用户token
+* get_app_token : 获取app token
+
 
 ### Django Middleware ###
 * JWT Middleware : 解析 JWT Token 
@@ -46,6 +49,10 @@
 [access_control_verify](#access_control_verify)
 
 [access_control_register](#access_control_register)
+
+[get_user_token](#get_user_token)
+
+[get_app_token](#get_app_token)
 
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
@@ -570,6 +577,26 @@ class ProductOperationList(generics.ListCreateAPIView):
     
 ```
 
+## get_user_token
+> get_user_token (获取用户token)
+
+```
+    #settings配置
+    REGISTRY_APP_CONF = {
+        "SERVICE_ADDRESS": "sparrow-service-svc:8000",
+        "PATH": "/api/get_app_token/",
+        "ENABLE_TOKEN_CACHE": os.environ.get("ENABLE_TOKEN_CACHE", False)
+    }
+    
+    
+    # 获取用户token
+    from sparrow_cloud.authorization.token import *
+    user_token = get_user_token(user_id="21424kvjbcdjslafds")
+    
+    # 获取app token
+    app_token = get_app_token()
+
+```
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/hanguangbaihuo/sparrow_cloud.svg)](https://starchart.cc/hanguangbaihuo/sparrow_cloud)

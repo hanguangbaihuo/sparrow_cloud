@@ -74,4 +74,11 @@ uf2erSRTljzgJmwsowIDAQAB
 
 SERVICE_CONF = {
     "NAME": "sparrow_cloud",
+    "SECRET": "124cdsalhdisahgisabjnjlk"
 }
+
+REGISTRY_APP_CONF = {
+        "SERVICE_ADDRESS": "sparrow-service-svc:8000",
+        "PATH": "/api/get_app_token/",
+        "ENABLE_TOKEN_CACHE": os.environ.get("ENABLE_TOKEN_CACHE", False)
+    }

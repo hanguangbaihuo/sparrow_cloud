@@ -21,11 +21,14 @@ def get_settings_service_name():
     return service_name
 
 
-def request(method, service_address, api_path, timeout, protocol="http", *args, **kwargs):
+def request(method, service_address, api_path, timeout, protocol="http", token=None, *args, **kwargs):
     service_name = get_settings_service_name()
     request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
+    headers = kwargs.get('headers', {})
+    if token:
+        headers.update({'Authorization': "token " + token})
     try:
-        res = requests.request(method=method, url=request_url, timeout=timeout, *args, **kwargs)
+        res = requests.request(method=method, url=request_url, timeout=timeout, headers=headers, *args, **kwargs)
         return res
     except Exception as ex:
         error_message = "rest_client error, service_name:{}, protocol:{}, method:{}, " \
@@ -35,17 +38,21 @@ def request(method, service_address, api_path, timeout, protocol="http", *args, 
         raise Exception(error_message)
 
 
-def get(service_address, api_path, timeout=10, *args, **kwargs):
-    return request('get', service_address, api_path, timeout, *args, **kwargs)
+def get(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+    return request(method='get', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
+                   *args, **kwargs)
 
 
-def post(service_address, api_path, timeout=10, *args, **kwargs):
-    return request('post', service_address, api_path, timeout, *args, **kwargs)
+def post(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+    return request(method='post', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
+                   *args, **kwargs)
 
 
-def put(service_address, api_path, timeout=10, *args, **kwargs):
-    return request('put', service_address, api_path, timeout, *args, **kwargs)
+def put(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+    return request(method='put', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
+                   *args, **kwargs)
 
 
-def delete(service_address, api_path, timeout=10, *args, **kwargs):
-    return request('delete', service_address, api_path, timeout, *args, **kwargs)
+def delete(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+    return request(method='delete', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
+                   *args, **kwargs)

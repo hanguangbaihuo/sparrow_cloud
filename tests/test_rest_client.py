@@ -85,44 +85,44 @@ class RestClientTestCase(unittest.TestCase):
     @mock.patch('requests.request', side_effect=mocked_requests)
     def test_post(self, mock_post):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.post(service_address, API_PATH, data=DATA)
+        res = rest_client.post(service_address=service_address, api_path=API_PATH, data=DATA)
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('requests.request', side_effect=mocked_requests)
     def test_put(self, mock_put):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.put(service_address, API_PATH, data=DATA)
+        res = rest_client.put(service_address=service_address, api_path=API_PATH, data=DATA)
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('requests.request', side_effect=mocked_requests)
     def test_get(self, mock_get):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.get(service_address, API_PATH, data=DATA)
+        res = rest_client.get(service_address=service_address, api_path=API_PATH, data=DATA)
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('requests.request', side_effect=mocked_requests)
     def test_delete(self, mock_delete):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.delete(service_address, API_PATH, data=DATA)
+        res = rest_client.delete(service_address=service_address, api_path=API_PATH, data=DATA)
         self.assertEqual(res, {'key1': 'value1'})
 
     @mock.patch('requests.request', side_effect=mocked_requests_empty_data)
     def test_empty_data(self, mock_get):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.get(service_address, API_PATH)
+        res = rest_client.get(service_address=service_address, api_path=API_PATH)
         self.assertEqual(res, {})
 
     @mock.patch('requests.request', side_effect=mocked_requests_not_empty_data)
     def test_empty_data_err(self, mock_get):
         service_address = settings.SERVICE_ADDRESS
-        res = rest_client.get(service_address, API_PATH)
+        res = rest_client.get(service_address=service_address, api_path=API_PATH)
         self.assertEqual(res, {'data': {'key2': 'value2'}, 'message': "'MockResponse' object has no attribute 'json'"})
 
     @mock.patch('requests.request', side_effect=mocked_requests_read_timeout)
     def test_post_err(self, mock_post):
         service_address = settings.SERVICE_ADDRESS
         try:
-            rest_client.post(service_address, API_PATH, data=DATA)
+            rest_client.post(service_address=service_address, api_path=API_PATH, data=DATA)
         except Exception as ex:
             message = ex.__str__()
             self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, protocol:http, method:post, '
@@ -132,7 +132,7 @@ class RestClientTestCase(unittest.TestCase):
     def test_put_err(self, mock_put):
         service_address = settings.SERVICE_ADDRESS
         try:
-            rest_client.put(service_address, API_PATH, data=DATA)
+            rest_client.put(service_address=service_address, api_path=API_PATH, data=DATA)
         except Exception as ex:
             message = ex.__str__()
             self.assertEqual(message, 'rest_client error, service_name:sparrow_cloud, protocol:http, method:put, '
