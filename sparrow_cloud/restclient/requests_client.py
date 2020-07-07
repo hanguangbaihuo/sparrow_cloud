@@ -35,7 +35,7 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
             carrier = {}
             tracer.inject(span, opentracing.Format.HTTP_HEADERS, carrier)
             headers.update(carrier)
-            logger.debug('=================== carrier: {}'.format(carrier)
+            logger.debug('=================== carrier: {}'.format(carrier))
     try:
         res = requests.request(method=method, url=request_url, timeout=timeout, headers=headers, *args, **kwargs)
         return res
