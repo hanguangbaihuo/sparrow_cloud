@@ -514,7 +514,9 @@ SPARROW_DING_TALK_CONF = {
 
 # 使用:
 >>> from sparrow_cloud.dingtalk.sender import send_message
->>> send_message(msg="test", code_list=["test", "test1"], channel="dingtalk", message_type="text")
+>>> from sparrow_cloud.authorization.token import get_app_token
+>>> app_token = get_app_token()
+>>> send_message(msg="test", code_list=["test", "test1"], channel="dingtalk", message_type="text", token=app_token)
 # 成功返回： {'code': 0, 'message': 'success'}
 # 错误返回： HTTPException
 
