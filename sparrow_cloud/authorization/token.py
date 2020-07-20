@@ -38,7 +38,7 @@ def get_user_token(user_id):
         user_token = rest_client.post(service_address=registry_app_conf["SERVICE_ADDRESS"],
                                       api_path=registry_app_conf["PATH"], timeout=0.5, data=data_to_send)
         cache.set(user_token_key, {'user_token': user_token}, timeout=user_token["expires_in"]-120)
-        return user_token
+        return user_token["token"]
     except Exception as ex:
         raise Exception('get_user_token error, no token available in cache and registry_app_error, '
                         'message:{}'.format(ex.__str__()))
@@ -71,7 +71,7 @@ def get_app_token():
         app_token = rest_client.post(service_address=registry_app_conf["SERVICE_ADDRESS"],
                                      api_path=registry_app_conf["PATH"], timeout=0.5, data=data_to_send)
         cache.set(app_token_key, {'app_token': app_token}, timeout=app_token["expires_in"]-120)
-        return app_token
+        return app_token["token"]
     except Exception as ex:
         raise Exception('get_app_token error, no token available in cache and registry_app_error, '
                         'message:{}'.format(ex.__str__()))

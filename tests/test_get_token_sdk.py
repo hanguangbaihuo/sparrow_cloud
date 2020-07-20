@@ -21,12 +21,12 @@ class TestGetAppToken(unittest.TestCase):
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_get_user_token(self, mock_post):
         user_token = get_user_token(user_id="21424kvjbcdjslafds")
-        self.assertEqual(user_token, MOCK_RESPONSE)
+        self.assertEqual(user_token, MOCK_RESPONSE["token"])
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_get_app_token(self, mock_post):
         app_token = get_app_token()
-        self.assertEqual(app_token, MOCK_RESPONSE)
+        self.assertEqual(app_token, MOCK_RESPONSE["token"])
 
     def setup_settings(self, settings):
         settings.SERVICE_CONF = {
