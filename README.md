@@ -514,7 +514,9 @@ SPARROW_DING_TALK_CONF = {
 
 # 使用:
 >>> from sparrow_cloud.dingtalk.sender import send_message
->>> send_message(msg="test", code_list=["test", "test1"], channel="dingtalk", message_type="text")
+>>> from sparrow_cloud.authorization.token import get_app_token
+>>> app_token = get_app_token()
+>>> send_message(msg="test", code_list=["test", "test1"], channel="dingtalk", message_type="text", token=app_token)
 # 成功返回： {'code': 0, 'message': 'success'}
 # 错误返回： HTTPException
 
@@ -601,10 +603,25 @@ class ProductOperationList(generics.ListCreateAPIView):
     
     
     # 获取用户token
-    from sparrow_cloud.authorization.token import *
+    from sparrow_cloud.authorization.token import get_user_token
     user_token = get_user_token(user_id="21424kvjbcdjslafds")
+
+```
+
+## get_app_token
+> get_app_token (获取用户token)
+
+```
+    #settings配置
+    REGISTRY_APP_CONF = {
+        "SERVICE_ADDRESS": "sparrow-service-svc:8000",
+        "PATH": "/api/get_app_token/",
+        "ENABLE_TOKEN_CACHE": os.environ.get("ENABLE_TOKEN_CACHE", False)
+    }
+    
     
     # 获取app token
+    from sparrow_cloud.authorization.token import get_app_token
     app_token = get_app_token()
 
 ```
