@@ -104,6 +104,10 @@ class CBVAllViewSetsTestCase(TestCase):
         factory = APIRequestFactory(REMOTE_USER='sssssssss')
         response = view(factory.put('/1/'))
         assert response.status_code == status.HTTP_403_FORBIDDEN
+        # 401
+        factory = APIRequestFactory(REMOTE_USER=None)
+        response = view(factory.put('/1/'))
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 # ############## 测试 access_control_cbv_method ###############
 
@@ -141,6 +145,10 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
         assert response.status_code == status.HTTP_200_OK
         # put
         factory = APIRequestFactory(REMOTE_USER='sssssssss')
+        response = view(factory.put('/1/'))
+        assert response.status_code == status.HTTP_200_OK
+        # 无用户
+        factory = APIRequestFactory(REMOTE_USER=None)
         response = view(factory.put('/1/'))
         assert response.status_code == status.HTTP_200_OK
 
