@@ -41,6 +41,7 @@ setup(
     long_description_content_type='text/markdown',
     author='sparrow',
     author_email='',  # SEE NOTE BELOW (*)
+    url='https://github.com/hanguangbaihuo/sparrow_cloud',
     packages=find_packages(include=['sparrow_cloud', 'sparrow_cloud.*', '*.sparrow_cloud.*', '*.sparrow_cloud']),
     include_package_data=True,
     install_requires=[
