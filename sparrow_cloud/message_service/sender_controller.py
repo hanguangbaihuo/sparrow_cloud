@@ -12,7 +12,7 @@ class TaskSender(object):
             raise Exception("message_backend_conf is not properly configured")
         self._message_backend_conf = message_backend_conf
 
-    def base_send_task(self, exchange, routing_key, message_code, args=[], kwargs={}, delay=False, delay_time=0):
+    def base_send_task(self, message_code, args=[], kwargs={}, delay_time=0):
         # {
         #     "code": "new_task",
         #     "args": [1,2,3],
@@ -25,12 +25,9 @@ class TaskSender(object):
         # }
         data = {
             "code": message_code,
-            "exchange": exchange,
             "args": args,
             "kwargs": kwargs,
-            "routing_key": routing_key,
             "delivery_mode": "persistent",
-            "delay": delay,
             "delay_time": delay_time
         }
         parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
@@ -55,16 +52,13 @@ class TaskSender(object):
         else:
             raise Exception(result.text)
 
-    def send_task(self, exchange, routing_key, message_code, delay=False, delay_time=0, *args, **kwargs):
+    def send_task(self, message_code, delay_time=0, *args, **kwargs):
         # 发送任务
         # import pdb; pdb.set_trace()
         return self.base_send_task(
-            exchange=exchange,
-            routing_key=routing_key,
             message_code=message_code,
             args=args,
             kwargs=kwargs,
-            delay=delay,
             delay_time=delay_time
         )
 
