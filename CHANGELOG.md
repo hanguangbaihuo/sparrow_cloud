@@ -5,6 +5,13 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.9] - 2020-9-29
+### Added
+- send_task_v2
+  
+### Changed
+- consumer Record on failure
+  
 ## [2.0.8] - 2020-7-31
 ### Changed
 - access_control fix bug
