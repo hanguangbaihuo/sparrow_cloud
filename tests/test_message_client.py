@@ -24,3 +24,9 @@ class TestMessage(unittest.TestCase):
         self.assertEqual(data, {})
 
 
+    @mock.patch('sparrow_cloud.message_service.sender.TaskSender.send_task', return_value={})
+    def test_send_message_v2(self, mock_send_task):
+        from sparrow_cloud.message_service.sender import send_task_v2
+        message_code = 'order_pay_success'
+        data = send_task_v2(message_code=message_code)
+        self.assertEqual(data, {})

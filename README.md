@@ -222,6 +222,24 @@ REST_FRAMEWORK = {
                 API_PATH  # message_client 发送消息地址
     
     调用方式：
+        from sparrow_cloud.message_service.sender import send_task_v2
+        非延时消息
+        data = send_task_v2(message_code=message_code, 
+                         retry_times=3,
+                         *args,
+                         **kwargs)
+        延时消息
+        data = send_task_v2(message_code=message_code, 
+                        retry_times=3,
+                        delay_time=200
+                        *args,
+                        **kwargs)
+        ps:
+           message_code: 消息码
+           retry_times: 重试次数，非必填，默认重试次数为3次（每次间隔1秒）
+           delay_time: 延时时间，单位为秒
+
+        =====================以下为旧版调用方式===========================
         from sparrow_cloud.message_service.sender import send_task
         非延时消息
         data = send_task(exchange=exchange, 

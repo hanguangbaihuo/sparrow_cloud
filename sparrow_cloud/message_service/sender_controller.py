@@ -68,19 +68,6 @@ class TaskSender(object):
             delay_time=delay_time
         )
 
-    # def send_delayed_task(self, exchange, routing_key, message_code, delay, delay_time, *args, **kwargs):
-    #     # 发送延时任务
-    #     return self.base_send_task(
-    #         exchange=exchange,
-    #         routing_key=routing_key,
-    #         message_code=message_code,
-    #         args=args,
-    #         kwargs=kwargs,
-    #         delay=delay,
-    #         delay_time=delay_time
-    #     )
-
-
 # if __name__ == "__main__":
 #     sender = TaskSender("1")
 #     sender.send_task("1",2,3, order_id=5, **{"test": "q"})
