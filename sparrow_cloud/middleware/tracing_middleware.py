@@ -56,9 +56,9 @@ class TracingMiddleware(MiddlewareMixin):
             if k.startswith('http-'):
                 k = k[5:]
             headers[k] = v
-        logger.debug('=================== headers :  {}'.format(headers))
+        # logger.debug('=================== headers :  {}'.format(headers))
         tracer = opentracing.global_tracer()
-        logger.debug('=================== tracer :  {}'.format(tracer))
+        # logger.debug('=================== tracer :  {}'.format(tracer))
         span_ctx = tracer.extract(
             Format.HTTP_HEADERS,
             headers

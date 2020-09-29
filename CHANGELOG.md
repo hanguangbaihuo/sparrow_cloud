@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.8] - 2020-7-31
+### Changed
+- access_control fix bug
+
 ## [2.0.7] - 2020-7-7
 ### Changed
 - SDK:get_user_token 
