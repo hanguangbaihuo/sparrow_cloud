@@ -8,10 +8,12 @@ import sys
 import shutil
 from setuptools import find_packages, setup
 
-version = "v1.9.5"
+version = "v2.0.9"
+
 
 def read(f):
     return open(f, 'r', encoding='utf-8').read()
+
 
 if sys.argv[-1] == 'publish':
     if os.system("pip freeze | grep twine"):
@@ -54,6 +56,8 @@ setup(
         'pika',
         'django-redis>=4.10.0',
         'cryptography>=2.8',
+        'opentracing',
+        'jaeger-client',
     ],
     python_requires=">=3.5",
     zip_safe=False,

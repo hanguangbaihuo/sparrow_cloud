@@ -1,9 +1,9 @@
-import unittest
 import jwt
-import time
 import os
-from django.conf import settings
+import time
+import unittest
 from unittest import mock
+from django.conf import settings
 
 from sparrow_cloud.auth.user import User
 

@@ -191,16 +191,10 @@ SPARROW_RABBITMQ_CONSUMER_CONF = {
         "USER_NAME": "xx",
         "PASSWORD": "xxxx",
         "VIRTUAL_HOST": "xxx",
-        "BROKER_SERVICE_CONF": {
-            "ENV_NAME": "xxxx",
-            "VALUE": "sparrow-demo",
-        },
+        "BROKER_SERVICE_CONF": "sparrow-demo:8000",
     },
     "MESSAGE_BACKEND_CONF": {
-        "BACKEND_SERVICE_CONF": {
-            "ENV_NAME": "SPARROW_BACKEND_HOST",
-            "VALUE": "sparrow-demo",
-        },
+        "BACKEND_SERVICE_CONF": "sparrow-demo:8000",
         "API_PATH": "/api/sparrow_task/test/update/"
     }
 }
@@ -216,10 +210,7 @@ QUEUE_CONF_1 = {
 
 
 MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": {
-                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
-                "VALUE": "xxxxx-svc",
-            },
+            "SERVICE_CONF": "xxxxx-svc:8000",
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
 

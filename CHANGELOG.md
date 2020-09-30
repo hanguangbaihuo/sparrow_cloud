@@ -5,6 +5,68 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.9] - 2020-9-29
+### Added
+- send_task_v2
+  
+### Changed
+- consumer Record on failure
+  
+## [2.0.8] - 2020-7-31
+### Changed
+- access_control fix bug
+
+## [2.0.7] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.6] - 2020-7-7
+### Changed
+- change dingtalk
+
+## [2.0.4] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.3] - 2020-7-7
+### Changed
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.3] - 2020-7-7
+### Added
+- SDK:get_user_token 
+- SDK:get_app_token
+
+## [2.0.0] - 2020-6-29
+### Changed
+- Middleware configuration
+- rest client configuration
+- requests client configuration
+- message_client configuration
+- rabbitmq_consumer configuration
+- table_api configuration
+- API SCHEMA REGISTER configuration
+- service_log configuration
+- DING_TALK configuration
+- ACCESS_CONTROL_VERIFY configuration
+
+### Remove
+- service_configuration
+- ACL Middleware
+- API Permission Register
+
+
+## [1.9.7] - 2020-6-18
+### Changed
+- change cbv Undecorated method does not go through user verification
+
+## [1.9.6] - 2020-6-17
+### Changed
+- change fbv/cbv response.content
+
 ## [1.9.5] - 2020-6-15
 ### Changed
 - fix bug AccessControl

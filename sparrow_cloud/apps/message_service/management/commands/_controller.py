@@ -147,11 +147,18 @@ class RabbitMQConsumer(object):
                 json_result = json.dumps(result, cls=PythonObjectEncoder)
             except:
                 json_result = str(result) if result else ''
-            kwargs = {
-                "status": "SUCCESS",
-                "result": json_result,
-                "traceback": "",
-            }
+            if json_result == 'false':
+                kwargs = {
+                    "status": "FAILURE",
+                    "result": json_result,
+                    "traceback": ""
+                }
+            else:
+                kwargs = {
+                    "status": "SUCCESS",
+                    "result": json_result,
+                    "traceback": "",
+                }
         except Exception as ex:
             kwargs = {
                 "status": "FAILURE",

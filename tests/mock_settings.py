@@ -33,11 +33,6 @@ CACHES = {
     }
 }
 
-CONSUL_CLIENT_ADDR = {
-    "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),
-    "PORT": os.environ.get("CONSUL_PORT", 9999)
-}
-
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
@@ -77,17 +72,13 @@ uf2erSRTljzgJmwsowIDAQAB
 -----END PUBLIC KEY-----"""
 
 
-ACL_MIDDLEWARE = {
-    "ACL_SERVICE": {
-        # ENV_NAME 为覆盖consul的默认值, 环境变量名称示例：服务名称_HOST， 只需要给一个环境变量的NAME，不需要给VALUE
-        "ENV_NAME": "SPARROW_SERVICE_ACL_HOST",
-        # VALUE 为服务发现的注册名称
-        "VALUE": os.environ.get("SPARROW_SERVICE_ACL_SVC", "acl_service"),
-    },
-    "API_PATH": "/api/acl_token/",
-    "ACL_PUBLIC_KEY": PUBLIC_KEY
-}
-
 SERVICE_CONF = {
     "NAME": "sparrow_cloud",
+    "SECRET": "124cdsalhdisahgisabjnjlk"
 }
+
+REGISTRY_APP_CONF = {
+        "SERVICE_ADDRESS": "sparrow-service-svc:8000",
+        "PATH": "/api/get_app_token/",
+        "ENABLE_TOKEN_CACHE": os.environ.get("ENABLE_TOKEN_CACHE", False)
+    }

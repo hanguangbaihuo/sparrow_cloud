@@ -17,10 +17,7 @@ logger = logging.getLogger(__name__)
 settings 配置:
 
 SPARROW_PERMISSION_REGISTER_CONF = {
-    "PERMISSION_SERVICE": {
-        "ENV_NAME": "PERMISSION_SERVICE_HOST",
-        "VALUE": "xxxxx-svc"
-    }
+    "PERMISSION_SERVICE": "test-svc:8000"
     "API_PATH": "/api/permission_i/register/"
 }
 '''

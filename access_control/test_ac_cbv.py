@@ -104,6 +104,10 @@ class CBVAllViewSetsTestCase(TestCase):
         factory = APIRequestFactory(REMOTE_USER='sssssssss')
         response = view(factory.put('/1/'))
         assert response.status_code == status.HTTP_403_FORBIDDEN
+        # 401
+        factory = APIRequestFactory(REMOTE_USER=None)
+        response = view(factory.put('/1/'))
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 # ############## 测试 access_control_cbv_method ###############
 
@@ -112,10 +116,7 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_ACCESS_CONTROL",
-                "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "xxxxx"),
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
@@ -146,13 +147,14 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
         factory = APIRequestFactory(REMOTE_USER='sssssssss')
         response = view(factory.put('/1/'))
         assert response.status_code == status.HTTP_200_OK
+        # 无用户
+        factory = APIRequestFactory(REMOTE_USER=None)
+        response = view(factory.put('/1/'))
+        assert response.status_code == status.HTTP_200_OK
 
     def tearDown(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_ACCESS_CONTROL",
-                "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "xxxxx"),
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
@@ -340,10 +342,7 @@ class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_ACCESS_CONTROL",
-                "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "xxxxx"),
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
@@ -468,10 +467,7 @@ class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
 
     def tearDown(self):
         settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": {
-                "ENV_NAME": "SPARROW_ACCESS_CONTROL",
-                "VALUE": os.environ.get("SPARROW_ACCESS_CONTROL", "xxxxx"),
-            },
+            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
             "VERIFY_API_PATH": "/verify/",
             # True：跳过， false：不跳过
             "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)

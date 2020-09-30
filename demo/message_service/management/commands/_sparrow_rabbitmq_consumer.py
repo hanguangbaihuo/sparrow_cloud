@@ -1,5 +1,5 @@
 from rabbitmq_consumer import RabbitMQConsumer
-from sparrow_cloud.registry.service_discovery import consul_service
+# from sparrow_cloud.registry.service_discovery import consul_service
 from django.conf import settings
 
 
@@ -25,16 +25,10 @@ def rabbitmq_consumer(queue):
             "MESSAGE_BROKER_CONF": {
                 "USER_NAME": "",
                 "PASSWORD": "",
-                "BROKER_SERVICE_CONF": {
-                    "ENV_NAME": "SPARROW_BROKER_HOST",
-                    "VALUE": "sparrow-demo",
-                },
+                "BROKER_SERVICE_CONF": "sparrow-demo:8000",
             },
             "MESSAGE_BACKEND_CONF": {
-                "BACKEND_SERVICE_CONF": {
-                        "ENV_NAME": "SPARROW_BACKEND_HOST",
-                        "VALUE": "sparrow-demo",
-                },
+                "BACKEND_SERVICE_CONF": "sparrow-demo:8000",
                 "API_PATH": "/api/sparrow_task/task/update/"
             }
         }
@@ -66,16 +60,19 @@ def rabbitmq_consumer(queue):
     consumer_conf = get_settings_value('SPARROW_RABBITMQ_CONSUMER_CONF')
     queue_conf = get_settings_value(queue)
     message_backend_path = consumer_conf['MESSAGE_BACKEND_CONF'].get('API_PATH', None)
-    backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF'].get('BACKEND_SERVICE_CONF', None)
-    broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
+    # backend_service_conf = consumer_conf['MESSAGE_BACKEND_CONF'].get('BACKEND_SERVICE_CONF', None)
+    # broker_service_conf = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
+    backend_service_addr = consumer_conf['MESSAGE_BACKEND_CONF'].get('BACKEND_SERVICE_CONF', None)
+    broker_service_addr = consumer_conf['MESSAGE_BROKER_CONF'].get('BROKER_SERVICE_CONF', None)
     broker_service_username = consumer_conf['MESSAGE_BROKER_CONF'].get('USER_NAME', None)
     broker_service_password = consumer_conf['MESSAGE_BROKER_CONF'].get('PASSWORD', None)
     virtual_host = consumer_conf['MESSAGE_BROKER_CONF'].get('VIRTUAL_HOST', None)
-    broker_service_addr = consul_service(broker_service_conf)
+    # broker_service_addr = consul_service(broker_service_conf)
 
     broker_conf = 'amqp'+"://"+broker_service_username+":"+broker_service_password+'@'+broker_service_addr+"/"+virtual_host
     if message_backend_path:
-        backend_service_addr = consul_service(backend_service_conf)
+        # backend_service_addr = consul_service(backend_service_conf)
+        # backend_service_addr = backend_service_conf["SERVICE_ADDRESS"]
         consumer = RabbitMQConsumer(
             queue=queue_conf.get('QUEUE', None),
             message_broker=broker_conf,
