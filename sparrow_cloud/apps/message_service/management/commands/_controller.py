@@ -3,7 +3,7 @@ from pika.exceptions import AMQPConnectionError as BrokerConnectonException
 from datetime import datetime
 from sparrow_cloud.restclient import rest_client
 
-import base64
+import base64, decimal, collections
 import importlib
 import json
 import logging
