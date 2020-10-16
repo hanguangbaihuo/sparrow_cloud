@@ -10,7 +10,6 @@ from setuptools import find_packages, setup
 
 version = "v2.0.11"
 
-
 def read(f):
     return open(f, 'r', encoding='utf-8').read()
 
