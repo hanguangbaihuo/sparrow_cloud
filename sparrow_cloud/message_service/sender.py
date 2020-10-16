@@ -97,3 +97,38 @@ def send_task_v2(message_code, retry_times=3, *args, **kwargs):
             error_message = ex.__str__()
     raise Exception("消息发送失败，失败原因{},重试次数{}，消息内容message_code={},消息参数{}{}".format(
                     error_message, retry_times, message_code, args, kwargs))
+
+
+def send_task_v3(message_code, *args, **kwargs):
+    """
+    发送实时任务
+        参数：
+            message_code 消息代码 
+            *args
+            **kwargs
+        settings配置：
+
+        TASK_PROXY_CONF = {
+            "SERVICE_CONF": "xxxxx-svc:8001",
+            "API_PATH": "/api/sparrow_task_proxy/producer/send",
+        }
+
+    """
+    message_conf = get_settings_value("TASK_PROXY_CONF")
+    task_sender = TaskSender(message_conf)
+    error_message = None
+   
+    try:
+        task_result = task_sender.send_task(
+                exchange=None,
+                routing_key=None,
+                message_code=message_code,
+                delay=False,
+                *args,
+                **kwargs
+            )
+        return task_result
+    except Exception as ex:
+        error_message = ex.__str__()
+        raise Exception("消息发送失败，失败原因{}, 消息内容message_code={},消息参数{}{}".format(
+                    error_message, message_code, args, kwargs))
