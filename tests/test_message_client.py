@@ -13,6 +13,10 @@ class TestMessage(unittest.TestCase):
             "SERVICE_CONF": "sparrow-task-test-svc:8001",
             "API_PATH": "/api/sparrow_task/producer/send/",
         }
+        settings.TASK_PROXY_CONF = {
+            "SERVICE_CONF": "sparrow-task-proxy-svc:8001",
+            "API_PATH": "/api/sparrow_task_proxy/producer/send",
+        }
 
     @mock.patch('sparrow_cloud.message_service.sender.TaskSender.send_task', return_value={})
     def test_send_message(self, mock_send_task):
@@ -29,4 +33,11 @@ class TestMessage(unittest.TestCase):
         from sparrow_cloud.message_service.sender import send_task_v2
         message_code = 'order_pay_success'
         data = send_task_v2(message_code=message_code)
+        self.assertEqual(data, {})
+
+    @mock.patch('sparrow_cloud.message_service.sender.TaskSender.send_task', return_value={})
+    def test_send_message_v3(self, mock_send_task):
+        from sparrow_cloud.message_service.sender import send_task_v3
+        message_code = 'order_pay_success'
+        data = send_task_v3(message_code=message_code)
         self.assertEqual(data, {})

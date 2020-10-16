@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [2.0.11] - 2020-10-16
+### Added
+- send_task_v3
+
 ## [2.0.10] - 2020-10-12
 ### Changed
 - message_service import decimal & collections
