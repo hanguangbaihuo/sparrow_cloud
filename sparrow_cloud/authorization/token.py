@@ -38,7 +38,7 @@ def get_user_token(user_id):
             logger.info("sparrowcloud get user token: {}".format(user_token["token"]))
             return user_token["token"]
     except Exception as ex:
-        raise Exception('get_user_token error, no token available in cache and registry_app_error, '
+        raise Exception('sparrowcloud/get_user_token error, no token available in cache and app_manage_error, '
                         'message:{}'.format(ex.__str__()))
 
 
@@ -65,7 +65,7 @@ def get_app_token():
             logger.info("sparrowcloud get app token: {}".format(app_token["token"]))
             return app_token["token"]
     except Exception as ex:
-        raise Exception('get_app_token error, no token available in cache and registry_app_error, '
+        raise Exception('sparrowcloud/get_app_token error, no token available in cache and app_manage_error, '
                         'message:{}'.format(ex.__str__()))
 
 
