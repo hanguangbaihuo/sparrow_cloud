@@ -20,7 +20,7 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
             *args
             **kwargs
 
-    configmap配置：
+    configmap ：
         SC_MESSAGE_SENDER_SVC: "xxxxxxx-svc:8000"
         SC_MESSAGE_SENDER_API: "/api/sparrow_task/producer/send/"
     """
@@ -55,11 +55,10 @@ def send_task_v2(message_code, retry_times=3, *args, **kwargs):
             message_code 消息代码 
             *args
             **kwargs
-        configmap 配置:
+        configmap :
             SC_TASK_PROXY: xxxxx-svc:8000
             SC_TASK_PROXY_API: "/api/xxxxxxxxxx/producer/send/"
     """
-    # message_conf = get_settings_value("MESSAGE_SENDER_CONF")
     sc_task_proxy = get_cm_value("SC_TASK_PROXY")
     sc_task_proxy_api = get_cm_value("SC_TASK_PROXY_API")
     task_sender = TaskSender(sc_message_sender_svc=sc_task_proxy, sc_message_sender_api=sc_task_proxy_api)
@@ -91,7 +90,7 @@ def send_task_v3(message_code, *args, **kwargs):
             message_code 消息代码 
             *args
             **kwargs
-        configmap 配置:
+        configmap :
             SC_TASK_PROXY: xxxxx-svc:8000
             SC_TASK_PROXY_API: "/api/xxxxxxxxxx/producer/send/"
     """

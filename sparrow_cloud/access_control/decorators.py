@@ -19,6 +19,9 @@ DETAIL_401 = {"message": "身份认证信息未提供。"}
 def access_control_fbv(resource=None):
     """FBV
         resource: "example_admin"
+        configmap ：
+            SC_ACCESS_CONTROL_SVC
+            SC_ACCESS_CONTROL_API
     """
     def decorator(func):
         @wraps(func)
@@ -40,6 +43,9 @@ def access_control_fbv(resource=None):
 def access_control_cbv_all(resource=None):
     """all
         resource: "example_admin"
+        configmap：
+            SC_ACCESS_CONTROL_SVC
+            SC_ACCESS_CONTROL_API
     """
     def decorator(view):
         def func(function):
@@ -66,6 +72,9 @@ def access_control_cbv_method(resource):
                 "get": "example1_admin",
                 "post": "example1_admin1"
               }
+        configmap：
+            SC_ACCESS_CONTROL_SVC
+            SC_ACCESS_CONTROL_API
     """
     def decorator(view):
         def func(function):

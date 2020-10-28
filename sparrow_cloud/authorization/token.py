@@ -17,7 +17,10 @@ def get_user_token(user_id):
     """
     get user token
     :param user_id:
-    :return:
+    
+    configmap：
+        SC_MANAGE_SVC
+        SC_MANAGE_API
     """
     user_token_key = get_hash_key(key_type="user", user_id=user_id)
     service_conf = get_settings_value("SERVICE_CONF")
@@ -45,7 +48,9 @@ def get_user_token(user_id):
 def get_app_token():
     """
     get app token
-    :return:
+    configmap：
+        SC_MANAGE_SVC
+        SC_MANAGE_API
     """
     app_token_key = get_hash_key(key_type="app")
     service_conf = get_settings_value("SERVICE_CONF")

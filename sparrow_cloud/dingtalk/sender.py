@@ -7,7 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 def send_message(msg, code_list, channel="dingtalk", message_type="text", *args, **kwargs):
-    """钉钉群发消息机器人 client """
+    """
+        群发消息机器人 client
+        configmap：
+            SC_MESSAGE_ROBOT
+            SC_MESSAGE_ROBOT_API
+    """
     if not isinstance(msg, str) and not isinstance(code_list, list):
         raise TypeError("参数类型错误：msg type not string or code_list type not list")
     sc_message_robot = get_cm_value("SC_MESSAGE_ROBOT")

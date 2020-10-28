@@ -37,6 +37,11 @@ class Command(BaseCommand):
 
 
 def register(schema):
+    '''
+    configmap ：
+        SC_SCHEMA_SVC
+        SC_SCHEMA_API
+    '''
     sc_schema_svc = get_cm_value("SC_SCHEMA_SVC")
     sc_schema_api = get_cm_value("SC_SCHEMA_API")
     try:
