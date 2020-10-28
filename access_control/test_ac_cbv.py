@@ -115,12 +115,7 @@ class CBVAllViewSetsTestCase(TestCase):
 class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = True
 
     @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
         return_value={"has_perm": False})
@@ -153,12 +148,7 @@ class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
         assert response.status_code == status.HTTP_200_OK
 
     def tearDown(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = False
 
 # ############## 测试 跳过access_control_cbv_method ###############
 
@@ -341,12 +331,7 @@ class CBVMethodViewSetsTestCase(TestCase):
 class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = True
 
     @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
         return_value={"has_perm": False})
@@ -466,9 +451,4 @@ class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
         assert response.status_code == status.HTTP_200_OK
 
     def tearDown(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = False

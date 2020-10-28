@@ -1,26 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import requests
 import logging
+import requests
 import opentracing
-from django.conf import settings
 from sparrow_cloud.utils.build_url import build_url
+from sparrow_cloud.utils.get_settings_value import get_service_name
 from .exception import HTTPException
 
 logger = logging.getLogger(__name__)
 
 
-def get_settings_service_name():
-    """获取settings中的配置"""
-    value = getattr(settings, 'SERVICE_CONF', '')
-    if value == '':
-        return ''
-    service_name = value.get('NAME', '')
-    return service_name
-
-
 def request(method, service_address, api_path, timeout, protocol="http", token=None, *args, **kwargs):
-    service_name = get_settings_service_name()
+    service_name = get_service_name()
     request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
     headers = kwargs.pop('headers', {})
     if token:
@@ -34,7 +25,7 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
             headers.update(carrier)
             logger.debug('=================== carrier: {}'.format(carrier))
     try:
-        res = requests.request(method=method, url=request_url, timeout=timeout, headers=headers, *args, **kwargs)
+        res = requests.request(method=method, url=request_url, headers=headers, *args, **kwargs)
         return _handle_response(res)
     except Exception as ex:
         error_message = "rest_client error, service_name:{}, protocol:{}, method:{}, " \

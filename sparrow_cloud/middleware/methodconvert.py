@@ -1,9 +1,8 @@
-from sparrow_cloud.utils.get_settings_value import GetSettingsValue
+from sparrow_cloud.utils.get_cm_value import get_cm_value
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 
-
-get_value = GetSettingsValue()
-METHOD_MAP = get_value.get_middleware_value('METHOD_MIDDLEWARE', 'METHOD_MAP')
+sc_method_map = get_cm_value("SC_METHOD_MAP")
+METHOD_MAP = tuple(loads(sc_method_map).values())
 if not METHOD_MAP:
     METHOD_MAP = ('PUT', 'DELETE')
 

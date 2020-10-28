@@ -3,11 +3,12 @@ import logging
 
 from functools import wraps
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 
 from sparrow_cloud.access_control.access_verify import access_verify
-from sparrow_cloud.utils.get_settings_value import get_settings_value
+from sparrow_cloud.utils.get_settings_value import get_settings_value, get_service_name
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +23,12 @@ def access_control_fbv(resource=None):
     def decorator(func):
         @wraps(func)
         def wrap(request, *args, **kwargs):
-            skip_access_control = get_settings_value("ACCESS_CONTROL").get("SKIP_ACCESS_CONTROL", False)
+            skip_access_control = getattr(settings, "SC_SKIP_ACCESS_CONTROL", False)
             if skip_access_control is False or skip_access_control == 'False':
                 user_id = request.META["REMOTE_USER"]
                 if user_id is None:
                     return HttpResponse(json.dumps(DETAIL_401), content_type='application/json; charset=utf-8', status=401)
-                app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
+                app_name = get_service_name()
                 if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource):
                     return HttpResponse(json.dumps(DETAIL_403), content_type='application/json; charset=utf-8', status=403)
                 return func(request, *args, **kwargs)
@@ -43,12 +44,12 @@ def access_control_cbv_all(resource=None):
     def decorator(view):
         def func(function):
             def wrap(request, *args, **kwargs):
-                skip_access_control = get_settings_value("ACCESS_CONTROL").get("SKIP_ACCESS_CONTROL", False)
+                skip_access_control = getattr(settings, "SC_SKIP_ACCESS_CONTROL", False)
                 if skip_access_control is False or skip_access_control == 'False':
                     user_id = request.META["REMOTE_USER"]
                     if user_id is None:
                         return HttpResponse(json.dumps(DETAIL_401), content_type='application/json; charset=utf-8', status=401)
-                    app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
+                    app_name = get_service_name()
                     if not access_verify(user_id=user_id, app_name=app_name, resource_code=resource):
                         return HttpResponse(json.dumps(DETAIL_403), content_type='application/json; charset=utf-8', status=403)
                     return function(request, *args, **kwargs)
@@ -69,10 +70,10 @@ def access_control_cbv_method(resource):
     def decorator(view):
         def func(function):
             def wrap(request, *args, **kwargs):
-                skip_access_control = get_settings_value("ACCESS_CONTROL").get("SKIP_ACCESS_CONTROL", False)
+                skip_access_control = getattr(settings, "SC_SKIP_ACCESS_CONTROL", False)
                 if skip_access_control is False or skip_access_control == 'False':
                     user_id = request.META["REMOTE_USER"]
-                    app_name = get_settings_value("SERVICE_CONF").get("NAME", None)
+                    app_name = get_service_name()
                     resource_code = (dict((k.lower(), v) for k, v in resource.items())).get(request.method.lower())
                     if resource_code:
                         if user_id is None:

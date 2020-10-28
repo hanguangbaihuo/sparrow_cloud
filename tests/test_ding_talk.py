@@ -5,12 +5,6 @@ from sparrow_cloud.restclient.exception import HTTPException
 from django.test import RequestFactory
 from sparrow_cloud.dingtalk.sender import send_message
 
-# CONSUL_RETURN_DATA = (
-#     "name",
-#     [
-#         {'ServiceAddress': '162.23.7.247', 'ServicePort': 8001}
-#     ]
-# )
 
 MOCK_RESPONSE = {"data": {"code": 0, "message": "success"}}
 
@@ -51,31 +45,16 @@ class TestSendMessage(unittest.TestCase):
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message(self, request):
-        from django.conf import settings
-        settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": "ding-talk:8001",
-            "PATH": "/send/message/",
-        }
         res = send_message("test", ["123"], "wechat", "text")
         self.assertEqual(res.get("data"), {"code": 0, "message": "success"})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=XX)
     def test_send_message_400(self, request):
-        from django.conf import settings
-        settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": "ding-talk:8001",
-            "PATH": "/send/message/",
-        }
         self.assertEqual(send_message("test", ["123"], "wechat", "text").status_code, 400)
         self.assertEqual(send_message("test", ["123"], "wechat", "text").detail, XX.detail)
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=XX)
     def test_send_message_typeerror(self, request):
-        from django.conf import settings
-        settings.SPARROW_DING_TALK_CONF = {
-            "SERVICE_DING_TALK": "ding-talk:8001",
-            "PATH": "/send/message/",
-        }
         try:
             send_message(1, {})
         except Exception as ex:

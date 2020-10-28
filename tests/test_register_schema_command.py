@@ -37,30 +37,31 @@ class RestClientTestCase(unittest.TestCase):
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value={})
     def test_register_schema_command(self, mock_post):
         out = StringIO()
-        os.environ["SCHEMA_SERVICE_HOST"] = "127.0.0.1:8001"
+        # os.environ["SCHEMA_SERVICE_HOST"] = "127.0.0.1:8001"
         call_command('register_api_schema', '-p', stdout=out)
         r = out.read()
         print(r)
         self.assertEqual(r, '')
 
     def tearDown(self):
-        del os.environ["SCHEMA_SERVICE_HOST"]
+        # del os.environ["SCHEMA_SERVICE_HOST"]
+        pass
 
     def setup_settings(self, settings):
         settings.XX = "1"
         settings.SECRET_KEY = "ss"
         settings.ROOT_URLCONF = __name__
 
-        settings.SPARROW_SCHEMA_REGISTER_CONF = {
-            "SCHEMA_SERVICE": "xxxxx-svc:8001",
-            "API_PATH": "/api/schema_i/register/"
-        }
+        # settings.SPARROW_SCHEMA_REGISTER_CONF = {
+        #     "SCHEMA_SERVICE": "xxxxx-svc:8001",
+        #     "API_PATH": "/api/schema_i/register/"
+        # }
         settings.SERVICE_CONF = {
             "NAME": "schema"
         }
-        settings.CONSUL_CLIENT_ADDR = {
-            "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
-            "PORT": os.environ.get("CONSUL_PORT", 8500)
-        }
+        # settings.CONSUL_CLIENT_ADDR = {
+        #     "HOST": os.environ.get("CONSUL_IP", "127.0.0.1"),  # 在k8s上的环境变量类型：变量/变量引用
+        #     "PORT": os.environ.get("CONSUL_PORT", 8500)
+        # }
 
 

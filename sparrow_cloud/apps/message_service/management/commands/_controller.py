@@ -47,7 +47,7 @@ class RabbitMQConsumer(object):
     rabitmq消费者
     """
 
-    def __init__(self, queue, message_broker_conf, message_backend_conf=None, 
+    def __init__(self, queue, message_broker_conf, message_backend_svc=None, message_backend_api=None,
                 retry_times=3, interval_time=3, heartbeat=60):
         """
         输入参数说明：
@@ -65,9 +65,8 @@ class RabbitMQConsumer(object):
             raise Exception("queue is not defined")
         self._queue = queue
 
-        if message_backend_conf:
-            logger.info("message result will be updated to {}".format(message_backend_conf))
-        self._message_backend_conf = message_backend_conf
+        self._message_backend_svc = message_backend_svc
+        self._message_backend_api = message_backend_api
         self._retry_times = retry_times
         self._interval_time = interval_time
         self._heartbeat = heartbeat
@@ -166,8 +165,7 @@ class RabbitMQConsumer(object):
                 "traceback": ex.__str__()
             }
         try:
-            if self._message_backend_conf:
-                self.update_task_result(task_id, consumer, **kwargs)
+            self.update_task_result(task_id, consumer, **kwargs)
         except Exception as ex:
             # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
             # 所以需要忽略错误，不能影响consumer正常消费以及ack消息
@@ -256,10 +254,7 @@ class RabbitMQConsumer(object):
                     "traceback": kwargs.get('traceback'),
                 }
                 # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
-                # 下次重试的时候需要通过consul重新获取新地址
-                backend_service_conf = self._message_backend_conf.get('BACKEND_SERVICE_CONF', None)
-                api_path = self._message_backend_conf.get('API_PATH', None)
-                response = rest_client.post(backend_service_conf, api_path=api_path, json=data)
+                response = rest_client.post(self._message_backend_svc, api_path=self._message_backend_api, json=data)
                 logger.info(
                     ' [*] Update task database info task_id is {0}, status is {1}'.format(task_id, status))
                 return

@@ -18,7 +18,7 @@ from unittest import mock
 class DecoratorTestCase(TestCase):
 
     def setUp(self):
-        pass
+        settings.SC_SKIP_ACCESS_CONTROL = False
 
     @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
     def test_calling_method_403_fbc(self, rest_client_get):
@@ -65,12 +65,7 @@ class DecoratorTestCase(TestCase):
 class DecoratorTestCaseSkipAccessControl(TestCase):
 
     def setUp(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", True)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = True
 
     @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
     def test_calling_method_403_skip(self, rest_client_get):
@@ -98,6 +93,7 @@ class DecoratorTestCaseSkipAccessControl(TestCase):
 
         request = self.factory.get('/')
         response = view(request)
+
         assert response.status_code == status.HTTP_200_OK
 
     def test_calling_method_401_skip(self):
@@ -113,9 +109,4 @@ class DecoratorTestCaseSkipAccessControl(TestCase):
         assert response.status_code == status.HTTP_200_OK
 
     def tearDown(self):
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "xxxxx:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # True：跳过， false：不跳过
-            "SKIP_ACCESS_CONTROL": os.environ.get("SKIP_ACCESS_CONTROL", False)
-        }
+        settings.SC_SKIP_ACCESS_CONTROL = False
