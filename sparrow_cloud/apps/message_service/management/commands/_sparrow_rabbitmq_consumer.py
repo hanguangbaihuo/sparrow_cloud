@@ -37,9 +37,9 @@ def rabbitmq_consumer(queue):
 
     """
     queue_conf = get_settings_value(queue)
-    retry_times = get_cm_value.get('SC_CONSUMER_RETRY_TIMES', 3)
-    interval_time = get_cm_value.get('SC_CONSUMER_INTERVAL_TIME', 3)
-    consumer_heartbeat = get_cm_value.get('SC_CONSUMER_HEARTBEAT', 60)
+    retry_times = get_cm_value.get('SC_CONSUMER_RETRY_TIMES')
+    interval_time = get_cm_value.get('SC_CONSUMER_INTERVAL_TIME')
+    consumer_heartbeat = get_cm_value.get('SC_CONSUMER_HEARTBEAT')
 
     virtual_host = get_cm_value("SC_BROKER_VIRTUAL_HOST")
     host = get_cm_value("SC_BROKER_SERVICE_HOST")
