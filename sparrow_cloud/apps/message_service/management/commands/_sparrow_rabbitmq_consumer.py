@@ -61,7 +61,7 @@ def rabbitmq_consumer(queue):
                 queue=queue_conf.get('QUEUE', None),
                 message_broker_conf=message_broker_conf,
                 message_backend_svc=backend_service_svc,
-                message_backend_svc=backend_service_api,
+                message_backend_api=backend_service_api,
                 retry_times=retry_times,
                 interval_time=interval_time,
                 heartbeat=consumer_heartbeat
