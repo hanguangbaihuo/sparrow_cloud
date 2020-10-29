@@ -69,9 +69,9 @@
 ## 测试运行 ##
 
     运行所有测试:
-        source tests/mock_configmap.sh && py.test tests && py.test access_control 
+        sh tests/mock_configmap.sh && py.test tests && py.test access_control 
     运行单个测试:
-        source tests/mock_configmap.sh && py.test tests/test_rest_client.py
+        sh tests/mock_configmap.sh && py.test tests/test_rest_client.py
 
 
 ## cache_manager
