@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.0.0] - 2020-10-29
+### Changed
+- sparrowcloud move the setting value to configmap
+  
 ## [2.0.11] - 2020-10-16
 ### Added
 - send_task_v3
