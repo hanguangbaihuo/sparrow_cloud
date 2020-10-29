@@ -29,7 +29,7 @@ def get_user_token(user_id):
     try:
         cache_user_token = cache.get(user_token_key)
         if cache_user_token is not None:
-            return cache_user_token["user_token"]
+            return cache_user_token["user_token"]["token"]
         else:
             data = {
                 "name": service_conf["NAME"],
@@ -59,7 +59,7 @@ def get_app_token():
     try:
         cache_app_token = cache.get(app_token_key)
         if cache_app_token:
-            return cache_app_token["app_token"]
+            return cache_app_token["app_token"]["token"]
         else:
             data = {
                 "name": service_conf["NAME"],
