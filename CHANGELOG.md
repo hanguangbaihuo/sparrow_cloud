@@ -8,7 +8,11 @@
 ## [3.0.3] - 2020-10-30
 ### Changed
 - methodconvert: fix bug
-- 
+  
+## [3.0.3] - 2020-10-30
+### Changed
+- methodconvert: fix bug
+  
 ## [3.0.2] - 2020-10-30
 ### Changed
 - sparrow_rabbitmq_consumer: fix bug
