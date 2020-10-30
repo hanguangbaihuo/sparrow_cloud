@@ -21,8 +21,8 @@ urlpatterns = [
 class RestClientTestCase(unittest.TestCase):
 
     def setUp(self):
-        os.environ["SPARROW_BROKER_HOST"] = "127.0.0.1:8001"
-        os.environ["SPARROW_BACKEND_HOST"] = "127.0.0.1:8002"
+        # os.environ["SPARROW_BROKER_HOST"] = "127.0.0.1:8001"
+        # os.environ["SPARROW_BACKEND_HOST"] = "127.0.0.1:8002"
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
 
     # @mock.patch('rabbitmq_consumer.RabbitMQConsumer.target_func_map', return_value='')
@@ -37,19 +37,19 @@ class RestClientTestCase(unittest.TestCase):
 
     def setup_settings(self, settings):
         settings.XX = "1"
-        settings.SECRET_KEY = "ss"
-        settings.SPARROW_RABBITMQ_CONSUMER_CONF = {
-            "MESSAGE_BROKER_CONF": {
-                "USER_NAME": "test_name",
-                "PASSWORD": "test_password",
-                "VIRTUAL_HOST": "test_virtual",
-                "BROKER_SERVICE_CONF": "sparrow-test:8001",
-            },
-            "MESSAGE_BACKEND_CONF": {
-                "BACKEND_SERVICE_CONF": "sparrow-test:8001",
-                "API_PATH": "/api/sparrow_test/task/test_update/"
-            }
-        }
+        # settings.SECRET_KEY = "ss"
+        # settings.SPARROW_RABBITMQ_CONSUMER_CONF = {
+        #     "MESSAGE_BROKER_CONF": {
+        #         "USER_NAME": "test_name",
+        #         "PASSWORD": "test_password",
+        #         "VIRTUAL_HOST": "test_virtual",
+        #         "BROKER_SERVICE_CONF": "sparrow-test:8001",
+        #     },
+        #     "MESSAGE_BACKEND_CONF": {
+        #         "BACKEND_SERVICE_CONF": "sparrow-test:8001",
+        #         "API_PATH": "/api/sparrow_test/task/test_update/"
+        #     }
+        # }
 
         settings.QUEUE_CONF={
             "QUEUE": "TEST_QUEUE",

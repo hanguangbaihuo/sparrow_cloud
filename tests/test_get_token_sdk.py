@@ -1,7 +1,9 @@
 import django
 import unittest
 from unittest import mock
+from django.core.cache import cache
 from sparrow_cloud.authorization.token import *
+from sparrow_cloud.utils.get_hash_key import get_hash_key
 
 
 MOCK_RESPONSE = {
@@ -22,10 +24,24 @@ class TestGetAppToken(unittest.TestCase):
     def test_get_user_token(self, mock_post):
         user_token = get_user_token(user_id="21424kvjbcdjslafds")
         self.assertEqual(user_token, MOCK_RESPONSE["token"])
+    
+    def test_get_user_token_cache(self):
+        user_token_key = get_hash_key(key_type="user", user_id="21424kvjbcdjslafds")
+        cache.set(user_token_key, {'user_token': MOCK_RESPONSE}, timeout=MOCK_RESPONSE["expires_in"]-120)
+        token = get_user_token(user_id="21424kvjbcdjslafds")
+        cache.delete(user_token_key)
+        self.assertEqual(token, MOCK_RESPONSE["token"])
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_get_app_token(self, mock_post):
         app_token = get_app_token()
+        self.assertEqual(app_token, MOCK_RESPONSE["token"])
+    
+    def test_get_app_token_cache(self):
+        app_token_key = get_hash_key(key_type="app")
+        cache.set(app_token_key, {'app_token': MOCK_RESPONSE}, timeout=MOCK_RESPONSE["expires_in"]-120)
+        app_token = get_app_token()
+        cache.delete(app_token_key)
         self.assertEqual(app_token, MOCK_RESPONSE["token"])
 
     def setup_settings(self, settings):

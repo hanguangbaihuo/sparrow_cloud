@@ -74,12 +74,3 @@ class RestClientTestCase(unittest.TestCase):
     def setup_settings(self, settings):
         settings.SECRET_KEY = "ss"
         settings.ROOT_URLCONF = __name__
-        settings.ACCESS_CONTROL = {
-            "ACCESS_CONTROL_SERVICE": "sparrow_access_control:8001",
-            "VERIFY_API_PATH": "/verify/",
-            # "ACCESS_CONTROL_CLASS": "sparrow_cloud.apps.access_control.example_access_control.ExampleAccessControl",
-            "SECRET": "fdsafgxckrewkrjfvlxosdg",
-        }
-        settings.SERVICE_CONF = {
-            "NAME": "test"
-        }

@@ -2,8 +2,8 @@ import json
 from django.core.management.base import BaseCommand
 from sparrow_cloud.apps.schema_command.schemas.generators import SchemaGenerator
 from sparrow_cloud.apps.schema_command.contributor import get_git_contributors
-from sparrow_cloud.apps.permission_command.management.commands._api import get_service_name
-from django.conf import settings
+from sparrow_cloud.utils.get_cm_value import get_cm_value
+from sparrow_cloud.utils.get_settings_value import get_service_name
 
 from sparrow_cloud.restclient import rest_client
 from sparrow_cloud.restclient.exception import HTTPException
@@ -22,7 +22,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         sg = SchemaGenerator()
         schema = sg.get_schema_dict()
-        # print(schema)
         if not schema:
             return
         # 作者
@@ -38,11 +37,15 @@ class Command(BaseCommand):
 
 
 def register(schema):
-    sparrow_permission_register_conf = settings.SPARROW_SCHEMA_REGISTER_CONF
-    api_path = sparrow_permission_register_conf['API_PATH']
-    permission_service_conf = sparrow_permission_register_conf["SCHEMA_SERVICE"]
+    '''
+    configmap ：
+        SC_SCHEMA_SVC
+        SC_SCHEMA_API
+    '''
+    sc_schema_svc = get_cm_value("SC_SCHEMA_SVC")
+    sc_schema_api = get_cm_value("SC_SCHEMA_API")
     try:
-        r = rest_client.post(permission_service_conf, api_path, json=schema)
+        r = rest_client.post(sc_schema_svc, sc_schema_api, json=schema)
         print("schema 注册成功 resp body={}".format(r))
     except HTTPException as ex:
         print("schema 注册失败. message={} ".format(ex.detail))

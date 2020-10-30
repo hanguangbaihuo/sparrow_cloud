@@ -7,10 +7,9 @@ from sparrow_cloud.restclient import requests_client
 
 class TaskSender(object):
 
-    def __init__(self, message_backend_conf):
-        if not message_backend_conf:
-            raise Exception("message_backend_conf is not properly configured")
-        self._message_backend_conf = message_backend_conf
+    def __init__(self, sc_message_sender_svc, sc_message_sender_api):
+        self.sc_message_sender_svc = sc_message_sender_svc
+        self.sc_message_sender_api = sc_message_sender_api
 
     def base_send_task(self, exchange, routing_key, message_code, args=[], kwargs={}, delay=False, delay_time=0):
         # {
@@ -41,10 +40,7 @@ class TaskSender(object):
             except:
                 pass
             # os.environ.pop("SPARROW_TASK_PARENT_OPTIONS")
-        # import pdb; pdb.set_trace()
-        backend_service_conf = self._message_backend_conf.get('SERVICE_CONF', None)
-        api_path = self._message_backend_conf.get('API_PATH', None)
-        result = requests_client.post(backend_service_conf, api_path=api_path, json=data)
+        result = requests_client.post(self.sc_message_sender_svc, api_path=self.sc_message_sender_api, json=data)
         if result.status_code == 200:
             try:
                 res = result.json()
@@ -57,7 +53,6 @@ class TaskSender(object):
 
     def send_task(self, exchange, routing_key, message_code, delay=False, delay_time=0, *args, **kwargs):
         # 发送任务
-        # import pdb; pdb.set_trace()
         return self.base_send_task(
             exchange=exchange,
             routing_key=routing_key,

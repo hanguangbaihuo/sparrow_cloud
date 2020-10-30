@@ -1,7 +1,7 @@
 from django.conf import settings
 from .sender_controller import TaskSender
-# from sparrow_cloud.registry.service_discovery import consul_service
 from sparrow_cloud.restclient.exception import HTTPException
+from sparrow_cloud.utils.get_cm_value import get_cm_value
 
 from functools import lru_cache
 import time
@@ -12,14 +12,6 @@ import time
 #     return task_senderml
 
 
-def get_settings_value(name):
-    """获取settings中的配置"""
-    value = getattr(settings, name, None)
-    if value == '' or value is None:
-        raise NotImplementedError("没有配置这个参数%s" % name)
-    return value
-
-
 def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwargs):
     """
     发送实时任务
@@ -27,16 +19,14 @@ def send_task(exchange, routing_key, message_code, retry_times=3, *args, **kwarg
             exchange/routing_key/message_code, 创建消息服务时返回的配置信息
             *args
             **kwargs
-        settings配置：
 
-        MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": "xxxxx-svc:8000",
-            "API_PATH": "/api/sparrow_task/producer/send/",
-        }
-
+    configmap ：
+        SC_MESSAGE_SENDER_SVC: "xxxxxxx-svc:8000"
+        SC_MESSAGE_SENDER_API: "/api/sparrow_task/producer/send/"
     """
-    message_conf = get_settings_value("MESSAGE_SENDER_CONF")
-    task_sender = TaskSender(message_conf)
+    sc_message_sender_svc = get_cm_value("SC_MESSAGE_SENDER_SVC")
+    sc_message_sender_api = get_cm_value("SC_MESSAGE_SENDER_API")
+    task_sender = TaskSender(sc_message_sender_svc=sc_message_sender_svc, sc_message_sender_api=sc_message_sender_api)
     # 发送任务出现异常时的初始重试时间间隔
     interval_time = 1
     error_message = None
@@ -65,19 +55,13 @@ def send_task_v2(message_code, retry_times=3, *args, **kwargs):
             message_code 消息代码 
             *args
             **kwargs
-        settings配置：
-
-        MESSAGE_SENDER_CONF = {
-            "SERVICE_CONF": {
-                "ENV_NAME": "DLJFLS_LSDK_LDKEND",
-                "VALUE": "xxxxx-svc",
-            },
-            "API_PATH": "/api/sparrow_task/producer/send/",
-        }
-
+        configmap :
+            SC_TASK_PROXY: xxxxx-svc:8000
+            SC_TASK_PROXY_API: "/api/xxxxxxxxxx/producer/send/"
     """
-    message_conf = get_settings_value("MESSAGE_SENDER_CONF")
-    task_sender = TaskSender(message_conf)
+    sc_task_proxy = get_cm_value("SC_TASK_PROXY")
+    sc_task_proxy_api = get_cm_value("SC_TASK_PROXY_API")
+    task_sender = TaskSender(sc_message_sender_svc=sc_task_proxy, sc_message_sender_api=sc_task_proxy_api)
     # 发送任务出现异常时的初始重试时间间隔
     interval_time = 1
     error_message = None
@@ -106,18 +90,14 @@ def send_task_v3(message_code, *args, **kwargs):
             message_code 消息代码 
             *args
             **kwargs
-        settings配置：
-
-        TASK_PROXY_CONF = {
-            "SERVICE_CONF": "xxxxx-svc:8001",
-            "API_PATH": "/api/sparrow_task_proxy/producer/send",
-        }
-
+        configmap :
+            SC_TASK_PROXY: xxxxx-svc:8000
+            SC_TASK_PROXY_API: "/api/xxxxxxxxxx/producer/send/"
     """
-    message_conf = get_settings_value("TASK_PROXY_CONF")
-    task_sender = TaskSender(message_conf)
+    sc_task_proxy = get_cm_value("SC_TASK_PROXY")
+    sc_task_proxy_api = get_cm_value("SC_TASK_PROXY_API")
+    task_sender = TaskSender(sc_message_sender_svc=sc_task_proxy, sc_message_sender_api=sc_task_proxy_api)
     error_message = None
-   
     try:
         task_result = task_sender.send_task(
                 exchange=None,

@@ -59,10 +59,6 @@ class ServiceLogCase(unittest.TestCase):
     @mock.patch('requests.request', side_effect=mocked_requests1)
     def test_send_log_1(self, mock_post):
         from django.conf import settings
-        settings.SPARROW_SERVICE_LOG_CONF = {
-            "SERVICE_LOG": "sparrow-log-svc:8001",
-            "PATH": "/service_log/log/",
-        }
         settings.SERVICE_CONF = {
             "NAME": "sparrow_cloud",
         }
@@ -81,10 +77,6 @@ class ServiceLogCase(unittest.TestCase):
     @mock.patch('requests.request', side_effect=mocked_requests1)
     def test_send_log_key_error(self, mock_post):
         from django.conf import settings
-        settings.SPARROW_SERVICE_LOG_CONF = {
-            "SERVICE_LOG": "sparrow-log-svc:8001",
-            "PATH": "/service_log/log/",
-        }
         settings.SERVICE_CONF = {
             "NAME": "sparrow_cloud",
         }

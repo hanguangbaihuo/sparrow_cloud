@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from sparrow_cloud.utils.get_settings_value import GetSettingsValue
+from sparrow_cloud.utils.get_settings_value import get_settings_value
 from sparrow_cloud.utils.common_exceptions import AuthenticationValidError
 
 import importlib
@@ -11,10 +11,8 @@ USER_CLASS_PATH = 'USER_CLASS_PATH'
 
 def get_user_class_path():
     """Get the data in settings and add value validation"""
-    settings_value = GetSettingsValue()
-    user_class_path = settings_value.get_middleware_value(
-        SPARROW_AUTHENTICATION, USER_CLASS_PATH)
-    return user_class_path
+    sparrow_authentication = get_settings_value("SPARROW_AUTHENTICATION")
+    return sparrow_authentication["USER_CLASS_PATH"]
 
 
 @functools.lru_cache(maxsize=None)
