@@ -1,3 +1,5 @@
+from json import loads
+
 from sparrow_cloud.utils.get_cm_value import get_cm_value
 from sparrow_cloud.middleware.base.base_middleware import MiddlewareMixin
 

@@ -5,6 +5,18 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.0.3] - 2020-10-30
+### Changed
+- methodconvert: fix bug
+  
+## [3.0.3] - 2020-10-30
+### Changed
+- methodconvert: fix bug
+  
+## [3.0.2] - 2020-10-30
+### Changed
+- sparrow_rabbitmq_consumer: fix bug
+
 ## [3.0.1] - 2020-10-30
 ### Changed
 - sparrowcloud/service_log move the setting value to configmap
