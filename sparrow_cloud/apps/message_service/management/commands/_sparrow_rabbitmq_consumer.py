@@ -62,9 +62,9 @@ def rabbitmq_consumer(queue):
                 message_broker_conf=message_broker_conf,
                 message_backend_svc=backend_service_svc,
                 message_backend_api=backend_service_api,
-                retry_times=retry_times,
-                interval_time=interval_time,
-                heartbeat=consumer_heartbeat
+                retry_times=int(retry_times),
+                interval_time=int(interval_time),
+                heartbeat=int(consumer_heartbeat)
             )
             consumer.target_func_map = queue_conf.get('TARGET_FUNC_MAP', None)
             consumer.consume()
