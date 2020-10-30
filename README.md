@@ -7,7 +7,7 @@
 * Rabbitmq_Consumer : rabbitmq消息消费端，server端未开源
 * Table_API : 接收查询条件返回 django model 序列化后的数据
 * Api Schema Register : django subcommand, 主动注册API 描述到文档服务， server端未开源
-* service_log : Log日志， 服务端未开源
+* service_log : Log日志， 服务端未开源(v3.0.1 以及之后的版本不在提供支持)
 * ding_talk : 发送消息到钉钉群，服务端未开源
 * access_control verify : 访问控制验证，服务端未开源
 * get_user_token : 获取用户token
@@ -24,6 +24,7 @@
 
 
 ## sparrow cloud组件 ##
+[Service Log](#service_log)
 
 [Cache Service](#cache_manager)
 
@@ -69,9 +70,9 @@
 ## 测试运行 ##
 
     运行所有测试:
-        sh tests/mock_configmap.sh && py.test tests && py.test access_control 
+        source tests/mock_configmap.sh && py.test tests && py.test access_control 
     运行单个测试:
-        sh tests/mock_configmap.sh && py.test tests/test_rest_client.py
+        source tests/mock_configmap.sh && py.test tests/test_rest_client.py
 
 
 ## cache_manager
@@ -97,6 +98,42 @@
     # demo中可查看示例
     # model 示例路径， sparrow_demo/models.py
 ```
+
+## service_log
+
+> 描述 ： 服务日志
+
+``` python
+    # 在 settings里面配置本服务配置
+    SERVICE_CONF = {
+        "NAME": "",  # 本服务的名称
+    }
+
+    # 使用：
+    from sparrow_cloud.service_log.sender import send_log
+     data = {
+         "object_id": "test_object_id",
+         "object_name": "test_object_name",
+         "user_id": "888888889",
+         "user_name": "tiger",
+         "user_phone": "18700000401",
+         "action": "跑路啦",
+         "message": "enenenenenenenenene"
+     }
+    # result : True False
+     result = send_log(data)
+
+
+    # 参数说明(参数根据自己的业务场景传入即可):
+    #     action: 服务自定义类型, string        （字段长度限制: 50）
+    #     object_name: 对象名字, 可以是表名      （字段长度限制: 50）
+    #     object_id: 对象ID, 业务逻辑自己传入    （字段长度限制: 20）
+    #     user_id: 用户id, 操作用户             （字段长度限制: 64）
+    #     user_name: 用户名称                  （字段长度限制: 50）
+    #     user_phone: 用户手机号                （字段长度限制: 11）
+    #     message: 消息   
+```
+
 
 ## JWTMiddleware
 

@@ -31,3 +31,6 @@ export SC_METHOD_MAP='{"PUT"="PUT", "DELETE"="DELETE"}'
 # go 语言task代理客户端 
 export SC_TASK_PROXY=TASK_PROXY_SVC
 export SC_TASK_PROXY_API=/api/task_proxy/producer/send
+# 服务日志
+export SC_SERVICE_LOG_SVC=service-log—svc:8080
+export SC_SERVICE_LOG_API=/service_log/log/
