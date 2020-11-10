@@ -244,7 +244,7 @@
                         **kwargs)
     # 延时消息
     data = send_task_v3(message_code=message_code,
-                    delay_time=200
+                    delay_time=200,
                     *args,
                     **kwargs)
     # ps:
