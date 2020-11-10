@@ -72,4 +72,4 @@ def rabbitmq_consumer(queue):
             break
         except:
             # 如果遇到exception不退出，过几秒重试一下
-            time.sleep(interval_time)
+            time.sleep(int(interval_time))
