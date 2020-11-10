@@ -5,7 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
-## [3.0.3] - 2020-10-30
+## [3.0.5] - 2020-11-10
+### Changed
+- consumer: fix bug
+  
+## [3.0.4] - 2020-10-30
 ### Changed
 - methodconvert: fix bug
   
