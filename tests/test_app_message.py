@@ -40,7 +40,7 @@ class TestAppMessage(unittest.TestCase):
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message_text1(self, request):
-        res = send_message(msg_data={"content": "1505"}, code_type="bowen_test", msg_sender="测试")
+        res = send_message(msg_data={"content": "1505"}, code_type="bowen_test", msg_sender="测试",shop_id="2")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
@@ -52,13 +52,3 @@ class TestAppMessage(unittest.TestCase):
     def test_send_message_image1(self, request):
         res = send_message(msg_data={"url": "http://www.test.com/image"}, code_type="bowen_test", content_type="image", msg_sender="测试", shop_id="2")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
-
-
-
-
-
-
-
-
-
-

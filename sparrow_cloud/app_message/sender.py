@@ -20,7 +20,7 @@ def send_message(msg_data, code_type, content_type="text", msg_sender=None, *arg
     sc_ly_message = get_cm_value("SC_LY_MESSAGE")
     sc_ly_message_api = get_cm_value("SC_LY_MESSAGE_API")
     data = {
-        "shop_id": kwargs.get("shop_id", ""),
+        "shop_id": kwargs.pop("shop_id", ""),
         "msg_sender": msg_sender,
         "code_type": code_type,
         "msg": {
