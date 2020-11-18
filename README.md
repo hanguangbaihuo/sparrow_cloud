@@ -12,6 +12,7 @@
 * access_control verify : 访问控制验证，服务端未开源
 * get_user_token : 获取用户token
 * get_app_token : 获取app token
+* ly_msg : 发送app 消息
 
 
 ### Django Middleware ###
@@ -49,6 +50,8 @@
 [get_user_token](#get_user_token)
 
 [get_app_token](#get_app_token)
+
+[app_message](#app_message)
 
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
@@ -528,6 +531,31 @@ class CarViewSet(ModelViewSet):
     # 获取app token
     from sparrow_cloud.authorization.token import get_app_token
     app_token = get_app_token()
+
+```
+
+## app_message
+> app_message (发送消息到app, 服务端未开源)
+
+```python
+    #目前支持两种消息类型： 纯文本和图片， 有其他需求请提issue 
+
+    # 发送图片消息到app
+    from sparrow_cloud.app_message.sender import send_message
+    msg_data = {"url": "http://www.test.com/image"}
+    res = send_message(msg_data=msg_data, code_type="test", content_type="image", msg_sender="麻雀", shop_id="2")
+
+    # 发送文本消息到app
+    from sparrow_cloud.app_message.sender import send_message
+    msg_data = {"content": "1505"}
+    res = send_message(msg_data=msg_data, code_type="test", content_type="text", msg_sender="麻雀", shop_id="2")
+
+    ##  参数说明
+        ## msg_data: 消息体， 请注意图片key: url， 文本key: content
+        ## code_type: 申请的code
+        ## content_type: 发送消息的类型，非必传, 默认是文本类型
+        ## msg_sender: app中展示的发送消息服务的名称， 非必传，如不传取 service_name
+        ## shop_id: 非必传 , 根据自己的需求
 
 ```
 ## Stargazers over time

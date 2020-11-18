@@ -34,3 +34,6 @@ export SC_TASK_PROXY_API=/api/task_proxy/producer/send
 # 服务日志
 export SC_SERVICE_LOG_SVC=service-log—svc:8080
 export SC_SERVICE_LOG_API=/service_log/log/
+# ly 消息服务端
+export SC_LY_MESSAGE=push—svc:8080
+export SC_LY_MESSAGE_API=/push/send/
