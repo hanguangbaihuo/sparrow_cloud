@@ -13,6 +13,8 @@ def send_message(msg_data, code_type, content_type="text", msg_sender=None, *arg
             SC_LY_MESSAGE
             SC_LY_MESSAGE_API
     """
+    if not isinstance(msg_data, dict):
+        raise TypeError("msg_data type error")
     if msg_sender is None:
         msg_sender = get_service_name()
     sc_ly_message = get_cm_value("SC_LY_MESSAGE")
