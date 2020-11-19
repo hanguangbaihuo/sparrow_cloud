@@ -548,7 +548,7 @@ class CarViewSet(ModelViewSet):
     # 发送文本消息到app
     from sparrow_cloud.app_message.sender import send_message
     msg_data = {"content": "1505"}
-    res = send_message(msg_data=msg_data, code_type="test", content_type="text", msg_sender="麻雀", shop_id="2")
+    res = send_message(msg_data=msg_data, code_type="test", msg_sender="麻雀", shop_id="2")
 
     ##  参数说明
         ## msg_data: 消息体， 请注意图片key: url， 文本key: content
