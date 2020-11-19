@@ -26,6 +26,7 @@ def mocked_requests(*args, **kwargs):
             return self.json_data
     return MockResponse(json_data=None, content={"code": 0, "message": "success"},  status_code=200)
 
+
 class TestAppMessage(unittest.TestCase):
     """ly message client"""
     rf = RequestFactory()
@@ -35,20 +36,20 @@ class TestAppMessage(unittest.TestCase):
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message_text(self, request):
-        res = send_message(msg_data={"content": "1505"}, code_type="bowen_test")
+        res = send_message(msg_data={"content": "1505"}, code_type="test_bowen")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message_text1(self, request):
-        res = send_message(msg_data={"content": "1505"}, code_type="bowen_test", msg_sender="测试",shop_id="2")
+        res = send_message(msg_data={"content": "1505"}, code_type="test_bowen", msg_sender="测试",shop_id="2")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message_image(self, request):
-        res = send_message(msg_data={"url": "http://www.test.com/image"}, code_type="bowen_test", content_type="image", msg_sender="测试")
+        res = send_message(msg_data={"url": "http://www.test.com/image"}, code_type="test_bowen", content_type="image", msg_sender="测试")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
 
     @mock.patch('sparrow_cloud.restclient.rest_client.post', return_value=MOCK_RESPONSE)
     def test_send_message_image1(self, request):
-        res = send_message(msg_data={"url": "http://www.test.com/image"}, code_type="bowen_test", content_type="image", msg_sender="测试", shop_id="2")
+        res = send_message(msg_data={"url": "http://www.test.com/image"}, code_type="test_bowen", content_type="image", msg_sender="测试", shop_id="2")
         self.assertEqual(res, {"code": 0, "message": "发送成功", "data": ""})
