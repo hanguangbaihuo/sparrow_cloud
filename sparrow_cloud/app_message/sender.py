@@ -29,7 +29,7 @@ def send_message(msg_data, code_type, content_type="text", msg_sender=None, *arg
         }
     }
     try:
-        res = rest_client.post(sc_ly_message, sc_ly_message_api, data=data, *args, **kwargs)
+        res = rest_client.post(sc_ly_message, sc_ly_message_api, json=data, *args, **kwargs)
         logging.info("sparrow_cloud ly_message send_message, data:{}, code_type:{}".format(data, code_type))
         return res
     except HTTPException as ex:
