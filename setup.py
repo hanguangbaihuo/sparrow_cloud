@@ -58,7 +58,7 @@ setup(
         'opentracing',
         'jaeger-client',
     ],
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',

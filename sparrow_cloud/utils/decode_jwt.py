@@ -1,10 +1,10 @@
 import jwt
+import os
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 
 
 def get_jwt_secret():
-    jwt_conf = get_settings_value("JWT_MIDDLEWARE")
-    return jwt_conf["JWT_SECRET"]
+    return os.getenv("JWT_SECRET") or get_settings_value("JWT_MIDDLEWARE").get("JWT_SECRET")
 
 
 def decode_jwt(token):
