@@ -8,7 +8,7 @@ import sys
 import shutil
 from setuptools import find_packages, setup
 
-version = "v3.0.6"
+version = "v3.0.7"
 
 def read(f):
     return open(f, 'r', encoding='utf-8').read()
