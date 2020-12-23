@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 
+## [3.0.7] - 2020-12-23
+### Changed
+- sdk: remove msg_data type check in send_message function of app_message
+- remove support for python 3.5 due to update cryptography from 2.8 to 3.3.1
+- JWT_SECRET environment variable have priority over setting in decode_jwt function
+
 ## [3.0.6] - 2020-11-18
 ### Added
 - sdk: app_message

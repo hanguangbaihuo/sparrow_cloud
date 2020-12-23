@@ -535,25 +535,25 @@ class CarViewSet(ModelViewSet):
 ```
 
 ## app_message
-> app_message (发送消息到app, 服务端未开源)
+> app_message (发送消息到揽月app, 服务端未开源)
 
 ```python
     #目前支持两种消息类型： 纯文本和图片， 有其他需求请提issue 
 
     # 发送图片消息到app
     from sparrow_cloud.app_message.sender import send_message
-    msg_data = {"url": "http://www.test.com/image"}
+    msg_data = "http://www.test.com/image.png"
     res = send_message(msg_data=msg_data, code_type="test", content_type="image", msg_sender="麻雀", shop_id="2")
 
     # 发送文本消息到app
     from sparrow_cloud.app_message.sender import send_message
-    msg_data = {"content": "1505"}
+    msg_data = "发送一条测试消息"
     res = send_message(msg_data=msg_data, code_type="test", msg_sender="麻雀", shop_id="2")
 
     ##  参数说明
-        ## msg_data: 消息体， 请注意图片key: url， 文本key: content
+        ## msg_data: 消息体，可以是任意数据结构，不局限于字符串
         ## code_type: 申请的code
-        ## content_type: 发送消息的类型，非必传, 默认是文本类型
+        ## content_type: 发送消息的类型，非必传, 默认是text文本类型，目前可选"text"或"image"
         ## msg_sender: app中展示的发送消息服务的名称， 非必传，如不传取 service_name
         ## shop_id: 非必传 , 根据自己的需求
 

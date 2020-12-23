@@ -8,7 +8,7 @@ import sys
 import shutil
 from setuptools import find_packages, setup
 
-version = "v3.0.6"
+version = "v3.0.7"
 
 def read(f):
     return open(f, 'r', encoding='utf-8').read()
@@ -58,7 +58,7 @@ setup(
         'opentracing',
         'jaeger-client',
     ],
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
