@@ -5,6 +5,9 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.0.9] - 2021-1-8
+### Changed
+- raise raw exception when requests occur exception in requests_client
 
 ## [3.0.8] - 2021-1-8
 ### Changed

@@ -26,7 +26,7 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
             carrier = {}
             tracer.inject(span, opentracing.Format.HTTP_HEADERS, carrier)
             headers.update(carrier)
-            logger.debug('=================== carrier: {}'.format(carrier))
+            # logger.debug('=================== carrier: {}'.format(carrier))
     try:
         res = requests.request(method=method, url=request_url, headers=headers, *args, **kwargs)
         return res
@@ -35,7 +35,7 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
                         "request_service_address:{}, api_path:{}, message:{}" \
             .format(service_name, protocol, method, service_address, api_path, ex.__str__())
         logger.error(error_message)
-        raise Exception(error_message)
+        raise ex
 
 
 def get(service_address, api_path, timeout=10, token=None, *args, **kwargs):
