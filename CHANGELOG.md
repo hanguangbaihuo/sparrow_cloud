@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.0.8] - 2021-1-8
+### Changed
+- add timeout for all methods of requests_client
+
 ## [3.0.7] - 2020-12-23
 ### Changed
 - sdk: remove msg_data type check in send_message function of app_message
