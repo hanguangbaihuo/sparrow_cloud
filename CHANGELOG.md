@@ -5,6 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+
+## [3.0.10] - 2021-1-14
+### Changed
+- support text/image/markdown/card_text/card_image type message to send in app_message
+
 ## [3.0.9] - 2021-1-8
 ### Changed
 - raise raw exception when requests occur exception in requests_client
