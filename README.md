@@ -560,7 +560,7 @@ class CarViewSet(ModelViewSet):
         ## code_type: 申请的code
         ## content_type: 发送消息的类型，非必传，默认是text文本类型。目前支持"text","image","markdown","card_text","card_image".
         ## msg_sender: app中展示的发送消息服务的名称， 非必传，如不传取 service_name
-        ## shop_id: 非必传，默认为空字符串，根据自己的需求
+        ## shop_id: 非必传，默认为None，根据自己的需求
         ## user_id_list: 非必传，默认为空列表，根据自己的需求
         ## nickname: 非必传，根据发送的消息类型content_type决定是否传递
         ## title: 非必传，根据发送的消息类型content_type决定是否传递

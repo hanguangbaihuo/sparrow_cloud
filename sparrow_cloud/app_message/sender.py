@@ -18,7 +18,7 @@ def send_message(msg_data, code_type, content_type="text", msg_sender=None, *arg
     sc_ly_message = get_cm_value("SC_LY_MESSAGE")
     sc_ly_message_api = get_cm_value("SC_LY_MESSAGE_API")
     data = {
-        "shop_id": kwargs.pop("shop_id", ""),
+        "shop_id": kwargs.pop("shop_id", None),
         "msg_sender": msg_sender,
         "code_type": code_type,
         "user_id_list": kwargs.pop("user_id_list", []),
@@ -28,8 +28,15 @@ def send_message(msg_data, code_type, content_type="text", msg_sender=None, *arg
         #     "data": msg_data
         # }
     }
-    # 把kwargs里面剩余的所有数据放入msg中，发送的数据由服务发送者决定，此处不做校验
-    msg = {"content_type": content_type, "data": msg_data}.update(kwargs)
+    # 把kwargs里面剩余的有关数据放入msg中，发送的数据由服务发送者决定，此处不做校验
+    msg = {
+        "content_type": content_type,
+        "data": msg_data
+    }
+    if kwargs.get("nickname"):
+        msg.update({"nickname": kwargs.pop("nickname")})
+    if kwargs.get("title"):
+        msg.update({"title": kwargs.pop("title")})
     data.update({"msg":msg})
     try:
         res = rest_client.post(sc_ly_message, sc_ly_message_api, json=data, *args, **kwargs)
