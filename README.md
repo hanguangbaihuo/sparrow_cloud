@@ -538,7 +538,7 @@ class CarViewSet(ModelViewSet):
 > app_message (发送消息到揽月app, 服务端未开源)
 
 ```python
-    #目前支持两种消息类型： 纯文本和图片， 有其他需求请提issue 
+    #目前支持的消息类型有：纯文本、图片，Markdown、文字card和图片card
 
     # 发送图片消息到app
     from sparrow_cloud.app_message.sender import send_message
@@ -547,15 +547,23 @@ class CarViewSet(ModelViewSet):
 
     # 发送文本消息到app
     from sparrow_cloud.app_message.sender import send_message
-    msg_data = "发送一条测试消息"
-    res = send_message(msg_data=msg_data, code_type="test", msg_sender="麻雀", shop_id="2")
+    msg_data = "文本消息"
+    res = send_message(msg_data=msg_data, code_type="test", nickname="文本消息携带字段")
+
+    # 发送文本card消息到app
+    from sparrow_cloud.app_message.sender import send_message
+    msg_data = "卡片消息内容"
+    res = send_message(msg_data=msg_data, code_type="test", content_type="card_text", title="通知")
 
     ##  参数说明
-        ## msg_data: 消息体，可以是任意数据结构，不局限于字符串
+        ## msg_data: 消息主体。填充待发送的消息格式msg中的data数据
         ## code_type: 申请的code
-        ## content_type: 发送消息的类型，非必传, 默认是text文本类型，目前可选"text"或"image"
+        ## content_type: 发送消息的类型，非必传，默认是text文本类型。目前支持"text","image","markdown","card_text","card_image".
         ## msg_sender: app中展示的发送消息服务的名称， 非必传，如不传取 service_name
-        ## shop_id: 非必传 , 根据自己的需求
+        ## shop_id: 非必传，默认为空字符串，根据自己的需求
+        ## user_id_list: 非必传，默认为空列表，根据自己的需求
+        ## nickname: 非必传，根据发送的消息类型content_type决定是否传递
+        ## title: 非必传，根据发送的消息类型content_type决定是否传递
 
 ```
 ## Stargazers over time
