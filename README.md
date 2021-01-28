@@ -589,12 +589,12 @@ class CarViewSet(ModelViewSet):
         ## 如果没有code字段表示出错，需要查看message。
         ## code为0表示加锁成功。其他数值表示加锁失败，停止执行之后的业务逻辑。
         ## message表示具体的信息
-    
+
     # 移除锁
     res = remove_lock("lock_key")
     if res.get("code") != 0:
         #移除锁失败
-    
+
     ##移除锁参数说明
         ## key: 加锁的key值
 
