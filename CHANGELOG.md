@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.1.0] - 2021-1-28
+### Added
+- distributed_lock package to add or remove_lock
+
 ## [3.0.10] - 2021-1-14
 ### Changed
 - support text/image/markdown/card_text/card_image type message to send in app_message
