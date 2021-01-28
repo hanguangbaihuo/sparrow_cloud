@@ -13,6 +13,7 @@
 * get_user_token : 获取用户token
 * get_app_token : 获取app token
 * ly_msg : 发送app 消息
+* distributed_lock : 添加分布式锁或移除锁
 
 
 ### Django Middleware ###
@@ -52,6 +53,8 @@
 [get_app_token](#get_app_token)
 
 [app_message](#app_message)
+
+[distributed_lock](#distributed_lock)
 
 ## django中间件 ##
 [JWT Middleware](#jwtmiddleware)
@@ -564,6 +567,41 @@ class CarViewSet(ModelViewSet):
         ## user_id_list: 非必传，默认为空列表，根据自己的需求
         ## nickname: 非必传，根据发送的消息类型content_type决定是否传递
         ## title: 非必传，根据发送的消息类型content_type决定是否传递
+
+```
+## distributed_lock
+> add_lock (添加锁)
+> remove_lock (移除锁)
+
+```python
+
+    from sparrow_cloud.distributed_lock.lock_op import add_lock, remove_lock
+    #添加锁
+    res = add_lock("lock_key", 100)
+    if res.get("code") != 0:
+        #加锁失败
+
+    ##添加锁参数说明
+        ## key: 加锁的key值
+        ## exexpire_time: 必须是int型，表示超时时间。如果在超过这个时间没有调用移除锁，则会自动释放锁。所以该时间需要根据业务层处理时间尽可能准确
+
+        ## 返回字典结构为{"code":0/-1, "message":"xxxx"}或者{"message":"xxx"}
+        ## 如果没有code字段表示出错，需要查看message。
+        ## code为0表示加锁成功。其他数值表示加锁失败，停止执行之后的业务逻辑。
+        ## message表示具体的信息
+    
+    # 移除锁
+    res = remove_lock("lock_key")
+    if res.get("code") != 0:
+        #移除锁失败
+    
+    ##移除锁参数说明
+        ## key: 加锁的key值
+
+        ## 返回字典结构为{"code":0/-1, "message":"xxxx"}或者{"message":"xxx"}
+        ## 如果没有code字段表示出错，需要查看message。
+        ## code为0表示移除锁成功。其他数值表示移除锁失败
+        ## message表示具体的信息，“1”表示移除成功，“0”表示没有该key值。
 
 ```
 ## Stargazers over time
