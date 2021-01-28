@@ -596,7 +596,7 @@ class CarViewSet(ModelViewSet):
         #移除锁失败
 
     ##移除锁参数说明
-        ## key: 加锁的key值
+        ## key: 移除锁的key值
 
         ## 返回字典结构为{"code":0/-1, "message":"xxxx"}或者{"message":"xxx"}
         ## 如果没有code字段表示出错，需要查看message。
