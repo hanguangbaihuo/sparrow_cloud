@@ -4,6 +4,7 @@ import logging
 
 from django.conf import settings
 from sparrow_cloud.restclient.exception import HTTPException
+from sparrow_cloud.utils.get_cm_value import get_cm_value
 from sparrow_cloud.utils.get_settings_value import get_settings_value
 from sparrow_cloud.restclient import rest_client
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 sc_distributed_lock_svc = get_cm_value("SC_SPARROW_DISTRIBUTED_LOCK_SVC")
 sc_distributed_lock_api = get_cm_value("SC_SPARROW_DISTRIBUTED_LOCK_API")
 
-def add_lock(key:string, expire_time:int, *args, **kwargs):
+def add_lock(key:str, expire_time:int, *args, **kwargs):
     """
         # ConfigMap:
             SC_SPARROW_DISTRIBUTED_LOCK_SVC
@@ -31,13 +32,13 @@ def add_lock(key:string, expire_time:int, *args, **kwargs):
     }
     try:
         res = rest_client.post(sc_distributed_lock_svc, sc_distributed_lock_api, json=data, *args, **kwargs)
-        logging.info("sparrow_cloud distributed lock add lock, data:{}, code_type:{}".format(data, code_type))
+        logging.info("sparrow_cloud distributed lock add lock, data:{}".format(data))
         return res
     except HTTPException as ex:
         logging.error("sparrow_cloud distributed lock add lock error: {}".format(ex))
         raise HTTPException(ex)
 
-def remove_lock(key:string, *args, **kwargs):
+def remove_lock(key:str, *args, **kwargs):
     """
         # ConfigMap:
             SC_SPARROW_DISTRIBUTED_LOCK_SVC
@@ -54,8 +55,8 @@ def remove_lock(key:string, *args, **kwargs):
         "key": key,
     }
     try:
-        res = rest_client.post(sc_distributed_lock_svc, sc_distributed_lock_api, json=data, *args, **kwargs)
-        logging.info("sparrow_cloud distributed lock remove lock, data:{}, code_type:{}".format(data, code_type))
+        res = rest_client.delete(sc_distributed_lock_svc, sc_distributed_lock_api, json=data, *args, **kwargs)
+        logging.info("sparrow_cloud distributed lock remove lock, data:{}".format(data))
         return res
     except HTTPException as ex:
         logging.error("sparrow_cloud distributed lock remove lock error: {}".format(ex))
