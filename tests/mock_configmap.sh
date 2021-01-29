@@ -37,3 +37,6 @@ export SC_SERVICE_LOG_API=/service_log/log/
 # ly 消息服务端
 export SC_LY_MESSAGE=push—svc:8080
 export SC_LY_MESSAGE_API=/push/send/
+# 分布式锁
+export SC_SPARROW_DISTRIBUTED_LOCK_SVC=sparrow-distributed-lock-svc:8001
+export SC_SPARROW_DISTRIBUTED_LOCK_API=/api/sparrow_distributed_lock/lock
