@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.1.1] - 2021-02-23
+### Added
+- add message detail "task_info"  for rabbitmq consumer controller when calling update task_result api 
+
 ## [3.1.0] - 2021-1-28
 ### Added
 - distributed_lock package to add or remove_lock

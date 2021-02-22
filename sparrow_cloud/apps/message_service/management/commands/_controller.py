@@ -124,6 +124,9 @@ class RabbitMQConsumer(object):
         return parent_options
 
     def get_parent_options(self):
+        """
+        从环境变量中获取父任务
+        """
         default_parent_options = {}
         parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
         if parent_options:
@@ -135,12 +138,17 @@ class RabbitMQConsumer(object):
         return  default_parent_options
 
     def base64_to_json(self, body):
+        """
+        base64编码的body 转成字符串
+        """
         my_json = base64.b64decode(body).decode('utf8')
         json_data = json.loads(my_json)
         return json_data
 
     def get_task_info(self, headers, body):
-
+        """
+        从消息头和消息体中提取消息
+        """
         delivery_info = headers.get('delivery_info', {})
         parent_options = self.get_parent_options()
         json_body = self.base64_to_json(body)
@@ -172,7 +180,6 @@ class RabbitMQConsumer(object):
 
         fmt1 = 'Thread id: {} Delivery tag: {} Message body: {} Message Header: {} Task_id:{}'
         logger.info(fmt1.format(thread_id, delivery_tag, body, headers, task_id))
-
 
         logger.info(
             ' [*] {0} Received task_id {1}. Executing...'.format(datetime.now(), task_id))
@@ -216,12 +223,12 @@ class RabbitMQConsumer(object):
                 "traceback": ex.__str__()
             }
         try:
-            # 从header json_body 中提取消息体
+            # 提取完整消息
             task_info = self.get_task_info(headers, body)
             kwargs["task_info"] = task_info
             self.update_task_result(task_id, consumer, **kwargs)
         except Exception as ex:
-            # sparrow_task服务重启的过程中，可能会遇到连接失败的情况以及提取消息体失败
+            # sparrow_task服务重启的过程中，可能会遇到连接失败的情况以及提取消息失败
             # 所以需要忽略错误，不能影响consumer正常消费以及ack消息
             fm2 = "Task_id:{} update_task_result error:{}  ".format(task_id, ex.__str__())
             logger.error(fm2)
