@@ -109,14 +109,71 @@ class RabbitMQConsumer(object):
             logger.error(
                 'channel is closed, delivery_tag {0} cannot be ACKed'.format(delivery_tag))
 
+    def set_parent_options(self, task_id, task_name):
+        """
+        设定父任务环境变量
+        """
+        parent_options = {
+                "id": task_id,
+                "code": task_name
+        }
+        try:
+            os.environ["SPARROW_TASK_PARENT_OPTIONS"] = json.dumps(parent_options, cls=PythonObjectEncoder)
+        except:
+            pass
+        return parent_options
+
+    def get_parent_options(self):
+        default_parent_options = {}
+        parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
+        if parent_options:
+            # parent_options = parent_options.replace("'",'"')
+            try:
+                return json.loads(parent_options)
+            except:
+                pass
+        return  default_parent_options
+
+    def base64_to_json(self, body):
+        my_json = base64.b64decode(body).decode('utf8')
+        json_data = json.loads(my_json)
+        return json_data
+
+    def get_task_info(self, headers, body):
+
+        delivery_info = headers.get('delivery_info', {})
+        parent_options = self.get_parent_options()
+        json_body = self.base64_to_json(body)
+
+        # 提取消息
+        task_info = {
+                "id": headers.get("task_id"), # from headers
+                "name": json_body.get("name"), # from body.name 
+                "task_args": json.dumps(json_body.get("args"), cls=PythonObjectEncoder), # from body.args
+                "task_kwargs": json.dumps(json_body.get("kwargs"), cls=PythonObjectEncoder), # from body.kwargs
+                "origin": headers.get('origin'), # from headers
+                "created_time": delivery_info.get('created_time', None), # from headers
+                "exchange": delivery_info.get('exchange', None), # from headers
+                "routing_key": delivery_info.get('routing_key', None), # from headers 
+                # "detail": str({'body': body, 'properties': header_frame}), 重新投递未使用到此字段
+                "is_sent": True,
+                "parent_id": parent_options.get('id', None), # from env 
+                "parent_code": parent_options.get('code', None), # from env
+      
+        }
+        return json.dumps(task_info, cls=PythonObjectEncoder)
+
     def do_work(self, connection, channel, method_frame, header_frame, body):
 
         thread_id = threading.get_ident()
         delivery_tag = method_frame.delivery_tag
-        fmt1 = 'Thread id: {} Delivery tag: {} Message body: {}'
-        logger.info(fmt1.format(thread_id, delivery_tag, body))
+        headers = header_frame.headers
+        task_id = headers.get("task_id")
 
-        task_id = header_frame.headers.get("task_id")
+        fmt1 = 'Thread id: {} Delivery tag: {} Message body: {} Message Header: {} Task_id:{}'
+        logger.info(fmt1.format(thread_id, delivery_tag, body, headers, task_id))
+
+
         logger.info(
             ' [*] {0} Received task_id {1}. Executing...'.format(datetime.now(), task_id))
 
@@ -126,21 +183,15 @@ class RabbitMQConsumer(object):
             # consumer = method_frame.consumer_tag
             # consumer放执行消息的队列
             consumer = self._queue
-            my_json = base64.b64decode(body).decode('utf8')
-            json_data = json.loads(my_json)
-            task_name = json_data.get('name')
-            task_args = json_data.get('args')
-            task_kwargs = json_data.get('kwargs')
+            json_body = self.base64_to_json(body)
+
+            task_name = json_body.get('name')
+            task_args = json_body.get('args')
+            task_kwargs = json_body.get('kwargs')
             # 设定父任务环境变量，以防下次发送子任务的时候需要用到
-            parent_options = {
-                "id": task_id,
-                "code": task_name
-            }
-            try:
-                os.environ["SPARROW_TASK_PARENT_OPTIONS"] = json.dumps(parent_options, cls=PythonObjectEncoder)
-            except:
-                pass
+            self.set_parent_options(task_id, task_name)
             
+            # 执行消费函数
             result = self.get_target_func(self.target_func_map[task_name])(*task_args, **task_kwargs)
             try:
                 json_result = json.dumps(result, cls=PythonObjectEncoder)
@@ -165,11 +216,15 @@ class RabbitMQConsumer(object):
                 "traceback": ex.__str__()
             }
         try:
+            # 从header json_body 中提取消息体
+            task_info = self.get_task_info(headers, body)
+            kwargs["task_info"] = task_info
             self.update_task_result(task_id, consumer, **kwargs)
         except Exception as ex:
-            # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
+            # sparrow_task服务重启的过程中，可能会遇到连接失败的情况以及提取消息体失败
             # 所以需要忽略错误，不能影响consumer正常消费以及ack消息
-            logger.error(ex.__str__())
+            fm2 = "Task_id:{} update_task_result error:{}  ".format(task_id, ex.__str__())
+            logger.error(fm2)
         logger.info(
             ' [*] {0} Finished task_id {1}.'.format(datetime.now(), task_id))
 
@@ -252,6 +307,7 @@ class RabbitMQConsumer(object):
                     "status": status,
                     "result": kwargs.get('result'),
                     "traceback": kwargs.get('traceback'),
+                    "task_info":kwargs.get('task_info'),
                 }
                 # sparrow_task服务重启的过程中，可能会遇到连接失败的情况
                 response = rest_client.post(self._message_backend_svc, api_path=self._message_backend_api, json=data)
