@@ -123,20 +123,6 @@ class RabbitMQConsumer(object):
             pass
         return parent_options
 
-    def get_parent_options(self):
-        """
-        从环境变量中获取父任务
-        """
-        default_parent_options = {}
-        parent_options = os.environ.get("SPARROW_TASK_PARENT_OPTIONS")
-        if parent_options:
-            # parent_options = parent_options.replace("'",'"')
-            try:
-                return json.loads(parent_options)
-            except:
-                pass
-        return  default_parent_options
-
     def base64_to_json(self, body):
         """
         base64编码的body 转成字符串
@@ -150,7 +136,7 @@ class RabbitMQConsumer(object):
         从消息头和消息体中提取消息
         """
         delivery_info = headers.get('delivery_info', {})
-        parent_options = self.get_parent_options()
+        parent_options = headers.get('parent_options', {})
         json_body = self.base64_to_json(body)
 
         # 提取消息
