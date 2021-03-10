@@ -38,21 +38,21 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
         raise ex
 
 
-def get(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def get(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='get', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def post(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def post(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='post', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def put(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def put(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='put', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def delete(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def delete(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='delete', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)

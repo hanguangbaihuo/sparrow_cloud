@@ -5,6 +5,9 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.1.2] - 2021-03-10
+### Added
+- add timeout for all methods of rest_client
 
 ## [3.1.1] - 2021-02-23
 ### Added
