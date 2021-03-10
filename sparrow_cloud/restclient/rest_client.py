@@ -25,7 +25,7 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
             headers.update(carrier)
             logger.debug('=================== carrier: {}'.format(carrier))
     try:
-        res = requests.request(method=method, url=request_url, headers=headers, *args, **kwargs)
+        res = requests.request(method=method, url=request_url, headers=headers, timeout=timeout, *args, **kwargs)
         return _handle_response(res)
     except Exception as ex:
         error_message = "rest_client error, service_name:{}, protocol:{}, method:{}, " \
@@ -35,22 +35,22 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
         raise HTTPException(error_message)
 
 
-def get(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def get(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='get', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def post(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def post(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='post', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def put(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def put(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='put', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 
 
-def delete(service_address, api_path, timeout=10, token=None, *args, **kwargs):
+def delete(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='delete', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
 

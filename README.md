@@ -203,14 +203,14 @@
 
 ``` python
     from sparrow_cloud.restclient import rest_client
-    rest_client.post(SERVICE_CONF, api_path, timeout=10, json=api_list)
+    rest_client.post(SERVICE_CONF, api_path, timeout=30, json=api_list)
 
     # 参数说明:
     # SERVICE_CONF = "test-svc:8000"
     # timeout: 
-    #     非必传，默认超时时间5秒
+    #     非必传，默认超时时间30秒
     #     传参方式：
-    #         timeout=10       # 10秒为connect 和 read 的 timeout
+    #         timeout=30       # 30秒为connect 和 read 的 timeout
     #         timeout=(5, 5)  # 分别定制：connect 和 read 的 timeout
     #         timeout=None    # Request 永远等待
     #     剩余参数与 requests.get/post 等方法保持一致
@@ -222,14 +222,14 @@
 
 ``` python
     from sparrow_cloud.restclient import requests_client
-    requests_client.post(SERVICE_CONF, api_path, timeout=10, json=api_list)
+    requests_client.post(SERVICE_CONF, api_path, timeout=30, json=api_list)
 
     # 参数说明:
     # SERVICE_CONF = "test-svc:8000"
     # timeout: 
-    #     非必传，默认超时时间5秒
+    #     非必传，默认超时时间30秒
     #     传参方式：
-    #         timeout=10       # 10秒为connect 和 read 的 timeout
+    #         timeout=30       # 30秒为connect 和 read 的 timeout
     #         timeout=(5, 5)  # 分别定制：connect 和 read 的 timeout
     #         timeout=None    # Request 永远等待
     # ps:
