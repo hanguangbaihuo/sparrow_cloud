@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.1.2] - 2021-03-24
+### Changed
+- add timeout for all methods of rest_client
+
 ## [3.1.1] - 2021-02-23
 ### Added
 - add message detail "task_info"  for rabbitmq consumer controller when calling update task_result api 
