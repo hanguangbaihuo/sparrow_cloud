@@ -10,7 +10,7 @@ from .exception import HTTPException
 logger = logging.getLogger(__name__)
 
 
-def request(method, service_address, api_path, timeout, protocol="http", token=None, *args, **kwargs):
+def request(method, service_address, api_path, protocol="http", token=None, *args, **kwargs):
     service_name = get_service_name()
     request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
     headers = kwargs.pop('headers', {})
