@@ -12,8 +12,8 @@ from sparrow_cloud.utils.get_settings_value import get_settings_value, get_servi
 
 logger = logging.getLogger(__name__)
 
-DETAIL_403 = {"message": "无权限访问。"}
-DETAIL_401 = {"message": "身份认证信息未提供。"}
+DETAIL_403 = {"message": "无权限访问。", "code":233403}
+DETAIL_401 = {"message": "身份认证信息未提供。","code":233401}
 
 
 def access_control_fbv(resource=None):
