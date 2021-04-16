@@ -17,12 +17,13 @@ class CheckLockMiddleware(MiddlewareMixin):
         if not key:
             return
         try:
-            response = rest_client.delete(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key,"opt":"incr"})
+            response = rest_client.put(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key,"opt":"incr"})
             res = response.get("code")
+            # 只有当锁存在且其值为0(表示锁未被使用)时，code才会返回0
             if res==0:
                 return
-            else: # 锁不存在，可能已经被删除或者超时过期
-                return JsonResponse({"message":"重复提交，本次操作被禁止"}, status=403)
+            else: # 锁不存在(被删除或者超时过期)或者其值不为0(表示已经使用)时，禁止本次操作。返回状态码不用403是为了防止前端由于4xx状态而弹出通知，静默防重复提交。
+                return JsonResponse({"message":"重复提交，本次操作被禁止", "code":233402}, status=200)
         except Exception as e:
             # 发生异常时，直接放行
             logger.info("check front lock failed in lock middleware, message: {}".format(e.__str__()))
