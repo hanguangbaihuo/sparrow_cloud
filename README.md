@@ -17,9 +17,11 @@
 
 
 ### Django Middleware ###
-* JWT Middleware : 解析 JWT Token 
-* Request Method Middleware : 兼容不支持 put/delete 请求
+* JWTMiddleware : 解析 JWT Token 
+* MethodConvertMiddleware : 兼容不支持 put/delete 请求
 * ExceptionMiddleware : 异常通知
+* TracingMiddleware : 追踪链
+* CheckLockMiddleware : 前端防重复提交锁中间件
 
 ### rest_framework 中间件 ###
 * UserID Authentication: 验证 user
@@ -57,13 +59,15 @@
 [distributed_lock](#distributed_lock)
 
 ## django中间件 ##
-[JWT Middleware](#jwtmiddleware)
+[JWTMiddleware](#jwtmiddleware)
 
-[Request Method Middleware](#method_middleware)
+[MethodConvertMiddleware](#method_middleware)
 
 [ExceptionMiddleware](#exceptionmiddleware)
 
 [TracingMiddleware](#tracingmiddleware)
+
+[CheckLockMiddleware](#CheckLockMiddleware)
 
 ## rest_framework中间件 ##
 [UserID Authentication](#useridauthentication)
@@ -195,6 +199,16 @@
   MIDDLEWARE_CLASSES = (
       'sparrow_cloud.middleware.TracingMiddleware',  # 追踪链
   )
+```
+
+## CheckLockMiddleware
+> 防前端重复提交中间件，需要前端配合使用
+> 对请求header中的特定键值判断其状态，来决定是否阻止该次请求
+
+```python
+    MIDDLEWARE_CLASSES = (
+        'sparrow_cloud.middleware.CheckLockMiddleware',  # 防前端重复提交
+    )
 ```
 
 ## restclient

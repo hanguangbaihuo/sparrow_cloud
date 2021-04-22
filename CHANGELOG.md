@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.2.0] - 2021-04-20
+### Added
+- CheckLockMiddleware to block front duplicate request
+
 ## [3.1.3] - 2021-03-31
 ### Changed
 - add code for access_control response
