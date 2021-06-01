@@ -19,7 +19,7 @@ class JWTMiddleware(MiddlewareMixin):
         '''
         auth = get_authorization_header(request).split()
         # 如果没有token, 返回空
-        if not auth or auth[0].lower() != b'token_test':
+        if not auth or auth[0].lower() != b'tokentest':
             request.META['REMOTE_USER'] = None
             request.META['payload'] = None
             return
@@ -52,7 +52,7 @@ class JWTMiddleware(MiddlewareMixin):
                 b64_payload = base64.b64encode(json.dumps(payload).encode('utf-8')).decode('utf-8')
                 request.META['X-Jwt-Payload'] = b64_payload
             else:
-                raise Exception("找不到正确的jwt token解码方法")
+                raise Exception("找不到正确的jwt token解码方法或者token失效")
         except Exception as ex:
             logger.error(ex)
             request.META['REMOTE_USER'] = None

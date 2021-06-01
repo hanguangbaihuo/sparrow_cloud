@@ -18,7 +18,7 @@ def get_jwt_secret():
 
 def decode_jwt(token: str, secret: str, algorithm: str) -> dict :
     try:
-        payload = jwt.decode(token, secret, algorithm)
+        payload = jwt.decode(token, secret, algorithms=[algorithm])
     except Exception as ex:
         raise ex
     return payload
