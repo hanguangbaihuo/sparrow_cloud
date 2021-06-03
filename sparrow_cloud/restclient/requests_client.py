@@ -3,6 +3,7 @@
 requests 的封装， 返回的原生数据
 
 """
+import json
 import requests
 import logging
 import opentracing
@@ -14,11 +15,19 @@ logger = logging.getLogger(__name__)
 
 
 def request(method, service_address, api_path, protocol="http", token=None, *args, **kwargs):
+    '''
+    :param token: should be a json format dict, it should be
+        {'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'} type
+        encode token by `json.dumps` to request header X-Jwt-Payload
+    '''
     service_name = get_service_name()
     request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
     headers = kwargs.pop('headers', {})
     if token:
-        headers.update({'Authorization': "token " + token})
+        if isinstance(token, dict): #token also should contain "uid" key
+            headers.update({'X-Jwt-Payload': json.dumps(token)})
+        else:
+            logger.error(f"requests_client token parameter is not dict type: {token}")
     tracer = opentracing.global_tracer()
     if tracer:
         span = tracer.active_span
@@ -31,7 +40,7 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
         res = requests.request(method=method, url=request_url, headers=headers, *args, **kwargs)
         return res
     except Exception as ex:
-        error_message = "rest_client error, service_name:{}, protocol:{}, method:{}, " \
+        error_message = "requests_client error, service_name:{}, protocol:{}, method:{}, " \
                         "request_service_address:{}, api_path:{}, message:{}" \
             .format(service_name, protocol, method, service_address, api_path, ex.__str__())
         logger.error(error_message)

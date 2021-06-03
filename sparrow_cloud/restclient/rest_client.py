@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import json
 import logging
 import requests
 import opentracing
@@ -11,11 +11,27 @@ logger = logging.getLogger(__name__)
 
 
 def request(method, service_address, api_path, timeout, protocol="http", token=None, *args, **kwargs):
+    '''
+    :param method: method for the new :class:`Request` object.
+    :param service_address: service name, e.g. sparrow-product-svc:8001
+    :param api_path: reqeust url
+    :param timeout: (optional) How many seconds to wait for the server to send data
+        before giving up, as a float, or a :ref:`(connect timeout, read
+        timeout) <timeouts>` tuple.
+    :param token: should be a json format dict, it should be
+        {'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'} type
+        encode token by `json.dumps` to request header X-Jwt-Payload
+    :param kwargs:
+    :param headers: (optional) Dictionary of HTTP Headers to send
+    '''
     service_name = get_service_name()
     request_url = build_url(protocol=protocol, address=service_address, api_path=api_path)
     headers = kwargs.pop('headers', {})
     if token:
-        headers.update({'Authorization': "token " + token})
+        if isinstance(token, dict): #token also should contain "uid" key
+            headers.update({'X-Jwt-Payload': json.dumps(token)})
+        else:
+            logger.error(f"rest_client token parameter is not dict type: {token}")
     tracer = opentracing.global_tracer()
     if tracer:
         span = tracer.active_span
@@ -23,7 +39,7 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
             carrier = {}
             tracer.inject(span, opentracing.Format.HTTP_HEADERS, carrier)
             headers.update(carrier)
-            logger.debug('=================== carrier: {}'.format(carrier))
+            # logger.debug('=================== carrier: {}'.format(carrier))
     try:
         res = requests.request(method=method, url=request_url, headers=headers, timeout=timeout, *args, **kwargs)
         return _handle_response(res)
