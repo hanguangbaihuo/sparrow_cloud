@@ -21,6 +21,7 @@ class UserIDAuthentication(object):
         e.g.
         X-Jwt-Payload: "{'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'}"
         '''
+        request.META.setdefault("X-Jwt-Payload", request.META.get("HTTP_X_JWT_PAYLOAD"))
         raw_data = request.META.get("X-Jwt-Payload")
         if not raw_data:
             return None
