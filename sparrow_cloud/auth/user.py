@@ -16,4 +16,10 @@ class UserBase(object):
 
 
 class User(UserBase):
-    pass
+    def __init__(self, user_id, payload):
+        super().__init__(user_id)
+        self._payload = payload
+
+    @property
+    def payload(self):
+        return self._payload

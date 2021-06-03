@@ -7,10 +7,10 @@ from sparrow_cloud.utils.get_user import get_user_class
 
 logger = logging.getLogger(__name__)
 
+# default user: sparrow_cloud.auth.user.User
+USER_CLASS = get_user_class()
 
 class UserIDAuthentication(object):
-
-    USER_CLASS = get_user_class()
 
     def authenticate(self, request):
         '''
@@ -47,8 +47,7 @@ class UserIDAuthentication(object):
             return None
 
     def get_user(self, user_id, payload):
-        user = self.USER_CLASS(user_id=user_id)
-        user.payload = payload
+        user = USER_CLASS(user_id,payload)
         return user
 
     def authenticate_header(self, request):
