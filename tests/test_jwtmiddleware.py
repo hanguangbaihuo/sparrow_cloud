@@ -2,39 +2,123 @@ import jwt
 import os
 import time
 import unittest
-from unittest import mock
-from django.conf import settings
+from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
 
-from sparrow_cloud.auth.user import User
+JWT_SECRET = "hard_to_guess_string"
+USER_ID = 'abcedfg1234567'
 
-
-USER_ID = '1112313123'
-PAYLOAD = {"uid": "1112313123", "app_id": "app_0000",
-           "exp": int(time.time()+60*60), "iat": int(time.time()), "iss": "backend"}
-AUTH = b'Token '+jwt.encode(PAYLOAD, '123131313', algorithm='HS256')
-USER = User(user_id=USER_ID)
-
-
+# 有效的对称加密token
 class MockRequest(object):
-    META = {}
+    def __init__(self):
+        self.META = {"HTTP_AUTHORIZATION": self.get_token()}
 
+    def get_token(self):
+        payload = {"uid": USER_ID, 
+                "app_id": "app_0000",
+                "exp": int(time.time()+60*60), 
+                "iat": int(time.time()), 
+                "iss": "test"
+            }
+        return b'Tokentest '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
-class TestJWTAuthentication(unittest.TestCase):
+# 过期无效的对称加密token
+class MockInvalidRequest(object):
+    def __init__(self):
+        self.META = {"HTTP_AUTHORIZATION": self.get_token()}
+
+    def get_token(self):
+        payload = { "uid": USER_ID, 
+                "app_id": "app_0000",
+                "exp": int(time.time()-100),
+                "iat": int(time.time()-500),
+                "iss": "test"
+            }
+        return b'Tokentest '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+
+# 有效的非对称加密token
+class MockAsyRequest(object):
+    def __init__(self):
+        self.META = {"HTTP_AUTHORIZATION": self.get_token()}
+
+    def get_token(self):
+        payload = { "uid": USER_ID, 
+                "app_id": "app_0000",
+                "exp": int(time.time()+60*60), 
+                "iat": int(time.time()), 
+                "iss": "test"
+            }
+        private_key = open(os.getenv("PRIVATE_KEY_PATH")).read()
+        return b'Tokentest '+jwt.encode(payload, private_key, algorithm='RS256')
+
+# 过期无效的非对称加密token
+class MockInvalidAsyRequest(object):
+    def __init__(self):
+        self.META = {"HTTP_AUTHORIZATION": self.get_token()}
+
+    def get_token(self):
+        payload = { "uid": USER_ID, 
+                "app_id": "app_0000",
+                "exp": int(time.time()-100),
+                "iat": int(time.time()-500),
+                "iss": "test"
+            }
+        private_key = open(os.getenv("PRIVATE_KEY_PATH")).read()
+        return b'Tokentest '+jwt.encode(payload, private_key, algorithm='RS256')
+
+class TestJWTMiddleware(unittest.TestCase):
 
     def setUp(self):
-        os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
-        settings.JWT_MIDDLEWARE = {
-            "JWT_SECRET": "123131313",  # JWT_SECRET, 必填
-        }
+        os.environ.setdefault("JWT_SECRET", JWT_SECRET)
+        os.environ.setdefault("PRIVATE_KEY_PATH", "./tests/rsa_private.pem")
+        os.environ.setdefault("PUBLIC_KEY_PATH", "./tests/rsa_public.pem")
 
-    @mock.patch('rest_framework.authentication.get_authorization_header', return_value=AUTH)
-    def test_users(self, get_authorization_header):
-        from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
-        self.assertEqual(JWTMiddleware().process_request(MockRequest()), None)
+    def test_normal_token(self):
+        '''
+        测试对称加密token
+        '''
+        request = MockRequest()
+        JWTMiddleware().process_request(request)
+        self.assertIn("REMOTE_USER", request.META)
+        self.assertIn("payload", request.META)
+        self.assertIn("X-Jwt-Payload", request.META)
+        self.assertEqual(USER_ID, request.META.get("REMOTE_USER"))
+        self.assertIsNotNone(request.META.get("payload"))
 
-    def tearDown(self):
-        del os.environ["DJANGO_SETTINGS_MODULE"]
+    def test_invaid_nornal_token(self):
+        '''
+        测试对称加密token过期无效
+        '''
+        request = MockInvalidRequest()
+        JWTMiddleware().process_request(request)
+        self.assertIn("REMOTE_USER", request.META)
+        self.assertIn("payload", request.META)
+        self.assertNotIn("X-Jwt-Payload", request.META)
+        self.assertIsNone(request.META.get("REMOTE_USER"))
+        self.assertIsNone(request.META.get("payload"))
 
+    def test_asy_token(self):
+        '''
+        测试非对称加密
+        '''
+        request = MockAsyRequest()
+        JWTMiddleware().process_request(request)
+        self.assertIn("REMOTE_USER", request.META)
+        self.assertIn("payload", request.META)
+        self.assertIn("X-Jwt-Payload", request.META)
+        self.assertEqual(USER_ID, request.META.get("REMOTE_USER"))
+        self.assertIsNotNone(request.META.get("payload"))
+
+    def test_invalid_asy_token(self):
+        '''
+        测试过期无效的非对称加密
+        '''
+        request = MockInvalidAsyRequest()
+        JWTMiddleware().process_request(request)
+        self.assertIn("REMOTE_USER", request.META)
+        self.assertIn("payload", request.META)
+        self.assertNotIn("X-Jwt-Payload", request.META)
+        self.assertIsNone(request.META.get("REMOTE_USER"))
+        self.assertIsNone(request.META.get("payload"))
 
 if __name__ == '__main__':
     unittest.main()
