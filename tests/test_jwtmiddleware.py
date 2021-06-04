@@ -2,7 +2,6 @@ import jwt
 import os
 import time
 import unittest
-from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
 
 JWT_SECRET = "hard_to_guess_string"
 USER_ID = 'abcedfg1234567'
@@ -76,6 +75,7 @@ class TestJWTMiddleware(unittest.TestCase):
         '''
         测试对称加密token
         '''
+        from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         request = MockRequest()
         JWTMiddleware().process_request(request)
         self.assertIn("REMOTE_USER", request.META)
@@ -88,6 +88,7 @@ class TestJWTMiddleware(unittest.TestCase):
         '''
         测试对称加密token过期无效
         '''
+        from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         request = MockInvalidRequest()
         JWTMiddleware().process_request(request)
         self.assertIn("REMOTE_USER", request.META)
@@ -100,6 +101,7 @@ class TestJWTMiddleware(unittest.TestCase):
         '''
         测试非对称加密
         '''
+        from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         request = MockAsyRequest()
         JWTMiddleware().process_request(request)
         self.assertIn("REMOTE_USER", request.META)
@@ -112,6 +114,7 @@ class TestJWTMiddleware(unittest.TestCase):
         '''
         测试过期无效的非对称加密
         '''
+        from sparrow_cloud.middleware.jwt_middleware import JWTMiddleware
         request = MockInvalidAsyRequest()
         JWTMiddleware().process_request(request)
         self.assertIn("REMOTE_USER", request.META)
