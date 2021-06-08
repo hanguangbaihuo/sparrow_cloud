@@ -148,6 +148,8 @@
 ## JWTMiddleware
 
 > 描述：Token 解析
+> 注意：配置PUBLIC_KEY_PATH环境变量，rsa公钥文件路径
+> 注意：配置JWT_SECRET环境变量，jwt验签密钥
 > 配置 JWTMiddleware 中间件需要的参数
 
 ``` python

@@ -9,7 +9,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-RSA_PUBLIC_SECRET = open(os.getenv("PUBLIC_KEY_PATH")).read()
+RSA_PUBLIC_SECRET = ""
+try:
+    RSA_PUBLIC_SECRET = open(os.getenv("PUBLIC_KEY_PATH")).read()
+except Exception as e:
+    logger.debug(f"获取公钥文件数据出错: {e.__str__()}")
 
 algorithms = {
                 "HS256": os.getenv("JWT_SECRET"),
