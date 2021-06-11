@@ -18,7 +18,7 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
     :param timeout: (optional) How many seconds to wait for the server to send data
         before giving up, as a float, or a :ref:`(connect timeout, read
         timeout) <timeouts>` tuple.
-    :param token: should be a json format dict, it should be
+    :param token: should be a json format dict or json string, it should be
         {'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'} type
         encode token by `json.dumps` to request header X-Jwt-Payload
     :param kwargs:
@@ -30,6 +30,8 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
     if token:
         if isinstance(token, dict): #token also should contain "uid" key
             headers.update({'X-Jwt-Payload': json.dumps(token)})
+        elif isinstance(token, str):
+            headers.update({'X-Jwt-Payload': token})
         else:
             logger.error(f"rest_client token parameter is not dict type: {token}")
     tracer = opentracing.global_tracer()
