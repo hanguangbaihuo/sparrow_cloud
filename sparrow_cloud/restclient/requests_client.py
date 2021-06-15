@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def request(method, service_address, api_path, protocol="http", token=None, *args, **kwargs):
     '''
-    :param token: should be a json format dict, it should be
+    :param token: should be a json format dict or json string, it should be
         {'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'} type
         encode token by `json.dumps` to request header X-Jwt-Payload
     '''
@@ -26,6 +26,8 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
     if token:
         if isinstance(token, dict): #token also should contain "uid" key
             headers.update({'X-Jwt-Payload': json.dumps(token)})
+        elif isinstance(token, str):
+            headers.update({'X-Jwt-Payload': token})
         else:
             logger.error(f"requests_client token parameter is not dict type: {token}")
     tracer = opentracing.global_tracer()
