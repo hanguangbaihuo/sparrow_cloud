@@ -52,4 +52,4 @@ class UserIDAuthentication(object):
         return user
 
     def authenticate_header(self, request):
-        return "Tokentest"
+        return "Token"
