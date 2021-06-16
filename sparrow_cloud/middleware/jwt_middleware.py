@@ -28,7 +28,7 @@ class JWTMiddleware(MiddlewareMixin):
         '''
         auth = get_authorization_header(request).split()
         # 如果没有token, 返回空
-        if not auth or auth[0].lower() != b'tokentest':
+        if not auth or auth[0].lower() != b'token':
             request.META['REMOTE_USER'] = None
             request.META['payload'] = None
             return
