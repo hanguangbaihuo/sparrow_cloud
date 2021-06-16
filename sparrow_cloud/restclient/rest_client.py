@@ -30,8 +30,10 @@ def request(method, service_address, api_path, timeout, protocol="http", token=N
     if token:
         if isinstance(token, dict): #token also should contain "uid" key
             headers.update({'X-Jwt-Payload': json.dumps(token)})
+            headers.update({'Authorization': "token "+ token.get("token")})
         elif isinstance(token, str):
             headers.update({'X-Jwt-Payload': token})
+            headers.update({'Authorization': "token "+ json.loads(token).get("token")})
         else:
             logger.error(f"rest_client token parameter is not dict type: {token}")
     tracer = opentracing.global_tracer()
