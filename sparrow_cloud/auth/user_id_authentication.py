@@ -1,35 +1,54 @@
 # -*- coding: utf-8 -*-
-from sparrow_cloud.utils.get_user import get_user_class
+import base64
+import json
 import logging
+from sparrow_cloud.utils.get_user import get_user_class
+
 
 logger = logging.getLogger(__name__)
 
+# default user: sparrow_cloud.auth.user.User
+USER_CLASS = get_user_class()
 
 class UserIDAuthentication(object):
 
-    USER_CLASS = get_user_class()
-
     def authenticate(self, request):
         '''
-        HTTP_AUTHORIZATION': 'Token eyJhbGciOiJIU.eyJpc3MiOiWTy.z0HODSJhWtFzX'
-        try to create user Model from UserModel
-            if suc : return user
-            if falied: return None
+        get X-Jwt-Payload header from gateway. It is base64 encoding of payload data.
+        X-Jwt-Payload: 'eyJ1aWQiOiAiMTIzNGFiYyIsICJleHAiOiAxNzIyMjAwMzE2LCAiaWF0IjogMTYyMjE5MzExNiwgImFwcF9pZCI6ICJjb3JlIn0='
+        payload: {'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'}
+        here text format coding should be compatible, in order to test api locally.
+        e.g.
+        X-Jwt-Payload: "{'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'core'}"
         '''
-        payload = request.META['payload']
-        user_id = request.META['REMOTE_USER']
-        if payload and user_id:
+        request.META.setdefault("X-Jwt-Payload", request.META.get("HTTP_X_JWT_PAYLOAD"))
+        raw_data = request.META.get("X-Jwt-Payload")
+        if not raw_data:
+            return None
+        try:
+            # 先通过base64编码进行解析
+            b64_payload = base64.b64decode(raw_data)
+            payload = json.loads(b64_payload)
+        except Exception as e:
+            # 解析出错，再通过text文本进行解析
             try:
-                user = self.get_user(user_id, payload)
-            except Exception as ex:
-                logger.error(ex)
+                payload = json.loads(raw_data)
+            except Exception as e:
+                logger.error(f"X-Jwt-Payload:{X-Jwt-Payload}无法解析")
                 return None
+        try:
+            user_id = payload.get("uid")
+            if not user_id:
+                logger.error(f"payload中没有uid:{payload}")
+                return None
+            user = self.get_user(user_id, payload)
             return (user, payload)
-        return None
+        except Exception as e:
+            logger.error(e)
+            return None
 
     def get_user(self, user_id, payload):
-        user = self.USER_CLASS(user_id=user_id)
-        user.payload = payload
+        user = USER_CLASS(user_id,payload)
         return user
 
     def authenticate_header(self, request):

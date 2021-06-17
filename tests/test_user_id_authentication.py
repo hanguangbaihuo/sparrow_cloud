@@ -1,53 +1,78 @@
-import unittest
-import importlib
-import os
+
+import base64
 from django.conf import settings
-from unittest import mock
+# import importlib
+import json
+import os
+import unittest
+# from unittest import mock
 
-from sparrow_cloud.auth.user import User
+PAYLOAD = {'uid': '1234abc', 'app_id': 'core',
+           'exp': 1722200316, 'iat': 1622193116, 'iss': 'test'}
 
+# class MockDjangoSetting(object):
+#     SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
 
-AUTH = b'Token eyJhUzI1NiIs'
-USER_ID = '3aa60781234547a5b94a095588999999'
-PAYLOAD = {'uid': '3aa60781234547a5b94a095588999999', 'app_id': 'app_0000',
-           'exp': 0000, 'iat': 1111, 'iss': 'd'}
-USER = User(user_id=USER_ID)
+class MockEmptyRequest(object):
+    META = {}
 
-
-class MockRequest(object):
+class MockB64Request(object):
     META = {
-        "payload": PAYLOAD,
-        "REMOTE_USER": USER_ID
+        "X-Jwt-Payload": base64.b64encode(json.dumps(PAYLOAD).encode('utf-8')).decode('utf-8')
     }
 
-
-def value():
-    user_class_path = "sparrow_cloud.auth.user.User"
-    module_path, cls_name = user_class_path.rsplit(".", 1)
-    user_cls = getattr(importlib.import_module(module_path), cls_name)
-    user = user_cls(user_id=USER_ID)
-    return user
-
+class MockTextRequest(object):
+    META = {
+        "X-Jwt-Payload": json.dumps(PAYLOAD)
+    }
 
 class TestUserIDAuthentication(unittest.TestCase):
     """测试 UserIDAuthentication"""
 
     def setUp(self):
+        # 配置Django的settings环境变量为当前目录中的mock_settings.py文件
         os.environ["DJANGO_SETTINGS_MODULE"] = "tests.mock_settings"
+        # 配置django的settings环境变量中的SPARROW_AUTHENTICATION
         settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
 
-    def test_user(self):
+    def test_empty_user(self):
+        '''
+        测试 空request.META
+        '''
         from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
-        user_info = UserIDAuthentication().authenticate(MockRequest())
-        user = user_info[0]
-        payload = user_info[1]
-        _user = value()
-        self.assertEqual(type(user), type(_user))
-        self.assertEqual(payload, PAYLOAD)
+        res = UserIDAuthentication().authenticate(MockEmptyRequest())
+        self.assertIsNone(res)
+
+    def test_base64_type_user(self):
+        '''
+        测试 base64编码格式X-Jwt-Payload的request.META
+        '''
+        from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
+        res = UserIDAuthentication().authenticate(MockB64Request())
+        self.assertIsNotNone(res)
+        self.assertIsInstance(res, tuple)
+        self.assertEqual(len(res), 2)
+        user, auth = res
+        self.assertEqual(auth, PAYLOAD)
+        self.assertIsNotNone(user.id)
+        self.assertIsNotNone(user.payload)
+
+    def test_text_type_user(self):
+        '''
+        测试 文本编码格式X-Jwt-Payload的request.META
+        '''
+        from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
+        res = UserIDAuthentication().authenticate(MockTextRequest())
+        self.assertIsNotNone(res)
+        self.assertIsInstance(res, tuple)
+        self.assertEqual(len(res), 2)
+        user, auth = res
+        self.assertEqual(auth, PAYLOAD)
+        self.assertIsNotNone(user.id)
+        self.assertIsNotNone(user.payload)
 
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
-
 
 if __name__ == '__main__':
     unittest.main()

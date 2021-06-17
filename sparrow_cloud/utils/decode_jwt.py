@@ -8,11 +8,17 @@ def get_jwt_secret():
     return get_env_value("JWT_SECRET") or get_settings_value("JWT_MIDDLEWARE").get("JWT_SECRET")
 
 
-def decode_jwt(token):
-    secret = get_jwt_secret()
+# def decode_jwt(token):
+#     secret = get_jwt_secret()
+#     try:
+#         payload = jwt.decode(token, secret, algorithms='HS256')
+#     except Exception as ex:
+#         raise ex
+#     return payload
+
+def decode_jwt(token: str, secret: str, algorithm: str) -> dict :
     try:
-        payload = jwt.decode(token, secret, algorithms='HS256')
+        payload = jwt.decode(token, secret, algorithms=[algorithm])
     except Exception as ex:
         raise ex
     return payload
-
