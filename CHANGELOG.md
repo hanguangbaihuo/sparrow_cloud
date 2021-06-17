@@ -5,6 +5,12 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.3.0] - 2021-06-17
+### Changed
+- jwt middleware
+- user_id_authentication and user in auth
+- get_app_token and get_user_token in authorization
+- token parameter to set header in restclient all function
 
 ## [3.2.0] - 2021-04-20
 ### Added
