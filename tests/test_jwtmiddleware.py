@@ -69,7 +69,7 @@ class TestJWTMiddleware(unittest.TestCase):
     def setUp(self):
         os.environ.setdefault("JWT_SECRET", JWT_SECRET)
         os.environ.setdefault("PRIVATE_KEY_PATH", "./tests/rsa_private.pem")
-        os.environ.setdefault("PUBLIC_KEY_PATH", "./tests/rsa_public.pem")
+        os.environ.setdefault("SC_JWT_PUBLIC_KEY_PATH", "./tests/rsa_public.pem")
 
     def test_normal_token(self):
         '''
