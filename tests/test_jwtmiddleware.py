@@ -18,7 +18,7 @@ class MockRequest(object):
                 "iat": int(time.time()), 
                 "iss": "test"
             }
-        return b'Tokentest '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+        return b'Token '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
 # 过期无效的对称加密token
 class MockInvalidRequest(object):
@@ -32,7 +32,7 @@ class MockInvalidRequest(object):
                 "iat": int(time.time()-500),
                 "iss": "test"
             }
-        return b'Tokentest '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+        return b'Token '+jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
 # 有效的非对称加密token
 class MockAsyRequest(object):
@@ -47,7 +47,7 @@ class MockAsyRequest(object):
                 "iss": "test"
             }
         private_key = open(os.getenv("PRIVATE_KEY_PATH")).read()
-        return b'Tokentest '+jwt.encode(payload, private_key, algorithm='RS256')
+        return b'Token '+jwt.encode(payload, private_key, algorithm='RS256')
 
 # 过期无效的非对称加密token
 class MockInvalidAsyRequest(object):
@@ -62,14 +62,14 @@ class MockInvalidAsyRequest(object):
                 "iss": "test"
             }
         private_key = open(os.getenv("PRIVATE_KEY_PATH")).read()
-        return b'Tokentest '+jwt.encode(payload, private_key, algorithm='RS256')
+        return b'Token '+jwt.encode(payload, private_key, algorithm='RS256')
 
 class TestJWTMiddleware(unittest.TestCase):
 
     def setUp(self):
         os.environ.setdefault("JWT_SECRET", JWT_SECRET)
         os.environ.setdefault("PRIVATE_KEY_PATH", "./tests/rsa_private.pem")
-        os.environ.setdefault("PUBLIC_KEY_PATH", "./tests/rsa_public.pem")
+        os.environ.setdefault("SC_JWT_PUBLIC_KEY_PATH", "./tests/rsa_public.pem")
 
     def test_normal_token(self):
         '''
