@@ -215,41 +215,55 @@
 
 ## restclient
 
-> 服务调用中间件
+> 服务调用
 
 ``` python
     from sparrow_cloud.restclient import rest_client
-    rest_client.post(SERVICE_CONF, api_path, timeout=30, json=api_list)
+    rest_client.post(service_address, api_path, timeout=30, token=None, json=api_list)
 
     # 参数说明:
-    # SERVICE_CONF = "test-svc:8000"
+    # service_address = "test-svc:8000"
     # timeout: 
     #     非必传，默认超时时间30秒
     #     传参方式：
     #         timeout=30       # 30秒为connect 和 read 的 timeout
     #         timeout=(5, 5)  # 分别定制：connect 和 read 的 timeout
     #         timeout=None    # Request 永远等待
-    #     剩余参数与 requests.get/post 等方法保持一致
+    # token:
+    #     内部跨服务调用认证token
+    #     from sparrow_cloud.authorization.token import get_app_token, get_user_token
+    #     token = get_user_token(user_id="21424kvjbcdjslafds")
+    #     或者
+    #     token = get_app_token()
+    # ps:
+    #   剩余参数与 requests.get/post 等方法保持一致
+
 ```    
 
 ## requestsclient
 
-> 服务调用中间件（返回结果未封装）
+> 服务调用（返回结果未封装）
 
 ``` python
     from sparrow_cloud.restclient import requests_client
-    requests_client.post(SERVICE_CONF, api_path, timeout=30, json=api_list)
+    requests_client.post(service_address, api_path, timeout=30, token=None, json=api_list)
 
     # 参数说明:
-    # SERVICE_CONF = "test-svc:8000"
+    # service_address = "test-svc:8000"
     # timeout: 
     #     非必传，默认超时时间30秒
     #     传参方式：
     #         timeout=30       # 30秒为connect 和 read 的 timeout
     #         timeout=(5, 5)  # 分别定制：connect 和 read 的 timeout
     #         timeout=None    # Request 永远等待
+    # token:
+    #     内部跨服务调用认证token
+    #     from sparrow_cloud.authorization.token import get_app_token, get_user_token
+    #     token = get_user_token(user_id="21424kvjbcdjslafds")
+    #     或者
+    #     token = get_app_token()
     # ps:
-    #   剩余参数与 requests.get/post 等方法保持一致      
+    #   剩余参数与 requests.get/post 等方法保持一致
 ```
       
 ## message_client
@@ -354,12 +368,12 @@
 
  # client端调用 
     from sparrow_cloud.restclient import rest_client
-    SERVICE_CONF = "sparrow-demo:8000"
+    service_address = "sparrow-demo:8000"
     payload = {
         "app_lable_model":"app_lable.model",
         "filter_condition":{"product_id":"74101"}
     }
-    response = rest_client.get(SERVICE_CONF, api_path='/table/api/', json=payload)
+    response = rest_client.get(service_address, api_path='/table/api/', json=payload)
     #  返回的数据结构：{'code': 0, 'message': 'ok', 'data': [{}]}
     
     
@@ -544,7 +558,7 @@ class CarViewSet(ModelViewSet):
 ```
 
 ## get_app_token
-> get_app_token (获取用户token)
+> get_app_token (获取服务token)
 
 ```python
     # 获取app token
