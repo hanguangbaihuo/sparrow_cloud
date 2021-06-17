@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
-from django.core import settings
+from django.conf import settings
 import json
 import os
 from rest_framework.authentication import get_authorization_header
