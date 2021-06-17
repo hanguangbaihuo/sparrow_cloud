@@ -17,7 +17,7 @@ except Exception as e:
     logger.debug(f"获取公钥文件数据出错: {e.__str__()}")
 
 algorithms = {
-                "HS256": os.getenv("JWT_SECRET") or settings.JWT_MIDDLEWARE["JWT_SECRET"]
+                "HS256": os.getenv("JWT_SECRET") or settings.JWT_MIDDLEWARE["JWT_SECRET"],
                 "RS256": RSA_PUBLIC_SECRET
             }
 
