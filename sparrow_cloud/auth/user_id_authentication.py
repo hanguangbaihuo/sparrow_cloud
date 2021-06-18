@@ -41,6 +41,9 @@ class UserIDAuthentication(object):
             if not user_id:
                 logger.error(f"payload中没有uid:{payload}")
                 return None
+            # 兼容一些业务中采用REMOTE_USER获取uid
+            request.META['REMOTE_USER'] = user_id
+            request.META['payload'] = payload
             user = self.get_user(user_id, payload)
             return (user, payload)
         except Exception as e:
