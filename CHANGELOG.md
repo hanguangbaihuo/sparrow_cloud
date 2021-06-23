@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.3.2] - 2021-06-23
+### Changed
+- add SC_SKIP_TOKEN_CACHE to skip cache in get_app_token and get_user_token
+
 ## [3.3.1] - 2021-06-18
 ### Changed
 - fix the bug in accesscontrol
