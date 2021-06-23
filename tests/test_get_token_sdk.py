@@ -11,19 +11,24 @@ MOCK_USER_RESPONSE = {
     "exp": 1622800021,
     "iat": 1622792821,
     "uid": "test_user_id_succ_abc123",
-    "type": "user"
+    "type": "user",
+    "expires_in": 7200
 }
 MOCK_APP_RESPONSE = {
     "iss": "sparrow_app_manage",
     "exp": 1622800182,
     "iat": 1622792982,
     "uid": "sparrow_cloud",
-    "type": "app"
+    "type": "app",
+    "expires_in": 7200
 }
 
 class UserGoodResp:
     status_code = 200
     text = json.dumps(MOCK_USER_RESPONSE)
+    @staticmethod
+    def json():
+        return MOCK_USER_RESPONSE
 
 class BadResp:
     status_code = 400
@@ -32,6 +37,9 @@ class BadResp:
 class AppGoodResp:
     status_code = 200
     text = json.dumps(MOCK_APP_RESPONSE)
+    @staticmethod
+    def json():
+        return MOCK_APP_RESPONSE
 
 class TestGetUserToken(unittest.TestCase):
 

@@ -27,21 +27,21 @@ def get_user_token(user_id):
     sc_manage_svc = get_cm_value("SC_MANAGE_SVC")
     sc_manage_api = get_cm_value("SC_MANAGE_API")
     try:
-        cache_user_token = cache.get(user_token_key)
-        if cache_user_token is not None:
-            return cache_user_token
-            # return cache_user_token["user_token"]["token"]
-        else:
-            data = {
-                "name": service_conf["NAME"],
-                "secret": service_conf["SECRET"],
-                "uid": user_id
-            }
-            res = requests_client.post(service_address=sc_manage_svc, api_path=sc_manage_api, json=data)
-            if res.status_code<200 or res.status_code>=300:
-                raise Exception(f"请求app_manage服务出错，状态码:{res.status_code},数据:{res.text}")
-            cache.set(user_token_key, res.text, timeout=7200)
-            return res.text
+        if os.environ.get("SC_SKIP_TOKEN_CACHE", "").title() != "True":
+            cache_user_token = cache.get(user_token_key)
+            if cache_user_token:
+                return cache_user_token
+        # 跳过缓存或者缓存数据空
+        data = {
+            "name": service_conf["NAME"],
+            "secret": service_conf["SECRET"],
+            "uid": user_id
+        }
+        res = requests_client.post(service_address=sc_manage_svc, api_path=sc_manage_api, json=data)
+        if res.status_code<200 or res.status_code>=300:
+            raise Exception(f"请求app_manage服务出错，状态码:{res.status_code},数据:{res.text}")
+        cache.set(user_token_key, res.text, timeout=res.json().get("expires_in", 7200))
+        return res.text
     except Exception as ex:
         logger.error(f"sparrowcloud/get_user_token error, no token available in cache and app_manage_error,\
                         'message:{ex.__str__()}, return static token")
@@ -62,21 +62,21 @@ def get_app_token():
     sc_manage_svc = get_cm_value("SC_MANAGE_SVC")
     sc_manage_api = get_cm_value("SC_MANAGE_API")
     try:
-        cache_app_token = cache.get(app_token_key)
-        if cache_app_token:
-            return cache_app_token
-            # return cache_app_token["app_token"]["token"]
-        else:
-            data = {
-                "name": service_conf["NAME"],
-                "secret": service_conf["SECRET"]
-            }
-            res = requests_client.post(service_address=sc_manage_svc, api_path=sc_manage_api, json=data)
-            if res.status_code<200 or res.status_code>=300:
-                raise Exception(f"请求app_manage服务出错，状态码:{res.status_code},数据:{res.text}")
-            cache.set(app_token_key, res.text, timeout=7200)
-            # logger.info("sparrowcloud get app token: {}".format(app_token["token"]))
-            return res.text
+        if os.environ.get("SC_SKIP_TOKEN_CACHE", "").title() != "True":
+            cache_app_token = cache.get(app_token_key)
+            if cache_app_token:
+                return cache_app_token
+        # 跳过缓存或者缓存数据空
+        data = {
+            "name": service_conf["NAME"],
+            "secret": service_conf["SECRET"]
+        }
+        res = requests_client.post(service_address=sc_manage_svc, api_path=sc_manage_api, json=data)
+        if res.status_code<200 or res.status_code>=300:
+            raise Exception(f"请求app_manage服务出错，状态码:{res.status_code},数据:{res.text}")
+        cache.set(app_token_key, res.text, timeout=res.json().get("expires_in", 7200))
+        # logger.info("sparrowcloud get app token: {}".format(app_token["token"]))
+        return res.text
     except Exception as ex:
         logger.error(f"sparrowcloud/get_app_token error, no token available in cache and app_manage_error,\
                         'message:{ex.__str__()}, return static token")
