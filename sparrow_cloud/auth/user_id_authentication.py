@@ -34,7 +34,7 @@ class UserIDAuthentication(object):
             try:
                 payload = json.loads(raw_data)
             except Exception as e:
-                logger.error(f"X-Jwt-Payload:{X-Jwt-Payload}无法解析")
+                logger.error(f"X-Jwt-Payload:{raw_data}无法解析")
                 return None
         try:
             user_id = payload.get("uid")
