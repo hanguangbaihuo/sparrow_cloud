@@ -1,5 +1,5 @@
 from collections import OrderedDict
-
+import json
 import os
 import pytest
 from django.conf.urls import include, url
@@ -13,442 +13,336 @@ from rest_framework.response import Response
 from rest_framework.routers import SimpleRouter
 from rest_framework.test import APIRequestFactory
 from rest_framework.viewsets import GenericViewSet
-
-
-from sparrow_cloud.access_control.decorators import access_control_cbv_all, access_control_cbv_method
 from unittest import mock
 
+X_JWT_PAYLOAD=json.dumps({'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'app_1234567'})
 
-class Action(models.Model):
-    pass
+# def setUpModule():
+#     # settings.SC_SKIP_ACCESS_CONTROL = True
+#     # 配置django的settings环境变量中的SPARROW_AUTHENTICATION
+#     settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
+#     from sparrow_cloud.access_control.decorators import access_control_cbv_all, access_control_cbv_method
 
-# ############## 测试 access_control_cbv_all ###############
+#     class Action(models.Model):
+#         pass
+
+#     # ############## 测试 access_control_cbv_all ###############
+
+#     @access_control_cbv_all("SparrowAdmin")
+#     class CBVAllActionViewSet(GenericViewSet):
+#         queryset = Action.objects.all()
+
+#         def list(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response()
+#             response.view = self
+#             return response
+
+#         def retrieve(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response({"message": "ok"})
+#             response.view = self
+#             return response
+
+#         def create(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response({"message": "ok"})
+#             response.view = self
+#             return response
+
+#         def update(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response({"message": "ok"})
+#             response.view = self
+#             return response
+
+#         def destroy(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response({"message": "ok"})
+#             response.view = self
+#             return response
+
+#         def partial_update(self, request, *args, **kwargs):
+#             # import pdb; pdb.set_trace()
+#             response = Response({"message": "ok"})
+#             response.view = self
+#             return response
+
+#     router = SimpleRouter()
+#     router.register(r'actions', CBVAllActionViewSet)
 
 
-@access_control_cbv_all("SparrowAdmin")
-class CBVAllActionViewSet(GenericViewSet):
-    queryset = Action.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response()
-        response.view = self
-        return response
-
-    def retrieve(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def create(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def update(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def destroy(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def partial_update(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-
-
-
-router = SimpleRouter()
-router.register(r'actions', CBVAllActionViewSet)
-
-
-urlpatterns = [
-    url(r'^api/', include(router.urls)),
-]
+#     urlpatterns = [
+#         url(r'^api/', include(router.urls)),
+#     ]
 
 
 class CBVAllViewSetsTestCase(TestCase):
+    '''
+    测试类视图装饰器 access_control_cbv_all
+    '''
+    @classmethod
+    def setUpClass(cls):
+        settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
+        # settings.SC_SKIP_ACCESS_CONTROL = False
+        os.environ.setdefault("SC_ACCESS_CONTROL_SVC","ac-svc:8001")
+        os.environ.setdefault("SC_ACCESS_CONTROL_API","/api/ac")
 
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_all(self, rest_client_get):
-        view = CBVAllActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.get('/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        # post
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.post('/1/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        # delete
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.delete('/1/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        # put
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.put('/1/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        # 401
-        factory = APIRequestFactory(REMOTE_USER=None)
-        response = view(factory.put('/1/'))
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-# ############## 测试 access_control_cbv_method ###############
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
 
-class CBVAllViewSetsTestCaseSkipAccessControl(TestCase):
+    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
+    def test_access_control_cbv_all_no_perm(self, rest_client_get):
+        # 不跳过访问控制，没权限访问
+        settings.SC_SKIP_ACCESS_CONTROL = False
+        from sparrow_cloud.access_control.decorators import access_control_cbv_all
 
-    def setUp(self):
-        settings.SC_SKIP_ACCESS_CONTROL = True
+        class Action(models.Model):
+            pass
 
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_all(self, rest_client_get):
+        @access_control_cbv_all("SparrowAdmin")
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                # import pdb; pdb.set_trace()
+                response = Response()
+                response.view = self
+                return response
+
         view = CBVAllActionViewSet.as_view(actions={
             'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
         })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
+        
+        factory = APIRequestFactory(HTTP_X_JWT_PAYLOAD=X_JWT_PAYLOAD)
+        response = view(factory.get('/'))
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": True})
+    def test_access_control_cbv_all_allow(self, rest_client_get):
+        # 不跳过访问控制，有权限访问
+        settings.SC_SKIP_ACCESS_CONTROL = False
+        from sparrow_cloud.access_control.decorators import access_control_cbv_all
+
+        class Action(models.Model):
+            pass
+
+        @access_control_cbv_all("SparrowAdmin")
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                response = Response()
+                response.view = self
+                return response
+
+        view = CBVAllActionViewSet.as_view(actions={
+            'get': 'list',
+        })
+        
+        factory = APIRequestFactory(HTTP_X_JWT_PAYLOAD=X_JWT_PAYLOAD)
         response = view(factory.get('/'))
         assert response.status_code == status.HTTP_200_OK
-        # post
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.post('/1/'))
+
+    # @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
+    def test_viewset_access_control_cbv_all_skip_ac(self):
+        # 跳过访问控制，没有mock远程，也没有认证
+        settings.SC_SKIP_ACCESS_CONTROL = True
+        from sparrow_cloud.access_control.decorators import access_control_cbv_all
+
+        class Action(models.Model):
+            pass
+
+        @access_control_cbv_all("SparrowAdmin")
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                # import pdb; pdb.set_trace()
+                response = Response()
+                response.view = self
+                return response
+
+        view = CBVAllActionViewSet.as_view(actions={
+            'get': 'list',
+        })
+        
+        factory = APIRequestFactory()# 无认证，HTTP_X_JWT_PAYLOAD=X_JWT_PAYLOAD
+        response = view(factory.get('/'))
         assert response.status_code == status.HTTP_200_OK
-        # delete
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.delete('/1/'))
-        assert response.status_code == status.HTTP_200_OK
-        # put
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        response = view(factory.put('/1/'))
-        assert response.status_code == status.HTTP_200_OK
-        # 无用户
-        factory = APIRequestFactory(REMOTE_USER=None)
-        response = view(factory.put('/1/'))
-        assert response.status_code == status.HTTP_200_OK
-
-    def tearDown(self):
-        settings.SC_SKIP_ACCESS_CONTROL = False
-
-# ############## 测试 跳过access_control_cbv_method ###############
-
-
-@access_control_cbv_method({
-    "get": "AdminGet",
-    "post": "AdminPost",
-    "delete": "AdminDelete",
-    "put": "AdminPut",
-})
-class CBVMethodActionViewSet(GenericViewSet):
-    queryset = Action.objects.all()
-
-    def list(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response()
-        response.view = self
-        return response
-
-    def retrieve(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def create(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def update(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def destroy(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-    def partial_update(self, request, *args, **kwargs):
-        # import pdb; pdb.set_trace()
-        response = Response({"message": "ok"})
-        response.view = self
-        return response
-
-
-
-
-router.register(r'actions_method', CBVMethodActionViewSet)
-
-urlpatterns = urlpatterns + [
-    url(r'^api_cbv_method/', include(router.urls)),
-]
 
 
 class CBVMethodViewSetsTestCase(TestCase):
+    '''
+    测试类视图装饰器 access_control_cbv_method
+    '''
+    @classmethod
+    def setUpClass(cls):
+        settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
+        # settings.SC_SKIP_ACCESS_CONTROL = False
+        os.environ.setdefault("SC_ACCESS_CONTROL_SVC","ac-svc:8001")
+        os.environ.setdefault("SC_ACCESS_CONTROL_API","/api/ac")
 
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_get_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.get('/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_get_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.get('/'))
-        assert response.status_code == status.HTTP_200_OK
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
 
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_post_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_post_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_delete_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_delete_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_put_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.put('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', 
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_put_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list', 
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.put('/'))
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-
-
-class CBVMethodViewSetsTestCaseSkipAccessControl(TestCase):
-
-    def setUp(self):
-        settings.SC_SKIP_ACCESS_CONTROL = True
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_get_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.get('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_get_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.get('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_post_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_post_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_delete_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_delete_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.post('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": True})
-    def test_viewset_access_control_cbv_method_put_200(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.put('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-
-    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get',
-        return_value={"has_perm": False})
-    def test_viewset_access_control_cbv_method_put_403(self, rest_client_get):
-        view = CBVMethodActionViewSet.as_view(actions={
-            'get': 'list',
-            'post': 'create',
-            'delete': 'destroy',
-            'put': 'partial_update',
-        })
-        factory = APIRequestFactory(REMOTE_USER='sssssssss')
-        # get
-        response = view(factory.put('/'))
-        assert response.status_code == status.HTTP_200_OK
-
-    def tearDown(self):
+    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
+    def test_viewset_access_control_cbv_method(self, rest_client_mock):
+        # 不跳过访问控制，无权限访问
         settings.SC_SKIP_ACCESS_CONTROL = False
+        from sparrow_cloud.access_control.decorators import access_control_cbv_method
+
+        class Action(models.Model):
+            pass
+
+        @access_control_cbv_method({
+            "get": "AdminGet",
+            "post": "AdminPost",
+            "delete": "AdminDelete",
+            "put": "AdminPut",
+        })
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                response = Response()
+                response.view = self
+                return response
+            def create(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def destroy(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def partial_update(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+
+        view = CBVAllActionViewSet.as_view(actions={
+                'get': 'list', 
+                'post': 'create',
+                'delete': 'destroy',
+                'put': 'partial_update',
+            })
+        
+        factory = APIRequestFactory(HTTP_X_JWT_PAYLOAD=X_JWT_PAYLOAD)
+        response = view(factory.get('/'))
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        response = view(factory.post('/'))
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        response = view(factory.delete('/'))
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        response = view(factory.put('/'))
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+    @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": True})
+    def test_access_control_cbv_method_allow(self, rest_client_mock):
+        # 不跳过访问控制，有权限访问
+        settings.SC_SKIP_ACCESS_CONTROL = False
+        from sparrow_cloud.access_control.decorators import access_control_cbv_method
+
+        class Action(models.Model):
+            pass
+
+        @access_control_cbv_method({
+            "get": "AdminGet",
+            "post": "AdminPost",
+            "delete": "AdminDelete",
+            "put": "AdminPut",
+        })
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                response = Response()
+                response.view = self
+                return response
+            def create(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def destroy(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def partial_update(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+
+        view = CBVAllActionViewSet.as_view(actions={
+                'get': 'list', 
+                'post': 'create',
+                'delete': 'destroy',
+                'put': 'partial_update',
+            })
+        
+        factory = APIRequestFactory(HTTP_X_JWT_PAYLOAD=X_JWT_PAYLOAD)
+        response = view(factory.get('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.post('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.delete('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.put('/'))
+        assert response.status_code == status.HTTP_200_OK
+
+    # @mock.patch('sparrow_cloud.access_control.access_verify.rest_client.get', return_value={"has_perm": False})
+    def test_viewset_access_control_cbv_method_skip_ac(self):
+        # 跳过访问控制，没有mock远程，也没有认证
+        settings.SC_SKIP_ACCESS_CONTROL = True
+        from sparrow_cloud.access_control.decorators import access_control_cbv_method
+
+        class Action(models.Model):
+            pass
+
+        @access_control_cbv_method({
+            "get": "AdminGet",
+            "post": "AdminPost",
+            "delete": "AdminDelete",
+            "put": "AdminPut",
+        })
+        class CBVAllActionViewSet(GenericViewSet):
+            queryset = Action.objects.all()
+
+            def list(self, request, *args, **kwargs):
+                response = Response()
+                response.view = self
+                return response
+            def create(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def destroy(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+            def partial_update(self, request, *args, **kwargs):
+                response = Response({"message": "ok"})
+                response.view = self
+                return response
+
+        view = CBVAllActionViewSet.as_view(actions={
+                'get': 'list', 
+                'post': 'create',
+                'delete': 'destroy',
+                'put': 'partial_update',
+            })
+        
+        factory = APIRequestFactory()
+        response = view(factory.get('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.post('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.delete('/'))
+        assert response.status_code == status.HTTP_200_OK
+        response = view(factory.put('/'))
+        assert response.status_code == status.HTTP_200_OK
