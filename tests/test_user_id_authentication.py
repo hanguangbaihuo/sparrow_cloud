@@ -26,6 +26,11 @@ class MockTextRequest(object):
         "X-Jwt-Payload": json.dumps(PAYLOAD)
     }
 
+class MockWrongRequest(object):
+    META = {
+        "X-Jwt-Payload": "wrong string to docode, neither base64 nor text"
+    }
+
 class TestUserIDAuthentication(unittest.TestCase):
     """测试 UserIDAuthentication"""
 
@@ -70,6 +75,14 @@ class TestUserIDAuthentication(unittest.TestCase):
         self.assertEqual(auth, PAYLOAD)
         self.assertIsNotNone(user.id)
         self.assertIsNotNone(user.payload)
+    
+    def test_wrong_x_jwt_payload(self):
+        '''
+        测试错误的编码X-Jwt-Payload的request.META
+        '''
+        from sparrow_cloud.auth.user_id_authentication import UserIDAuthentication
+        res = UserIDAuthentication().authenticate(MockWrongRequest())
+        self.assertIsNone(res)
 
     def tearDown(self):
         del os.environ["DJANGO_SETTINGS_MODULE"]
