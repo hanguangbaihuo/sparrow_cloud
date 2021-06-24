@@ -1,81 +1,17 @@
-from collections import OrderedDict
 import json
 import os
-import pytest
 from django.conf.urls import include, url
 from django.db import models
 from django.test import TestCase, override_settings
 from django.conf import settings
 
 from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.routers import SimpleRouter
 from rest_framework.test import APIRequestFactory
 from rest_framework.viewsets import GenericViewSet
 from unittest import mock
 
 X_JWT_PAYLOAD=json.dumps({'uid': '1234abc', 'exp': 1722200316, 'iat': 1622193116, 'app_id': 'app_1234567'})
-
-# def setUpModule():
-#     # settings.SC_SKIP_ACCESS_CONTROL = True
-#     # 配置django的settings环境变量中的SPARROW_AUTHENTICATION
-#     settings.SPARROW_AUTHENTICATION = {"USER_CLASS_PATH": "sparrow_cloud.auth.user.User"}
-#     from sparrow_cloud.access_control.decorators import access_control_cbv_all, access_control_cbv_method
-
-#     class Action(models.Model):
-#         pass
-
-#     # ############## 测试 access_control_cbv_all ###############
-
-#     @access_control_cbv_all("SparrowAdmin")
-#     class CBVAllActionViewSet(GenericViewSet):
-#         queryset = Action.objects.all()
-
-#         def list(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response()
-#             response.view = self
-#             return response
-
-#         def retrieve(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response({"message": "ok"})
-#             response.view = self
-#             return response
-
-#         def create(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response({"message": "ok"})
-#             response.view = self
-#             return response
-
-#         def update(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response({"message": "ok"})
-#             response.view = self
-#             return response
-
-#         def destroy(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response({"message": "ok"})
-#             response.view = self
-#             return response
-
-#         def partial_update(self, request, *args, **kwargs):
-#             # import pdb; pdb.set_trace()
-#             response = Response({"message": "ok"})
-#             response.view = self
-#             return response
-
-#     router = SimpleRouter()
-#     router.register(r'actions', CBVAllActionViewSet)
-
-
-#     urlpatterns = [
-#         url(r'^api/', include(router.urls)),
-#     ]
-
 
 class CBVAllViewSetsTestCase(TestCase):
     '''
