@@ -28,7 +28,7 @@ class MockTextRequest(object):
 
 class MockWrongRequest(object):
     META = {
-        "X-Jwt-Payload": "wrong string to docode, neighter base64 nor text"
+        "X-Jwt-Payload": "wrong string to docode, neither base64 nor text"
     }
 
 class TestUserIDAuthentication(unittest.TestCase):
