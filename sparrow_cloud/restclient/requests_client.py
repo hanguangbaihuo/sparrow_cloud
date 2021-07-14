@@ -26,12 +26,10 @@ def request(method, service_address, api_path, protocol="http", token=None, *arg
     if token:
         if isinstance(token, dict): #token also should contain "uid" key
             headers.update({'X-Jwt-Payload': json.dumps(token)})
-            headers.update({'Authorization': "token "+ token.get("token")})
         elif isinstance(token, str):
             headers.update({'X-Jwt-Payload': token})
-            headers.update({'Authorization': "token "+ json.loads(token).get("token")})
         else:
-            logger.error(f"requests_client token parameter is not dict type: {token}")
+            logger.error(f"requests_client token parameter is not suitable type: {token}")
     tracer = opentracing.global_tracer()
     if tracer:
         span = tracer.active_span
