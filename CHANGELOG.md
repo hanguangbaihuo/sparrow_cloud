@@ -5,6 +5,10 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+## [3.3.4] - 2021-07-14
+### Changed
+- remove setting Authorization header in rest_client when having token parameter
+- remove HS256 decode jwt token from jwt middleware
 
 ## [3.3.3] - 2021-06-24
 ### Changed
