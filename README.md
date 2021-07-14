@@ -148,19 +148,13 @@
 ## JWTMiddleware
 
 > 描述：Token 解析
-> 注意：配置SC_JWT_PUBLIC_KEY_PATH环境变量，rsa公钥文件路径
-> 注意：配置JWT_SECRET环境变量，jwt验签密钥
+> 注意：配置SC_JWT_PUBLIC_KEY环境变量，rsa公钥文件数据
 > 配置 JWTMiddleware 中间件需要的参数
 
 ``` python
     # 注册中间件
     MIDDLEWARE = (
         'sparrow_cloud.middleware.jwt_middleware.JWTMiddleware', # 放最上层
-
-    # 将以下参数添加到settings.py
-    JWT_MIDDLEWARE = {
-        "JWT_SECRET": "", # JWT_SECRET, 必填
-    }
 ```
 
 
