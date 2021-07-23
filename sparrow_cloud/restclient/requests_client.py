@@ -64,6 +64,11 @@ def put(service_address, api_path, timeout=30, token=None, *args, **kwargs):
                    *args, **kwargs)
 
 
+def patch(service_address, api_path, timeout=30, token=None, *args, **kwargs):
+    return request(method='patch', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
+                   *args, **kwargs)
+
+
 def delete(service_address, api_path, timeout=30, token=None, *args, **kwargs):
     return request(method='delete', service_address=service_address, api_path=api_path, timeout=timeout, token=token,
                    *args, **kwargs)
