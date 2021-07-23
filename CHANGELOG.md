@@ -5,6 +5,11 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
+
+## [3.3.5] - 2021-07-23
+### Added
+- add patch method for restclient
+
 ## [3.3.4] - 2021-07-14
 ### Changed
 - remove setting Authorization header in rest_client when having token parameter
