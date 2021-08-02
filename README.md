@@ -193,7 +193,7 @@
 
 ``` python
   MIDDLEWARE_CLASSES = (
-      'sparrow_cloud.middleware.TracingMiddleware',  # 追踪链
+      'sparrow_cloud.middleware.tracing_middleware.TracingMiddleware',  # 追踪链
   )
 ```
 
@@ -203,7 +203,7 @@
 
 ```python
     MIDDLEWARE_CLASSES = (
-        'sparrow_cloud.middleware.CheckLockMiddleware',  # 防前端重复提交
+        'sparrow_cloud.middleware.lock_middleware.CheckLockMiddleware',  # 防前端重复提交
     )
 ```
 
