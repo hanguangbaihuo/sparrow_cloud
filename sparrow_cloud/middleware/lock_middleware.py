@@ -33,9 +33,13 @@ class CheckLockMiddleware(MiddlewareMixin):
         key = request.META.get("HTTP_SC_LOCK")
         if not key:
             return response
-        # 业务处理正常，删除锁中的key
-        if response.status_code>=200 and response.status_code<300:
-            rest_client.delete(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key})
-        else:#业务失败，重置锁，可以进行下一次请求
-            rest_client.put(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key,"opt":"reset"})
-        return response
+        try:
+            # 业务处理正常，更新锁中的key为完成
+            if response.status_code>=200 and response.status_code<300:
+                rest_client.patch(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key})
+            else:#业务失败，重置锁，可以进行下一次请求
+                rest_client.put(SC_SPARROW_DISTRIBUTED_LOCK_SVC, SC_SPARROW_DISTRIBUTED_LOCK_FRONT_API, json={"key":key,"opt":"reset"})
+            return response
+        except Exception as e:
+            logger.info("update front lock failed in lock middleware response, message: {}".format(e.__str__()))
+            return response
