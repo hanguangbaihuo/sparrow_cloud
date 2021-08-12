@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [3.3.6] - 2021-08-12
+### Changed
+- lock middleware fix bug
+
 ## [3.3.5] - 2021-07-23
 ### Added
 - add patch method for restclient
